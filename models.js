@@ -20,8 +20,8 @@ recipeSchema.methods.recipeRepr = function() {
     ingredients: this.ingredients,
     prep: this.prep,
     link: this.link,
-    books: this.filters.bookIds,
-    tags: this.filters.categories,
+    books: this.filters['bookIds'],
+    tags: this.filters['categories'],
     notes: this.notes
   };
 };

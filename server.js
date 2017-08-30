@@ -10,10 +10,9 @@ const app = express();
 
 app.use(morgan('common'));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 mongoose.Promise = global.Promise;
-
-app.use(express.static('public'));
 
 app.get('/recipes', (req, res) => {
 	Recipe

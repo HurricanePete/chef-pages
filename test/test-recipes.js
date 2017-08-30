@@ -175,8 +175,8 @@ describe('GET endpoint', function() {
 			resRecipes.ingredients.should.deep.equal(recipe.ingredients);
 			resRecipes.prep.should.equal(recipe.prep);
 			resRecipes.link.should.equal(recipe.link);
-			resRecipes.books.should.deep.equal(recipe.books);
-			resRecipes.tags.should.equal(recipe.tags);
+			resRecipes.books.should.deep.equal(recipe.filters.bookIds);
+			resRecipes.tags.should.deep.equal(recipe.filters.categories);
 			resRecipes.notes.should.equal(recipe.notes);
 		})
 	})
