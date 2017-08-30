@@ -4,6 +4,23 @@
 	<title>Chef Pages</title>
 </head>
 <body>
-<p>Hello World</p>
+	<header>
+		<h3>Welcome to Chef Pages</h3>
+		<h5>Create and view custom cookbooks</h5>
+	</header>
+	<form action="" method="get" id="search-form">
+		<input type="text" name="search" id="search" placeholder="">
+		<select id="filter">
+			<option value="all" default>All</option>
+			<option value="name">Name</option>
+			<option value="user">User</option>
+			<option value="book">Cookbook</option>
+			<option value="category">Category</option>
+		</select>
+	</form>
+	<button class="search-submit" type="submit" form="search-form">Cook it!</button>
+	<div class="js-results"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="app.js"></script>
 </body>
 </html>
