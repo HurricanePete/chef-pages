@@ -3,7 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
-const {DATABASE_URL, port} = require('config');
+const {DATABASE_URL, PORT} = require('./config');
+const {Recipe} = require('./models');
 
 const app = express();
 
@@ -12,13 +13,31 @@ app.use(bodyParser.json());
 
 mongoose.Promise = global.Promise;
 
-app.get('/recipes', (req, res) => {
-	
-})
-
 app.use(express.static('public'));
 
+app.get('/recipes', (req, res) => {
+	Recipe
+	.find()
+	.exec()
+	.then(recipes => {
+		res.json(recipes.map(recipe => recipe.recipeRepr()));
+	}) 
+	.catch(err => {
+		console.error(err);
+		res.status(500).json({error: 'Something went wrong'});
+	});
+});
 
+app.get('/get/:id', (req, res) => {
+	Recipe
+	.findById(req.params.id)
+	.exec()
+	.then(recipe => res.json(recipe.recipeRepr()))
+	.catch(err => {
+		console.error(err);
+		res.status(500).json({error: 'Something went wrong'});
+	});
+});
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
   return new Promise((resolve, reject) => {

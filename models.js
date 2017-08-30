@@ -21,10 +21,11 @@ recipeSchema.methods.recipeRepr = function() {
     prep: this.prep,
     link: this.link,
     books: this.filters.bookIds,
-    tags: this.filters.categories
+    tags: this.filters.categories,
+    notes: this.notes
   };
 };
 
-const BlogPost = mongoose.model('Recipe', recipeSchema);
+const Recipe = mongoose.model('Recipe', recipeSchema);
 
 module.exports = {Recipe};
