@@ -27,7 +27,7 @@ app.get('/recipes', (req, res) => {
 	});
 });
 
-app.get('/get/:id', (req, res) => {
+app.get('/recipes/:id', (req, res) => {
 	Recipe
 	.findById(req.params.id)
 	.exec()
