@@ -62,12 +62,12 @@ function generateLink() {
 
 function generateBooks() {
 	const bookIds = [1111111, 2222222, 3333333];
-	return bookIds[Math.floor(Math.random() * bookIds.length)];
+	return [bookIds[Math.floor(Math.random() * bookIds.length)]];
 }
 
 function generateCategories() {
 	const categories = ['quick', 'protein', 'vegetarian', 'comfort'];
-	return categories[Math.floor(Math.random() * categories.length)];
+	return [categories[Math.floor(Math.random() * categories.length)]];
 }
 
 function generateUser() {
@@ -106,7 +106,6 @@ function tearDownDb() {
 	return mongoose.connection.dropDatabase();
 }
 
-
 describe('Chef Pages', function() {
 	before(function() {
 		return runServer();
@@ -125,9 +124,10 @@ describe('Chef Pages', function() {
 	});
 });
 
-describe('GET endpoint', function() {
+
+describe('Chef Pages API resource', function() {
 	before(function() {
-		return runServer();
+		return runServer(DATABASE_URL);
 	});
 	beforeEach(function() {
 		return seedRecipeData();
@@ -139,46 +139,71 @@ describe('GET endpoint', function() {
 		return closeServer()
 	});
 
-	it('should return all recipes on GET', function() {
-		let res;
-		return chai.request(app)
-		.get('/recipes')
-		.then(function(_res) {
-			res = _res;
-			res.should.have.status(200);
-			res.body.should.have.length.of.at.least(1);
-			return Recipe.count()
-		})
-		.then(function(count) {
-			res.body.length.should.equal(count);
+	describe('GET endpoint', function() {
+		it('should return all recipes', function() {
+			let res;
+			return chai.request(app)
+			.get('/recipes')
+			.then(function(_res) {
+				res = _res;
+				res.should.have.status(200);
+				res.body.should.have.length.of.at.least(1);
+				return Recipe.count()
+			})
+			.then(function(count) {
+				res.body.length.should.equal(count);
+			});
 		});
+
+		it('should return recipes with the correct fields', function() {
+			let resRecipes;
+			return chai.request(app)
+			.get('/recipes')
+			.then(function(res) {
+				res.should.have.status(200);
+				res.should.be.json;
+				res.body.should.be.a('array');
+				res.body.should.have.length.of.at.least(1);
+				res.body.forEach(function(recipe) {
+					recipe.should.be.a('object');
+					recipe.should.include.keys('name', 'ingredients', 'prep', 'link', 'books', 'tags', 'notes');
+				});
+				resRecipes = res.body[0];
+				return Recipe.findById(resRecipes.id);
+			})
+			.then(function(recipe) {
+				resRecipes.id.should.equal(recipe.id);
+				resRecipes.name.should.equal(recipe.name);
+				resRecipes.ingredients.should.deep.equal(recipe.ingredients);
+				resRecipes.prep.should.equal(recipe.prep);
+				resRecipes.link.should.equal(recipe.link);
+				resRecipes.books.should.deep.equal(recipe.filters.bookIds);
+				resRecipes.tags.should.deep.equal(recipe.filters.categories);
+				resRecipes.notes.should.equal(recipe.notes);
+			})
+		})
 	});
 
-	it('should return recipes with the correct fields', function() {
-		let resRecipes;
-		return chai.request(app)
-		.get('/recipes')
-		.then(function(res) {
-			res.should.have.status(200);
-			res.should.be.json;
-			res.body.should.be.a('array');
-			res.body.should.have.length.of.at.least(1);
-			res.body.forEach(function(recipe) {
-				recipe.should.be.a('object');
-				recipe.should.include.keys('name', 'ingredients', 'prep', 'link', 'books', 'tags', 'notes');
-			});
-			resRecipes = res.body[0];
-			return Recipe.findById(resRecipes.id);
-		})
-		.then(function(recipe) {
-			resRecipes.id.should.equal(recipe.id);
-			resRecipes.name.should.equal(recipe.name);
-			resRecipes.ingredients.should.deep.equal(recipe.ingredients);
-			resRecipes.prep.should.equal(recipe.prep);
-			resRecipes.link.should.equal(recipe.link);
-			resRecipes.books.should.deep.equal(recipe.filters.bookIds);
-			resRecipes.tags.should.deep.equal(recipe.filters.categories);
-			resRecipes.notes.should.equal(recipe.notes);
+	describe('POST enpoint', function() {
+		it('should add a recipe correctly', function() {
+			const newRecipe = generateRecipeData();
+			return chai.request(app)
+			.post('/recipes')
+			.send(newRecipe)
+			.then(function(res) {
+				res.should.have.status(201);
+				res.should.be.json;
+				res.body.should.be.a('object');
+				res.body.should.include.keys('name', 'ingredients', 'prep', 'link', 'books', 'tags', 'notes');
+				res.body.should.not.be.null;
+				res.body.name.should.equal(newRecipe.name);
+				res.body.ingredients.should.deep.equal(newRecipe.ingredients);
+				res.body.prep.should.equal(newRecipe.prep);
+				res.body.link.should.equal(newRecipe.link);
+				res.body.books.should.deep.equal(newRecipe.filters.bookIds);
+				res.body.tags.should.deep.equal(newRecipe.filters.categories);
+				res.body.notes.should.equal(newRecipe.notes);
+			})
 		})
 	})
 });

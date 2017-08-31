@@ -1,3 +1,4 @@
+require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -36,6 +37,38 @@ app.get('/recipes/:id', (req, res) => {
 		console.error(err);
 		res.status(500).json({error: 'Something went wrong'});
 	});
+});
+
+app.post('/recipes', (req, res) => {
+	const requiredFields = ['name', 'ingredients', 'prep'];
+	for (let i=0; i<requiredFields.length; i++) {
+		const field = requiredFields[i];
+		if (!(field in req.body)) {
+			const message = `Missing \`${field}\` in request body`
+			console.error(message);
+			return res.status(400).send(message);
+		}
+	}
+
+	Recipe
+	.create({
+		filters: {
+			userId: req.body.filters.userId,
+			bookIds: req.body.filters.bookIds,
+			categories: req.body.filters.categories
+		},
+		name: req.body.name,
+		link: req.body.link,
+		ingredients: req.body.ingredients,
+		prep: req.body.prep,
+		notes: req.body.notes
+	})
+	.then(recipe => res.status(201).json(recipe.recipeRepr()))
+	.catch(err => {
+		console.error(err);
+		res.status(500).json({error: 'Something went wrong'});
+	});
+
 });
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
