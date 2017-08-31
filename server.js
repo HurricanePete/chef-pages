@@ -1,36 +1,110 @@
-var express = require('express');
-var app = express();
+require('dotenv').config();
+const bodyParser = require('body-parser');
+const express = require('express');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
 
+const {DATABASE_URL, PORT} = require('./config');
+const {Recipe} = require('./models');
+
+const app = express();
+
+app.use(morgan('common'));
+app.use(bodyParser.json());
 app.use(express.static('public'));
 
-function runServer() {
-	const port = process.env.PORT || 8080;
-	return new Promise((resolve, reject) => {
-		server = app.listen(port, () => {
-			console.log(`Your app is listening on port ${port}`);
-			resolve(server);
-		})
-		.on('error', err => {
-			reject(err);
-		});
+mongoose.Promise = global.Promise;
+
+app.get('/recipes', (req, res) => {
+	Recipe
+	.find()
+	.exec()
+	.then(recipes => {
+		res.json(recipes.map(recipe => recipe.recipeRepr()));
+	}) 
+	.catch(err => {
+		console.error(err);
+		res.status(500).json({error: 'Something went wrong'});
 	});
+});
+
+app.get('/recipes/:id', (req, res) => {
+	Recipe
+	.findById(req.params.id)
+	.exec()
+	.then(recipe => res.json(recipe.recipeRepr()))
+	.catch(err => {
+		console.error(err);
+		res.status(500).json({error: 'Something went wrong'});
+	});
+});
+
+app.post('/recipes', (req, res) => {
+	const requiredFields = ['name', 'ingredients', 'prep'];
+	for (let i=0; i<requiredFields.length; i++) {
+		const field = requiredFields[i];
+		if (!(field in req.body)) {
+			const message = `Missing \`${field}\` in request body`
+			console.error(message);
+			return res.status(400).send(message);
+		}
+	}
+
+	Recipe
+	.create({
+		filters: {
+			userId: req.body.filters.userId,
+			bookIds: req.body.filters.bookIds,
+			categories: req.body.filters.categories
+		},
+		name: req.body.name,
+		link: req.body.link,
+		ingredients: req.body.ingredients,
+		prep: req.body.prep,
+		notes: req.body.notes
+	})
+	.then(recipe => res.status(201).json(recipe.recipeRepr()))
+	.catch(err => {
+		console.error(err);
+		res.status(500).json({error: 'Something went wrong'});
+	});
+
+});
+
+function runServer(databaseUrl=DATABASE_URL, port=PORT) {
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+      .on('error', err => {
+        mongoose.disconnect();
+        reject(err);
+      });
+    });
+  });
 }
 
 function closeServer() {
-	return new Promise((resolve, reject) => {
-		console.log('Closing server');
-		server.close(err => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
-		});
-	});
+  return mongoose.disconnect().then(() => {
+     return new Promise((resolve, reject) => {
+       console.log('Closing server');
+       server.close(err => {
+           if (err) {
+               return reject(err);
+           }
+           resolve();
+       });
+     });
+  });
 }
 
 if (require.main === module) {
-	runServer().catch(err => console.error(err));
-}
+  runServer().catch(err => console.error(err));
+};
 
-module.exports = {app, runServer, closeServer};
+module.exports = {runServer, app, closeServer};
