@@ -84,6 +84,27 @@ app.delete('/recipes/:id', (req, res) => {
 	});
 });
 
+app.put('/recipes/:id', (req, res) => {
+	if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    	res.status(400).json({error: 'Request path id and request body id values must match'});
+  	}
+
+	const updated = {};
+	const updateableFields = ['filters', 'name', 'link', 'ingredients', 'prep', 'notes'];
+	updateableFields.forEach(field => {
+		if (field in req.body) {
+			updated[field] = req.body[field];
+		}
+		console.log(req.body[field]);
+	});;
+
+	Recipe
+	.findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
+	.exec()
+	.then(updatedPost => res.status(201).json(updatedPost.recipeRepr()))
+	.catch(err => res.status(500).json({message: 'Something went wrong'}))
+});
+
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
   return new Promise((resolve, reject) => {
     mongoose.connect(databaseUrl, err => {
