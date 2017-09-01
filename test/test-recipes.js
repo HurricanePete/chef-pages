@@ -185,7 +185,7 @@ describe('Chef Pages API resource', function() {
 	});
 
 	describe('POST enpoint', function() {
-		it('should add a recipe correctly', function() {
+		it('should add a recipe with the correct fields', function() {
 			const newRecipe = generateRecipeData();
 			return chai.request(app)
 			.post('/recipes')
@@ -206,4 +206,26 @@ describe('Chef Pages API resource', function() {
 			})
 		})
 	})
+
+	describe('DELETE endpoint', function() {
+		it('should delete recipe with the supplied id', function() {
+			let recipe;
+			return Recipe
+				.findOne()
+				.exec()
+				.then(function(_rec) {
+					recipe = _rec;
+					return chai.request(app)
+					.delete(`/recipes/${recipe.id}`);
+				})
+				.then(function(res) {
+					res.should.have.status(204)
+					return Recipe.findById(recipe.id).exec();
+				})
+				.then(function(_rec) {
+					should.not.exist(_rec);
+				});
+		});
+	});
+
 });

@@ -71,6 +71,19 @@ app.post('/recipes', (req, res) => {
 
 });
 
+app.delete('/recipes/:id', (req, res) => {
+	Recipe
+	.findByIdAndRemove(req.params.id)
+	.exec()
+	.then(() => {
+		res.status(204).json({message: 'success'});
+	})
+	.catch(err => {
+		console.error(err);
+		res.status(500).json({error: 'Something went wrong'});
+	});
+});
+
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
   return new Promise((resolve, reject) => {
     mongoose.connect(databaseUrl, err => {
