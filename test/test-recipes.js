@@ -228,4 +228,42 @@ describe('Chef Pages API resource', function() {
 		});
 	});
 
+	describe('PUT endpoint', function() {
+		it('should update a recipe correctly', function() {
+			const updateData = {
+				filters: {
+					bookIds: [1357900],
+					categories: ['New category']
+				},
+				name: 'Testing Recipe',
+				link: 'www.tesrecipes.com',
+				ingredients: ['These', 'Are', 'My', 'Test', 'Ingredients'],
+				prep: 'Combine ingredients into a sentance',
+				notes: 'Note updates!'
+			}
+			return Recipe
+				.findOne()
+				.exec()
+				.then(function(recipe) {
+					updateData.id = recipe.id
+					return chai.request(app)
+					.put(`/recipes/${recipe.id}`)
+					.send(updateData);
+				})
+				.then(function(res) {
+					res.should.have.status(201);
+					return Recipe.findById(updateData.id).exec();
+				})
+				.then(function(rec) {
+					rec.name.should.equal(updateData.name);
+					rec.ingredients.should.deep.equal(updateData.ingredients);
+					rec.prep.should.equal(updateData.prep);
+					rec.link.should.equal(updateData.link);
+					rec.filters.bookIds.should.deep.equal(updateData.filters.bookIds);
+					rec.filters.categories.should.deep.equal(updateData.filters.categories);
+					rec.notes.should.equal(updateData.notes);
+				});
+		});
+	});
+
 });
