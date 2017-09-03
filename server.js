@@ -39,6 +39,8 @@ app.get('/recipes/:id', (req, res) => {
 	});
 });
 
+app.get('/recipes/')
+
 app.post('/recipes', (req, res) => {
 	const requiredFields = ['name', 'ingredients', 'prep'];
 	for (let i=0; i<requiredFields.length; i++) {

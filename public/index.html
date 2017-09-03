@@ -2,13 +2,20 @@
 <html>
 <head>
 	<title>Chef Pages</title>
+	<link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body>
 	<header>
 		<h3>Welcome to Chef Pages</h3>
 		<h5>Create and view custom cookbooks</h5>
 	</header>
-	<form action="" method="get" id="search-form">
+	<span>
+		<button class="js-getButton">Get</buttton>
+		<button class="js-postButton">Post</button>
+	</span>
+	<div class="js-get">
+	<form action="http://localhost:8080/recipes" method="get" id="search-form">
+	<legend>Get Form</legend>
 		<input type="text" name="search" id="search" placeholder="">
 		<select id="filter">
 			<option value="all" default>All</option>
@@ -18,7 +25,33 @@
 			<option value="category">Category</option>
 		</select>
 	</form>
-	<button class="search-submit" type="submit" form="search-form">Cook it!</button>
+	<button class="search-submit" type="submit" form="search-form">Cook it!</button><hr>
+	</div>
+	<div class="js-post hidden">
+	<form action="http://localhost:8080/recipes" method="post" id="post-form">
+	<legend>Post Form</legend>
+		Name: <input type="text" name="name" id="name">
+		Link: <input type="text" name="link" id="link">
+		<fieldset>
+			<legend>Ingredients:</legend>
+			<input type="text" name="ingredients" id="ingredients" >
+			<input type="text" name="ingredients" id="ingredients">			
+		</fieldset>
+		<input type="text" name="prep" id="prep">
+		<input type="text" name="notes" id="notes">
+		<fieldset>
+			<legend>Books:</legend>
+			<input type="number" name="books" id="books">
+			<input type="number" name="books" id="books">
+		</fieldset>
+		<fieldset>
+			<legend>Filters:</legend>
+			<input type="text" name="categories" id="cate">
+			<input type="text" name="categories" id="categ">
+		</fieldset>
+	</form>
+	<button class="post-submit" type="submit" form="post-form">Book it!</button>
+	</div>
 	<div class="js-results"></div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type="text/javascript" src="app.js"></script>
