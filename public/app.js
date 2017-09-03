@@ -1,63 +1,5 @@
 var state = {
-    filter: "all",
-    searchTerm: null
-}
-
-function nameSearch(input) {
-    let result = [];
-    MOCK_RECIPES.recipes.forEach(function(entry){
-        if (entry.name === input) {
-            result.push(entry);
-        }
-    });
-    return result;
-}
-
-function userSearch(input) {
-    let result = [];
-    MOCK_RECIPES.recipes.forEach(function(entry){
-        if (entry.filters.userId === input) {
-            result.push(entry);
-        }
-    });
-    return result;
-}
-
-function bookSearch(input) {
-    let result = [];
-    MOCK_RECIPES.recipes.forEach(function(entry){
-        for (var i = 0; i<=entry.filters['bookIds'].length; i++) {
-            if (entry.filters.bookIds[i] === input) {
-                result.push(entry);
-            };
-        };
-    });
-    return result;
-}
-
-function categorySearch(input) {
-    let result = [];
-    MOCK_RECIPES.recipes.forEach(function(entry){
-        for (var i = 0; i<=entry.filters['categories'].length; i++) {
-            if (entry.filters.categories[i] === input) {
-                result.push(entry);
-            };
-        };
-    });
-    return result;
-}
-
-function handleSearches() {
-    switch(state.filter) {
-        case "name": return nameSearch(state.searchTerm);
-        break;
-        case "user": return userSearch(state.searchTerm);
-        break;
-        case "book": return bookSearch(state.searchTerm);
-        break;
-        case "category": return categorySearch(state.searchTerm);
-        break;
-    }
+    request: 'get';
 }
 
 function ingredientsList(list) {
@@ -77,6 +19,10 @@ function displaySearchRecipes(data) {
             '<ul>' + ingredientsList(item.ingredients) + '</ul>' +
             '<p>' + item.prep + '</p>' +
             '<p>' + item.notes + '</p>' +
+            '<span>' + 
+            '<button class="put-button">Put</button>' + 
+            '<button class="delete-button">Delete</button>' + 
+            '</span>'
             '</div>'+ '<br>'); 
     });
 }
