@@ -1,5 +1,7 @@
-var state = {
-    request: 'get';
+const SERVER_URL = 'localHost:8080/recipes' 
+
+let state = {
+    request: 'get'
 }
 
 function ingredientsList(list) {
@@ -38,9 +40,10 @@ function requestToggle(state, target) {
     };
 }
 
-$('button.search-submit').click(function(event) {
-    event.preventDefault();
-    $('.js-results').empty();
+$('#get-form').ajaxForm({
+    url: 'SERVER_URL',
+    dataType: 'json',
+    success: displaySearchRecipes(res);
 })
 
 $('button.js-getButton').click(function(event) {
