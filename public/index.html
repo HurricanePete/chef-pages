@@ -14,7 +14,7 @@
 		<button class="js-postButton">Post</button>
 	</span>
 	<div class="js-get">
-	<form action="http://localhost:8080/recipes" method="get" id="get-form">
+	<form action="" method="get" id="get-form">
 	<legend>Get Form</legend>
 		<input type="text" name="search" id="search" placeholder="">
 		<select id="filter">
@@ -28,29 +28,29 @@
 	<button class="search-submit" type="submit" form="search-form">Cook it!</button><hr>
 	</div>
 	<div class="js-post hidden">
-	<form action="http://localhost:8080/recipes" method="post" id="post-form">
+	<form action="" method="post" id="post-form">
 	<legend>Post Form</legend>
-		Name: <input type="text" name="name" id="name">
+		Name: <input type="text" name="name" id="name"><br>
 		Link: <input type="text" name="link" id="link">
-		<fieldset>
+		<fieldset class="ingredients-field">
 			<legend>Ingredients:</legend>
-			<input type="text" name="ingredients" id="ingredients" >
-			<input type="text" name="ingredients" id="ingredients">			
+			<input type="text" name="ingredients" id="ingredients">
+			<button class="ingredient-adder">Add Ingredient</button>			
 		</fieldset>
-		<input type="text" name="prep" id="prep">
-		<input type="text" name="notes" id="notes">
-		<fieldset>
+		Prep: <input type="text" name="prep" id="prep"><br>
+		Notes: <input type="text" name="notes" id="notes">
+		<fieldset class="book-field">
 			<legend>Books:</legend>
 			<input type="number" name="books" id="books">
-			<input type="number" name="books" id="books">
+			<button class="book-adder">Add Book</button>			
 		</fieldset>
-		<fieldset>
+		<fieldset class="category-field">
 			<legend>Filters:</legend>
-			<input type="text" name="categories" id="cate">
 			<input type="text" name="categories" id="categ">
+			<button class="category-adder">Add Category</button>			
 		</fieldset>
 	</form>
-	<button class="post-submit" type="submit" form="post-form">Book it!</button>
+	<button class="post-submit">Book it!</button><button class="put-submit hidden">Spice it!</button>
 	</div>
 	<div class="js-results"></div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

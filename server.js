@@ -48,6 +48,7 @@ app.post('/recipes', (req, res) => {
 		if (!(field in req.body)) {
 			const message = `Missing \`${field}\` in request body`
 			console.error(message);
+			console.error(req.body);
 			return res.status(400).send(message);
 		}
 	}
