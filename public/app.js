@@ -1,7 +1,8 @@
 const SERVER_URL = 'http://localhost:8080/recipes/' 
 
 let state = {
-    request: 'get'
+    request: 'get',
+    putId: null
 }
 
 function ingredientsList(list) {
@@ -45,15 +46,15 @@ function displayRecipes(data) {
             '</span>' +
             '</div>');
     }
-};
+}
 
-function inputAdder(target, type, name, id) {
+function inputAdder(target, type, nameId) {
     target.before(
-        `<input type="${type}" name="${name}" id="${id}">`
+        `<input type="${type}" name="${nameId}" id="${nameId}">`
         );
 }
 
-function requestToggle(state, target) {
+function stateToggle(state, target) {
     if (state.request === 'get') {
         target.find('div.js-post').addClass('hidden');
         target.find('div.js-get').removeClass('hidden');
@@ -78,23 +79,55 @@ function formToArry(target, submitValue) {
     })
 }
 
-function populateForm(data) {
 
+//sanity check with Dominic
+function formAdditionsHandler(array, type, nameId) {
+    let additions = 0;
+    if (array.length > 1) {
+        for (let i=1; i<=array.length; i++) {
+            inputAdder(($('#post-form')).find(`.${nameId}-adder`), type, nameId);
+            additions++;
+        }
+    }
+    for (let i=0; i<=additions; i) {
+        $(`fieldset.${nameId}-field`).find('input').each(function(item) {
+            $(this).val(array[i]);
+            i++;
+        })
+    }
 }
 
-$('button.ingredient-adder').click(function(event) {
+function resetForm(target) {
+    target.find('.ingredients-field').find('input').not(':first').remove();
+    target.find('.books-field').find('input').not(':first').remove();
+    target.find('.categories-field').find('input').not(':first').remove();
+    target.find('input').val('');
+}
+
+function populateForm(data) {
+    $('body').find('#post-form').find('#name').val(data.name);
+    $('body').find('#post-form').find('#link').val(data.link);
+    $('body').find('#post-form').find('#ingredients').val(data.ingredients[0]);
+    formAdditionsHandler(data['ingredients'], 'text', 'ingredients');
+    $('body').find('form#post-form').find('input#prep').val(data.prep);
+    $('body').find('form#post-form').find('input#notes').val(data.notes);
+    formAdditionsHandler(data['books'], 'number', 'books');
+    formAdditionsHandler(data['tags'], 'text', 'categories');
+}
+
+$('button.ingredients-adder').click(function(event) {
     event.preventDefault();
-    inputAdder($(this), 'text', 'ingredients', 'ingredients');
+    inputAdder($(this), 'text', 'ingredients');
 })
 
-$('button.book-adder').click(function(event) {
+$('button.books-adder').click(function(event) {
     event.preventDefault();
-    inputAdder($(this), 'number', 'books', 'books');
+    inputAdder($(this), 'number', 'books');
 })
 
-$('button.category-adder').click(function(event) {
+$('button.categories-adder').click(function(event) {
     event.preventDefault();
-    inputAdder($(this), 'text', 'categories', 'categ');
+    inputAdder($(this), 'text', 'categories');
 })
 
 $('button.search-submit').click(function(event) {
@@ -117,17 +150,22 @@ $('button.post-submit').click(function(event) {
         "prep": $('#prep').val(),
         "notes": $('#notes').val()
     }
-    formToArry($('fieldset.book-field').find('input'), data.filters.bookIds);
-    formToArry($('fieldset.category-field').find('input'), data.filters.categories);
+    formToArry($('fieldset.books-field').find('input'), data.filters.bookIds);
+    formToArry($('fieldset.categories-field').find('input'), data.filters.categories);
     formToArry($('fieldset.ingredients-field').find('input'), data.ingredients);
-    console.log(data);
     const settings = {
         url: SERVER_URL,
         data: JSON.stringify(data),
         contentType: 'application/json',
         success: displayRecipes
     }
-    $.post(settings);
+    return new Promise ((resolve, reject) => {
+        $.post(settings);
+        resolve(resetForm($('#post-form')))
+        reject(function(err) {
+            console.log(err)
+        });
+    });
 })
 
 $('div.js-results').on('click', '.delete-button', function(event) {
@@ -149,12 +187,13 @@ $('div.js-results').on('click', '.delete-button', function(event) {
 $('div.js-results').on('click', '.put-button', function(event) {
     event.preventDefault();
     state.request = "put";
-    requestToggle(state, $('body'));
+    stateToggle(state, $('body'));
     let id = $('div.js-results').find(this).closest('div').find('p:first').text();
+    state.putId = id;
     const settings = {
         url: SERVER_URL + id,
         type: 'get',
-//        success: populateForm
+        success: populateForm
     };
     return new Promise ((resolve, reject) => {
         $.ajax(settings);
@@ -165,14 +204,51 @@ $('div.js-results').on('click', '.put-button', function(event) {
     });
 })
 
+$('button.put-submit').click(function(event) {
+    event.preventDefault();
+    const data = {
+        "id": state.putId,
+        "filters": {
+            "userId": 1111111,
+            "bookIds": [],
+            "categories": []
+        },
+        "name": $('#name').val(),
+        "link": $('#link').val(),
+        "ingredients": [],
+        "prep": $('#prep').val(),
+        "notes": $('#notes').val()
+    }
+    formToArry($('fieldset.books-field').find('input'), data.filters.bookIds);
+    formToArry($('fieldset.categories-field').find('input'), data.filters.categories);
+    formToArry($('fieldset.ingredients-field').find('input'), data.ingredients);
+    const settings = {
+        url: SERVER_URL + state.putId,
+        type: 'put',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: displayRecipes
+    };
+    return new Promise ((resolve, reject) => {
+        $.ajax(settings);
+        resolve(resetForm($('#post-form')));
+        reject(function(err) {
+            console.log(err)
+        });
+    });
+    state.putId = null;
+    state.request = 'post';
+    stateToggle(state, $('body'));
+})
+
 $('button.js-getButton').click(function(event) {
     event.preventDefault();
     state.request = 'get';
-    requestToggle(state, $('body'));
+    stateToggle(state, $('body'));
 })
 
 $('button.js-postButton').click(function(event) {
     event.preventDefault();
     state.request = 'post';
-    requestToggle(state, $('body'));
+    stateToggle(state, $('body'));
 })
