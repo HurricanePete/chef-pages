@@ -13,6 +13,7 @@ function ingredientsList(list) {
     return htmlList;
 }
 
+
 function displayRecipes(data) {
     if (Array.isArray(data)) {
         data.forEach(function(item) {
@@ -115,6 +116,61 @@ function populateForm(data) {
     formAdditionsHandler(data['tags'], 'text', 'categories');
 }
 
+function filterAll(input, data) {
+    results = data.filter(function(recipe) {
+        if (recipe['name'].includes(input) || recipe['books'].includes(input) || recipe['tags'].includes(input)) {
+            return recipe
+        }
+    })
+    return results
+}
+
+function filterName(input, data) {
+    results = data.filter(function(recipe) {
+        if (recipe['name'].includes(input)) {
+            return recipe
+        }
+    })
+    return results
+}
+
+function filterBook(input, data) {
+    results = data.filter(function(recipe) {
+        if (recipe['books'].includes(input)) {
+            return recipe
+        }
+    })
+    return results
+}
+
+function filterCategory(input, data) {
+    results = data.filter(function(recipe) {
+        if (recipe['tags'].includes(input)) {
+            return recipe
+        }
+    })
+    return results
+}
+
+function resultSwitcher(data) {
+    const searchTerm = $('#search').val();
+    const filter = $('#filter').val();
+    switch(filter) {
+        case 'all':
+            displayRecipes(filterAll(searchTerm, data));
+            break;
+        case 'name':
+            displayRecipes(filterName(searchTerm, data));
+            break;
+        case 'book':
+            displayRecipes(filterBook(searchTerm, data));
+            break;
+        case 'category':
+            displayRecipes(filterCategory(searchTerm, data));
+    }
+
+}
+
 $('button.ingredients-adder').click(function(event) {
     event.preventDefault();
     inputAdder($(this), 'text', 'ingredients');
@@ -133,7 +189,7 @@ $('button.categories-adder').click(function(event) {
 $('button.search-submit').click(function(event) {
     event.preventDefault();
     $(this).closest('body').find('.js-results').empty();
-    $.ajax({url: SERVER_URL, success: displayRecipes});
+    $.ajax({url: SERVER_URL, success: resultSwitcher});
 })
 
 $('button.post-submit').click(function(event) {

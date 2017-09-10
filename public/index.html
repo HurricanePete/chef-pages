@@ -10,8 +10,8 @@
 		<h5>Create and view custom cookbooks</h5>
 	</header>
 	<span>
-		<button class="js-getButton">Get</buttton>
-		<button class="js-postButton">Post</button>
+		<button class="js-getButton">View Recipes</buttton>
+		<button class="js-postButton">Add a Recipe</button>
 	</span>
 	<div class="js-get">
 	<form action="" method="" id="get-form">
@@ -30,15 +30,19 @@
 	<div class="js-post hidden">
 	<form action="" method="" id="post-form">
 	<legend>Post Form</legend>
-		Name: <input type="text" name="name" id="name"><br>
-		Link: <input type="text" name="link" id="link">
+		<label for="name">Name</label>
+		<input type="text" name="name" id="name"><br>
+		<label for="link">Link</label>
+		<input type="text" name="link" id="link">
 		<fieldset class="ingredients-field">
 			<legend>Ingredients:</legend>
 			<input type="text" name="ingredients" id="ingredients">
 			<button class="ingredients-adder">Add Ingredient</button>			
 		</fieldset>
-		Prep: <input type="text" name="prep" id="prep"><br>
-		Notes: <input type="text" name="notes" id="notes">
+		<label for="prep">Instructions</label>
+		<input type="text" name="prep" id="prep"><br>
+		<label for="notes">Notes</label> 
+		<input type="text" name="notes" id="notes">
 		<fieldset class="books-field">
 			<legend>Books:</legend>
 			<input type="number" name="books" id="books">
