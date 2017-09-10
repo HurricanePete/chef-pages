@@ -1,17 +1,27 @@
+* {
+	font-family: 'Roboto', sans-serif;
+}
+
+body {
+	background-color: lightblue;
+}
+
 legend {
 	font-weight: bold;
+	padding-bottom: 5px;
 }
 
 fieldset > legend {
 	margin-left: 45px;
 }
 
-fieldset > input {
-
+fieldset:last-child {
+	margin-left: 5px;
 }
 
 form {
 	border: 1px solid grey;
+	padding: 5px;
 }
 
 label {
@@ -21,14 +31,41 @@ label {
 	width: 100px;
 }
 
-input {
+select {
+	background-color: lightgrey;
+}
+
+input, textarea {
 	margin-bottom: 5px;
+	background-color: lightgrey;
+}
+
+button {
+	padding: 5px;
 }
 
 .hidden {
 	display: none;
 }
 
-.js-get > input {
+#search {
 	margin-left: 15px;
+}
+
+#prep {
+	margin-top: 5px;
+}
+
+.results-frame {
+	border: 1px solid black;
+	padding: 5px;
+}
+
+.js-getButton, .js-postButton {
+	margin-left: 5px;
+}
+
+.put-button, .delete-button {
+	width: 50px;
+	margin-left: 5px;
 }

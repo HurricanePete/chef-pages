@@ -18,7 +18,7 @@ function displayRecipes(data) {
     if (Array.isArray(data)) {
         data.forEach(function(item) {
             $('.js-results').append(
-            '<div>' +
+            '<div class="results-frame">' +
             '<p class="js-id hidden">' + item.id + '</p>' +
             '<p>' + item.name + '</p>' +
             '<p>' + item.link + '</p>' +
@@ -34,7 +34,7 @@ function displayRecipes(data) {
     }
     else {
         $('.js-results').append(
-            '<div>' +
+            '<div class="results-frame">' +
             '<p class="js-id hidden">' + data.id + '</p>' +
             '<p>' + data.name + '</p>' +
             '<p>' + data.link + '</p>' +
@@ -51,7 +51,7 @@ function displayRecipes(data) {
 
 function inputAdder(target, type, nameId) {
     target.before(
-        `<input type="${type}" name="${nameId}" id="${nameId}">`
+        `<span class=".js-added"><input type="${type}" name="${nameId}" id="${nameId}"><button class=".js-input-delete">X</button></span>`
         );
 }
 
@@ -184,6 +184,11 @@ $('button.books-adder').click(function(event) {
 $('button.categories-adder').click(function(event) {
     event.preventDefault();
     inputAdder($(this), 'text', 'categories');
+})
+
+$('form#post-form').on('click', '.js-input-delete', function(event) {
+    event.preventDefault();
+    $(this).closest('span.js-added').remove();
 })
 
 $('button.search-submit').click(function(event) {

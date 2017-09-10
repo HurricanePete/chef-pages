@@ -3,6 +3,7 @@
 <head>
 	<title>Chef Pages</title>
 	<link rel="stylesheet" type="text/css" href="main.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 <body>
 	<header>
@@ -15,7 +16,7 @@
 	</span>
 	<div class="js-get">
 	<form action="" method="" id="get-form">
-	<legend>Get Form</legend>
+	<legend>Search For Recipes</legend>
 		<input type="text" name="search" id="search" placeholder="">
 		<select id="filter">
 			<option value="all" default>All</option>
@@ -29,7 +30,7 @@
 	</div>
 	<div class="js-post hidden">
 	<form action="" method="" id="post-form">
-	<legend>Post Form</legend>
+	<legend>Add a New Recipe</legend>
 		<label for="name">Name</label>
 		<input type="text" name="name" id="name"><br>
 		<label for="link">Link</label>
@@ -40,7 +41,7 @@
 			<button class="ingredients-adder">Add Ingredient</button>			
 		</fieldset>
 		<label for="prep">Instructions</label>
-		<input type="text" name="prep" id="prep"><br>
+		<textarea type="text" name="prep" id="prep"></textarea><br>
 		<label for="notes">Notes</label> 
 		<input type="text" name="notes" id="notes">
 		<fieldset class="books-field">
