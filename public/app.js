@@ -21,7 +21,7 @@ function displayRecipes(data) {
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + item.id + '</p>' +
             '<p>' + item.name + '</p>' +
-            '<p>' + item.link + '</p>' +
+            '<a href="#">' + item.link + '</a>' +
             '<ul>' + ingredientsList(item.ingredients) + '</ul>' +
             '<p>' + item.prep + '</p>' +
             '<p>' + item.notes + '</p>' +
@@ -37,7 +37,7 @@ function displayRecipes(data) {
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + data.id + '</p>' +
             '<p>' + data.name + '</p>' +
-            '<p>' + data.link + '</p>' +
+            '<a href="#">' + data.link + '</a>' +
             '<ul>' + ingredientsList(data.ingredients) + '</ul>' +
             '<p>' + data.prep + '</p>' +
             '<p>' + data.notes + '</p>' +
@@ -51,7 +51,10 @@ function displayRecipes(data) {
 
 function inputAdder(target, type, nameId) {
     target.before(
-        `<span class=".js-added"><input type="${type}" name="${nameId}" id="${nameId}"><button class=".js-input-delete">X</button></span>`
+        '<span class="js-added">' + 
+        `<input type="${type}" name="${nameId}" id="${nameId}">` + 
+        '<button class="js-input-delete">X</button>' + 
+        '</span>'
         );
 }
 
@@ -80,7 +83,6 @@ function formToArry(target, submitValue) {
     })
 }
 
-
 //sanity check with Dominic
 function formAdditionsHandler(array, type, nameId) {
     let additions = 0;
@@ -99,9 +101,9 @@ function formAdditionsHandler(array, type, nameId) {
 }
 
 function resetForm(target) {
-    target.find('.ingredients-field').find('input').not(':first').remove();
-    target.find('.books-field').find('input').not(':first').remove();
-    target.find('.categories-field').find('input').not(':first').remove();
+    target.find('.ingredients-field').find('span').remove();
+    target.find('.books-field').find('span').remove();
+    target.find('.categories-field').find('span').remove();
     target.find('input').val('');
 }
 
@@ -186,7 +188,7 @@ $('button.categories-adder').click(function(event) {
     inputAdder($(this), 'text', 'categories');
 })
 
-$('form#post-form').on('click', '.js-input-delete', function(event) {
+$('body').on('click', '.js-input-delete', function(event) {
     event.preventDefault();
     $(this).closest('span.js-added').remove();
 })
@@ -310,6 +312,7 @@ $('button.js-getButton').click(function(event) {
 
 $('button.js-postButton').click(function(event) {
     event.preventDefault();
+    resetForm($('#post-form'));
     state.request = 'post';
     stateToggle(state, $('body'));
 })

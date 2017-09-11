@@ -2,13 +2,30 @@
 	font-family: 'Roboto', sans-serif;
 }
 
-body {
-	background-color: lightblue;
+nav {
+	text-align: right;
+    padding: 0;
+    background-color: lightblue;
+    padding: 15px;
+}
+
+header {
+	text-align: center;
 }
 
 legend {
 	font-weight: bold;
-	padding-bottom: 5px;
+    padding-bottom: 5px;
+    margin: 0 auto;
+}
+
+fieldset {
+	width: 75%;
+}
+
+ul {
+	margin: 0px;
+	padding: 0px;
 }
 
 fieldset > legend {
@@ -19,9 +36,12 @@ fieldset:last-child {
 	margin-left: 5px;
 }
 
+
 form {
-	border: 1px solid grey;
-	padding: 5px;
+	width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 5px;
 }
 
 label {
@@ -41,7 +61,15 @@ input, textarea {
 }
 
 button {
-	padding: 5px;
+	margin: 15px 0;
+    background-color: lightgrey;
+    border: 1px solid lightgrey;
+    padding: 10px 15px;
+    font-weight: bold;
+}
+
+div.js-get {
+	text-align: center;
 }
 
 .hidden {
@@ -58,14 +86,33 @@ button {
 
 .results-frame {
 	border: 1px solid black;
-	padding: 5px;
+    width: 56%;
+    margin: 20px auto;
+    padding: 20px 50px;
 }
 
-.js-getButton, .js-postButton {
-	margin-left: 5px;
+.js-getButton {
+	font-weight: 700;
+    color: grey;
+    text-decoration: none;
+    margin-left: 25px;
+} 
+
+.js-postButton {
+	font-weight: 700;
+    color: green;
+    text-decoration: none;
+    margin-left: 25px;
 }
 
 .put-button, .delete-button {
-	width: 50px;
 	margin-left: 5px;
+}
+
+.put-submit, .search-submit, .post-submit {
+	margin: 15px 0;
+    background-color: lightgrey;
+    border: 1px solid lightgrey;
+    padding: 10px 15px;
+    font-weight: bold;
 }
