@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://localhost:8080/recipes/' 
+const SERVER_URL = require('../config');
 
 let state = {
     request: 'get',
