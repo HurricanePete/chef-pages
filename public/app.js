@@ -1,4 +1,4 @@
-const SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/'
+const SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/'
 
 let state = {
     request: 'get',
@@ -196,7 +196,7 @@ $('body').on('click', '.js-input-delete', function(event) {
 $('button.search-submit').click(function(event) {
     event.preventDefault();
     $(this).closest('body').find('.js-results').empty();
-    $.ajax({url: SERVER_URL, success: resultSwitcher});
+    $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
 })
 
 $('button.post-submit').click(function(event) {
