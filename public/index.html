@@ -2,13 +2,21 @@
 <html>
 <head>
 	<title>Chef Pages</title>
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 <body>
+	<nav>
+		<a href="#" class="js-getButton">View Recipes</a>
+		<a href="#" class="js-postButton">Add a Recipe</a>
+	</nav>
 	<header>
-		<h3>Welcome to Chef Pages</h3>
-		<h5>Create and view custom cookbooks</h5>
+		<h1>Welcome to Chef Pages</h1>
+		<h3>Create and view custom cookbooks</h3>
 	</header>
-	<form action="" method="get" id="search-form">
+	<div class="js-get">
+	<form action="" method="" id="get-form">
+	<legend>Search For Recipes</legend>
 		<input type="text" name="search" id="search" placeholder="">
 		<select id="filter">
 			<option value="all" default>All</option>
@@ -18,7 +26,37 @@
 			<option value="category">Category</option>
 		</select>
 	</form>
-	<button class="search-submit" type="submit" form="search-form">Cook it!</button>
+	<button class="search-submit" type="submit" form="search-form">Cook it!</button><hr>
+	</div>
+	<div class="js-post hidden">
+	<form action="" method="" id="post-form">
+	<legend>Add a New Recipe</legend>
+		<label for="name">Name</label>
+		<input type="text" name="name" id="name"><br>
+		<label for="link">Link</label>
+		<input type="text" name="link" id="link">
+		<fieldset class="ingredients-field">
+			<legend>Ingredients:</legend>
+			<input type="text" name="ingredients" id="ingredients">
+			<button class="ingredients-adder">Add Ingredient</button>			
+		</fieldset>
+		<label for="prep">Instructions</label>
+		<textarea type="text" name="prep" id="prep"></textarea><br>
+		<label for="notes">Notes</label> 
+		<input type="text" name="notes" id="notes">
+		<fieldset class="books-field">
+			<legend>Books:</legend>
+			<input type="number" name="books" id="books">
+			<button class="books-adder">Add Book</button>			
+		</fieldset>
+		<fieldset class="categories-field">
+			<legend>Filters:</legend>
+			<input type="text" name="categories" id="categories">
+			<button class="categories-adder">Add Category</button>			
+		</fieldset>
+	</form>
+	<button class="post-submit">Book it!</button><button class="put-submit hidden">Spice it!</button>
+	</div>
 	<div class="js-results"></div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type="text/javascript" src="app.js"></script>

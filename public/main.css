@@ -1,0 +1,118 @@
+* {
+	font-family: 'Roboto', sans-serif;
+}
+
+nav {
+	text-align: right;
+    padding: 0;
+    background-color: lightblue;
+    padding: 15px;
+}
+
+header {
+	text-align: center;
+}
+
+legend {
+	font-weight: bold;
+    padding-bottom: 5px;
+    margin: 0 auto;
+}
+
+fieldset {
+	width: 75%;
+}
+
+ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+fieldset > legend {
+	margin-left: 45px;
+}
+
+fieldset:last-child {
+	margin-left: 5px;
+}
+
+
+form {
+	width: 100%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 5px;
+}
+
+label {
+	float: left;
+	text-align: right;
+	margin-right: 15px;
+	width: 100px;
+}
+
+select {
+	background-color: lightgrey;
+}
+
+input, textarea {
+	margin-bottom: 5px;
+	background-color: lightgrey;
+}
+
+button {
+	margin: 15px 0;
+    background-color: lightgrey;
+    border: 1px solid lightgrey;
+    padding: 10px 15px;
+    font-weight: bold;
+}
+
+div.js-get {
+	text-align: center;
+}
+
+.hidden {
+	display: none;
+}
+
+#search {
+	margin-left: 15px;
+}
+
+#prep {
+	margin-top: 5px;
+}
+
+.results-frame {
+	border: 1px solid black;
+    width: 56%;
+    margin: 20px auto;
+    padding: 20px 50px;
+}
+
+.js-getButton {
+	font-weight: 700;
+    color: grey;
+    text-decoration: none;
+    margin-left: 25px;
+} 
+
+.js-postButton {
+	font-weight: 700;
+    color: green;
+    text-decoration: none;
+    margin-left: 25px;
+}
+
+.put-button, .delete-button {
+	margin-left: 5px;
+}
+
+.put-submit, .search-submit, .post-submit {
+	margin: 15px 0;
+    background-color: lightgrey;
+    border: 1px solid lightgrey;
+    padding: 10px 15px;
+    font-weight: bold;
+}

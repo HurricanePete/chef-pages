@@ -1,129 +1,9 @@
-var state = {
-    filter: "all",
-    searchTerm: null
+const SERVER_URL = require('../config');
+
+let state = {
+    request: 'get',
+    putId: null
 }
-
-var MOCK_RECIPES = {
-    "recipes": [
-        {
-            "id": "1111111",
-            "filters": {
-                "userId": "1111111",
-                "bookIds": ["1111111", "2222222"], 
-                "categories": ["healthy", "quick"]
-            },
-            "name": "Delicious Donuts",
-            "link": "www.eatingwell.com",
-            "ingredients": ["eggs", "sugar", "love"],
-            "prep": "Do some baking",
-            "notes": "These shouldn't be marked as healthy"
-        },
-        {
-            "id": "2222222",
-            "filters": {
-                "userId": "1111111",
-                "bookIds": ["2222222", "3333333"], 
-                "categories": ["quick"]
-            },
-            "name": "Eggsy Eggs",
-            "link": "www.easyeggs.com",
-            "ingredients": ["eggs", "eggs", "eggs"],
-            "prep": "Boil some of them, fry some more, and eat the rest raw",
-            "notes": "Consuming raw or undercooked foods can cause health problems"
-        },
-        {
-            "id": "3333333",
-            "filters": {
-                "userId": "2222222",
-                "bookIds": ["1111111", "3333333"], 
-                "categories": ["quick", "comfort"]
-            },
-            "name": "Noodles",
-            "link": "www.oodlesofnoodles.com",
-            "ingredients": ["noodles"],
-            "prep": "Bring water to a boil and boil the noodles for awhile",
-            "notes": "So easy that a space-man could do it"
-        },
-        {
-            "id": "4444444",
-            "filters": {
-                "userId": "3333333",
-                "bookIds": ["4444444"], 
-                "categories": ["comfort", "protein heavy"]
-            },
-            "name": "Steak Galore",
-            "link": "www.greatbigsteaks.com",
-            "ingredients": ["cow", "pepper"],
-            "prep": "Grill that sucker until it's the way you like it",
-            "notes": "You can never have too much pepper"
-        }
-    ]
-}
-
-function nameSearch(input) {
-    let result = [];
-    MOCK_RECIPES.recipes.forEach(function(entry){
-        if (entry.name === input) {
-            result.push(entry);
-        }
-    });
-    return result;
-}
-
-function userSearch(input) {
-    let result = [];
-    MOCK_RECIPES.recipes.forEach(function(entry){
-        if (entry.filters.userId === input) {
-            result.push(entry);
-        }
-    });
-    return result;
-}
-
-function bookSearch(input) {
-    let result = [];
-    MOCK_RECIPES.recipes.forEach(function(entry){
-        for (var i = 0; i<=entry.filters['bookIds'].length; i++) {
-            if (entry.filters.bookIds[i] === input) {
-                result.push(entry);
-            };
-        };
-    });
-    return result;
-}
-
-function categorySearch(input) {
-    let result = [];
-    MOCK_RECIPES.recipes.forEach(function(entry){
-        for (var i = 0; i<=entry.filters['categories'].length; i++) {
-            if (entry.filters.categories[i] === input) {
-                result.push(entry);
-            };
-        };
-    });
-    return result;
-}
-
-function handleSearches() {
-    switch(state.filter) {
-        case "name": return nameSearch(state.searchTerm);
-        break;
-        case "user": return userSearch(state.searchTerm);
-        break;
-        case "book": return bookSearch(state.searchTerm);
-        break;
-        case "category": return categorySearch(state.searchTerm);
-        break;
-    }
-}
-
-//function getAllRecipes(callbackFn) {
-//    setTimeout(function(){callbackFn(MOCK_RECIPES)}, 100);
-//}
-
-//function getSearchRecipes(callbackFn, state) {
-//    setTimeout(function(){callbackFn(handleSearches())}, 100);
-//}
 
 function ingredientsList(list) {
     let htmlList = ""
@@ -133,46 +13,306 @@ function ingredientsList(list) {
     return htmlList;
 }
 
-function displayAllRecipes(data) {
-    data.recipes.forEach(function(item){
-        $('.js-results').append(
-            '<div>' +
+
+function displayRecipes(data) {
+    if (Array.isArray(data)) {
+        data.forEach(function(item) {
+            $('.js-results').append(
+            '<div class="results-frame">' +
+            '<p class="js-id hidden">' + item.id + '</p>' +
             '<p>' + item.name + '</p>' +
-            '<p>' + item.link + '</p>' +
+            '<a href="#">' + item.link + '</a>' +
             '<ul>' + ingredientsList(item.ingredients) + '</ul>' +
             '<p>' + item.prep + '</p>' +
             '<p>' + item.notes + '</p>' +
-            '</div>'+ '<br>'); 
-    });
-}
-
-function displaySearchRecipes(data) {
-    data.forEach(function(item){
-        $('.js-results').append(
-            '<div>' +
-            '<p>' + item.name + '</p>' +
-            '<p>' + item.link + '</p>' +
-            '<ul>' + ingredientsList(item.ingredients) + '</ul>' +
-            '<p>' + item.prep + '</p>' +
-            '<p>' + item.notes + '</p>' +
-            '</div>'+ '<br>'); 
-    });
-}
-
-function stateHandler(state) {
-    if (state.filter === "all") {
-        $(displayAllRecipes(MOCK_RECIPES));
+            '<span>' + 
+            '<button class="put-button">Put</button>' + 
+            '<button class="delete-button">Delete</button>' + 
+            '</span>' +
+            '</div>');
+        })
     }
     else {
-        $(displaySearchRecipes(handleSearches(state)));
+        $('.js-results').append(
+            '<div class="results-frame">' +
+            '<p class="js-id hidden">' + data.id + '</p>' +
+            '<p>' + data.name + '</p>' +
+            '<a href="#">' + data.link + '</a>' +
+            '<ul>' + ingredientsList(data.ingredients) + '</ul>' +
+            '<p>' + data.prep + '</p>' +
+            '<p>' + data.notes + '</p>' +
+            '<span>' + 
+            '<button class="put-button">Put</button>' + 
+            '<button class="delete-button">Delete</button>' + 
+            '</span>' +
+            '</div>');
     }
 }
 
-$('button.search-submit').click(function(event){
-    event.preventDefault();
-    $('.js-results').empty();
-    state.filter = $('#filter').val();
-    state.searchTerm = $('#search').val();
-    stateHandler(state);
+function inputAdder(target, type, nameId) {
+    target.before(
+        '<span class="js-added">' + 
+        `<input type="${type}" name="${nameId}" id="${nameId}">` + 
+        '<button class="js-input-delete">X</button>' + 
+        '</span>'
+        );
+}
 
+function stateToggle(state, target) {
+    if (state.request === 'get') {
+        target.find('div.js-post').addClass('hidden');
+        target.find('div.js-get').removeClass('hidden');
+    }
+    else if (state.request === 'post') {
+        target.find('div.js-post').removeClass('hidden');
+        target.find('div.js-get').addClass('hidden');
+        target.find('button.post-submit').removeClass('hidden');
+        target.find('button.put-submit').addClass('hidden');
+    }
+    else if (state.request === 'put') {
+        target.find('div.js-post').removeClass('hidden');
+        target.find('div.js-get').addClass('hidden');
+        target.find('button.post-submit').addClass('hidden');
+        target.find('button.put-submit').removeClass('hidden');
+    }
+}
+
+function formToArry(target, submitValue) {
+    target.each(function() {
+        submitValue.push($(this).val());
+    })
+}
+
+//sanity check with Dominic
+function formAdditionsHandler(array, type, nameId) {
+    let additions = 0;
+    if (array.length > 1) {
+        for (let i=1; i<=array.length; i++) {
+            inputAdder(($('#post-form')).find(`.${nameId}-adder`), type, nameId);
+            additions++;
+        }
+    }
+    for (let i=0; i<=additions; i) {
+        $(`fieldset.${nameId}-field`).find('input').each(function(item) {
+            $(this).val(array[i]);
+            i++;
+        })
+    }
+}
+
+function resetForm(target) {
+    target.find('.ingredients-field').find('span').remove();
+    target.find('.books-field').find('span').remove();
+    target.find('.categories-field').find('span').remove();
+    target.find('input').val('');
+}
+
+function populateForm(data) {
+    $('body').find('#post-form').find('#name').val(data.name);
+    $('body').find('#post-form').find('#link').val(data.link);
+    $('body').find('#post-form').find('#ingredients').val(data.ingredients[0]);
+    formAdditionsHandler(data['ingredients'], 'text', 'ingredients');
+    $('body').find('form#post-form').find('input#prep').val(data.prep);
+    $('body').find('form#post-form').find('input#notes').val(data.notes);
+    formAdditionsHandler(data['books'], 'number', 'books');
+    formAdditionsHandler(data['tags'], 'text', 'categories');
+}
+
+function filterAll(input, data) {
+    results = data.filter(function(recipe) {
+        if (recipe['name'].includes(input) || recipe['books'].includes(input) || recipe['tags'].includes(input)) {
+            return recipe
+        }
+    })
+    return results
+}
+
+function filterName(input, data) {
+    results = data.filter(function(recipe) {
+        if (recipe['name'].includes(input)) {
+            return recipe
+        }
+    })
+    return results
+}
+
+function filterBook(input, data) {
+    results = data.filter(function(recipe) {
+        if (recipe['books'].includes(input)) {
+            return recipe
+        }
+    })
+    return results
+}
+
+function filterCategory(input, data) {
+    results = data.filter(function(recipe) {
+        if (recipe['tags'].includes(input)) {
+            return recipe
+        }
+    })
+    return results
+}
+
+function resultSwitcher(data) {
+    const searchTerm = $('#search').val();
+    const filter = $('#filter').val();
+    switch(filter) {
+        case 'all':
+            displayRecipes(filterAll(searchTerm, data));
+            break;
+        case 'name':
+            displayRecipes(filterName(searchTerm, data));
+            break;
+        case 'book':
+            displayRecipes(filterBook(searchTerm, data));
+            break;
+        case 'category':
+            displayRecipes(filterCategory(searchTerm, data));
+    }
+
+}
+
+$('button.ingredients-adder').click(function(event) {
+    event.preventDefault();
+    inputAdder($(this), 'text', 'ingredients');
+})
+
+$('button.books-adder').click(function(event) {
+    event.preventDefault();
+    inputAdder($(this), 'number', 'books');
+})
+
+$('button.categories-adder').click(function(event) {
+    event.preventDefault();
+    inputAdder($(this), 'text', 'categories');
+})
+
+$('body').on('click', '.js-input-delete', function(event) {
+    event.preventDefault();
+    $(this).closest('span.js-added').remove();
+})
+
+$('button.search-submit').click(function(event) {
+    event.preventDefault();
+    $(this).closest('body').find('.js-results').empty();
+    $.ajax({url: SERVER_URL, success: resultSwitcher});
+})
+
+$('button.post-submit').click(function(event) {
+    event.preventDefault();
+    const data = {
+        "filters": {
+            "userId": 1111111,
+            "bookIds": [],
+            "categories": []
+        },
+        "name": $('#name').val(),
+        "link": $('#link').val(),
+        "ingredients": [],
+        "prep": $('#prep').val(),
+        "notes": $('#notes').val()
+    }
+    formToArry($('fieldset.books-field').find('input'), data.filters.bookIds);
+    formToArry($('fieldset.categories-field').find('input'), data.filters.categories);
+    formToArry($('fieldset.ingredients-field').find('input'), data.ingredients);
+    const settings = {
+        url: SERVER_URL,
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: displayRecipes
+    }
+    return new Promise ((resolve, reject) => {
+        $.post(settings);
+        resolve(resetForm($('#post-form')))
+        reject(function(err) {
+            console.log(err)
+        });
+    });
+})
+
+$('div.js-results').on('click', '.delete-button', function(event) {
+    event.preventDefault();
+    let id = $('div.js-results').find(this).closest('div').find('p:first').text();
+    const settings = {
+        url: SERVER_URL + id,
+        type: 'delete'
+    };
+    return new Promise ((resolve, reject) => {
+        $.ajax(settings);
+        resolve($('div.js-results').find(this).closest('div').remove());
+        reject(function(err) {
+            console.log(err)
+        });
+    });
+})
+
+$('div.js-results').on('click', '.put-button', function(event) {
+    event.preventDefault();
+    state.request = "put";
+    stateToggle(state, $('body'));
+    let id = $('div.js-results').find(this).closest('div').find('p:first').text();
+    state.putId = id;
+    const settings = {
+        url: SERVER_URL + id,
+        type: 'get',
+        success: populateForm
+    };
+    return new Promise ((resolve, reject) => {
+        $.ajax(settings);
+        resolve($('div.js-results').find(this).closest('div').remove());
+        reject(function(err) {
+            console.log(err)
+        });
+    });
+})
+
+$('button.put-submit').click(function(event) {
+    event.preventDefault();
+    const data = {
+        "id": state.putId,
+        "filters": {
+            "userId": 1111111,
+            "bookIds": [],
+            "categories": []
+        },
+        "name": $('#name').val(),
+        "link": $('#link').val(),
+        "ingredients": [],
+        "prep": $('#prep').val(),
+        "notes": $('#notes').val()
+    }
+    formToArry($('fieldset.books-field').find('input'), data.filters.bookIds);
+    formToArry($('fieldset.categories-field').find('input'), data.filters.categories);
+    formToArry($('fieldset.ingredients-field').find('input'), data.ingredients);
+    const settings = {
+        url: SERVER_URL + state.putId,
+        type: 'put',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: displayRecipes
+    };
+    return new Promise ((resolve, reject) => {
+        $.ajax(settings);
+        resolve(resetForm($('#post-form')));
+        reject(function(err) {
+            console.log(err)
+        });
+    });
+    state.putId = null;
+    state.request = 'post';
+    stateToggle(state, $('body'));
+})
+
+$('button.js-getButton').click(function(event) {
+    event.preventDefault();
+    state.request = 'get';
+    stateToggle(state, $('body'));
+})
+
+$('button.js-postButton').click(function(event) {
+    event.preventDefault();
+    resetForm($('#post-form'));
+    state.request = 'post';
+    stateToggle(state, $('body'));
 })
