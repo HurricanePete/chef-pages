@@ -20,9 +20,9 @@ function displayRecipes(data) {
             $('.js-results').append(
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + item.id + '</p>' +
-            '<p>' + item.name + '</p>' +
+            '<h4>' + item.name + '</h4>' +
             '<a href="#">' + item.link + '</a>' +
-            '<ul>' + ingredientsList(item.ingredients) + '</ul>' +
+            '<ul class="ingredients-list">' + ingredientsList(item.ingredients) + '</ul>' +
             '<p>' + item.prep + '</p>' +
             '<p>' + item.notes + '</p>' +
             '<span>' + 
@@ -36,9 +36,9 @@ function displayRecipes(data) {
         $('.js-results').append(
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + data.id + '</p>' +
-            '<p>' + data.name + '</p>' +
+            '<h4>' + data.name + '</h4>' +
             '<a href="#">' + data.link + '</a>' +
-            '<ul>' + ingredientsList(data.ingredients) + '</ul>' +
+            '<ul class="ingredients-list">' + ingredientsList(data.ingredients) + '</ul>' +
             '<p>' + data.prep + '</p>' +
             '<p>' + data.notes + '</p>' +
             '<span>' + 
@@ -50,11 +50,11 @@ function displayRecipes(data) {
 }
 
 function inputAdder(target, type, nameId) {
-    target.before(
-        '<span class="js-added">' + 
+    target.closest('ul').find('li').last().after(
+        '<li class="js-added">' + 
         `<input type="${type}" name="${nameId}" id="${nameId}">` + 
-        '<button class="js-input-delete">X</button>' + 
-        '</span>'
+        '<i class="fa fa-minus-circle fa-lg js-input-delete" aria-hidden="true"></i>' +
+        '</li>'
         );
 }
 
@@ -83,17 +83,16 @@ function formToArry(target, submitValue) {
     })
 }
 
-//sanity check with Dominic
 function formAdditionsHandler(array, type, nameId) {
     let additions = 0;
     if (array.length > 1) {
-        for (let i=1; i<=array.length; i++) {
+        for (let i=2; i<=array.length; i++) {
             inputAdder(($('#post-form')).find(`.${nameId}-adder`), type, nameId);
             additions++;
         }
     }
     for (let i=0; i<=additions; i) {
-        $(`fieldset.${nameId}-field`).find('input').each(function(item) {
+        $(`ul.${nameId}-field`).find('input').each(function(item) {
             $(this).val(array[i]);
             i++;
         })
@@ -101,18 +100,19 @@ function formAdditionsHandler(array, type, nameId) {
 }
 
 function resetForm(target) {
-    target.find('.ingredients-field').find('span').remove();
-    target.find('.books-field').find('span').remove();
-    target.find('.categories-field').find('span').remove();
+    target.find('.ingredients-field').find('.js-added').remove();
+    target.find('.books-field').find('.js-added').remove();
+    target.find('.categories-field').find('.js-added').remove();
     target.find('input').val('');
+    target.find('textarea').val('');
 }
 
 function populateForm(data) {
-    $('body').find('#post-form').find('#name').val(data.name);
+    $('#name').val(data.name);
     $('body').find('#post-form').find('#link').val(data.link);
     $('body').find('#post-form').find('#ingredients').val(data.ingredients[0]);
     formAdditionsHandler(data['ingredients'], 'text', 'ingredients');
-    $('body').find('form#post-form').find('input#prep').val(data.prep);
+    $('body').find('form#post-form').find('textarea#prep').val(data.prep);
     $('body').find('form#post-form').find('input#notes').val(data.notes);
     formAdditionsHandler(data['books'], 'number', 'books');
     formAdditionsHandler(data['tags'], 'text', 'categories');
@@ -173,24 +173,24 @@ function resultSwitcher(data) {
 
 }
 
-$('button.ingredients-adder').click(function(event) {
+$('i.ingredients-adder').click(function(event) {
     event.preventDefault();
     inputAdder($(this), 'text', 'ingredients');
 })
 
-$('button.books-adder').click(function(event) {
+$('i.books-adder').click(function(event) {
     event.preventDefault();
     inputAdder($(this), 'number', 'books');
 })
 
-$('button.categories-adder').click(function(event) {
+$('i.categories-adder').click(function(event) {
     event.preventDefault();
     inputAdder($(this), 'text', 'categories');
 })
 
 $('body').on('click', '.js-input-delete', function(event) {
     event.preventDefault();
-    $(this).closest('span.js-added').remove();
+    $(this).closest('li.js-added').remove();
 })
 
 $('button.search-submit').click(function(event) {
@@ -213,9 +213,9 @@ $('button.post-submit').click(function(event) {
         "prep": $('#prep').val(),
         "notes": $('#notes').val()
     }
-    formToArry($('fieldset.books-field').find('input'), data.filters.bookIds);
-    formToArry($('fieldset.categories-field').find('input'), data.filters.categories);
-    formToArry($('fieldset.ingredients-field').find('input'), data.ingredients);
+    formToArry($('ul.books-field').find('input'), data.filters.bookIds);
+    formToArry($('ul.categories-field').find('input'), data.filters.categories);
+    formToArry($('ul.ingredients-field').find('input'), data.ingredients);
     const settings = {
         url: SERVER_URL,
         data: JSON.stringify(data),
@@ -282,9 +282,9 @@ $('button.put-submit').click(function(event) {
         "prep": $('#prep').val(),
         "notes": $('#notes').val()
     }
-    formToArry($('fieldset.books-field').find('input'), data.filters.bookIds);
-    formToArry($('fieldset.categories-field').find('input'), data.filters.categories);
-    formToArry($('fieldset.ingredients-field').find('input'), data.ingredients);
+    formToArry($('ul.books-field').find('input'), data.filters.bookIds);
+    formToArry($('ul.categories-field').find('input'), data.filters.categories);
+    formToArry($('ul.ingredients-field').find('input'), data.ingredients);
     const settings = {
         url: SERVER_URL + state.putId,
         type: 'put',
@@ -304,13 +304,13 @@ $('button.put-submit').click(function(event) {
     stateToggle(state, $('body'));
 })
 
-$('button.js-getButton').click(function(event) {
+$('a.js-getButton').click(function(event) {
     event.preventDefault();
     state.request = 'get';
     stateToggle(state, $('body'));
 })
 
-$('button.js-postButton').click(function(event) {
+$('a.js-postButton').click(function(event) {
     event.preventDefault();
     resetForm($('#post-form'));
     state.request = 'post';

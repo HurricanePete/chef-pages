@@ -19,23 +19,11 @@ legend {
     margin: 0 auto;
 }
 
-fieldset {
-	width: 75%;
-}
-
 ul {
-	margin: 0px;
+	margin: 0px 10px;
 	padding: 0px;
+	text-align: left;
 }
-
-fieldset > legend {
-	margin-left: 45px;
-}
-
-fieldset:last-child {
-	margin-left: 5px;
-}
-
 
 form {
 	width: 100%;
@@ -43,21 +31,34 @@ form {
     margin: 0 auto;
     padding: 5px;
 }
+div.js-post {
+	margin: 0 auto;
+	width: 75%;
+	border: 1px solid grey;
+	padding: 10px;
+	text-align: center;
+}
+
+div.books, div.categories {
+	margin: 0 auto;
+	text-align: center;
+}
 
 label {
+	width: 99px;
 	float: left;
-	text-align: right;
-	margin-right: 15px;
-	width: 100px;
+}
+
+hr {
+	width: 70%;
 }
 
 select {
 	background-color: lightgrey;
 }
 
-input, textarea {
-	margin-bottom: 5px;
-	background-color: lightgrey;
+i {
+	display: inline-block;
 }
 
 button {
@@ -68,20 +69,58 @@ button {
     font-weight: bold;
 }
 
+li {
+	list-style: none;
+	width: 100%;
+}
+
+
+input, textarea {
+	padding: 10px 15px;
+    width: 70%;
+    margin-right: 0;
+    border: 1px solid black;
+}
+
 div.js-get {
 	text-align: center;
 }
+
+ul.ingredients-field, ul.books-field, ul.categories-field {
+	text-align: left;
+	width: 100%;
+	margin-left: 69px;
+}
+
+ul#post > li {
+	margin: 15px auto;
+}
+
 
 .hidden {
 	display: none;
 }
 
-#search {
-	margin-left: 15px;
+.search-submit {
+	margin: 0 0 0 0;
 }
 
-#prep {
-	margin-top: 5px;
+#search {
+    width: 40%;
+    margin: 0 0 0 0;
+}
+
+#filter {
+	height: 40px;
+	font-weight: bold;
+	padding-left: 5px;
+}
+
+.js-added {
+	margin-right: 1px;
+	margin: 1px auto;
+	padding-left: 30px;
+	padding-right: 40px;
 }
 
 .results-frame {
@@ -91,11 +130,25 @@ div.js-get {
     padding: 20px 50px;
 }
 
+div.results-frame > a {
+	text-decoration: none;
+	color: green;
+}
+
+ul.ingredients-list {
+	margin-top: 10px;
+	margin-left: 0px;
+	padding: 0;
+}
+
+ul.ingredients-list > li {
+	list-style: circle;
+}
+
 .js-getButton {
 	font-weight: 700;
     color: grey;
     text-decoration: none;
-    margin-left: 25px;
 } 
 
 .js-postButton {
@@ -109,10 +162,6 @@ div.js-get {
 	margin-left: 5px;
 }
 
-.put-submit, .search-submit, .post-submit {
-	margin: 15px 0;
-    background-color: lightgrey;
-    border: 1px solid lightgrey;
-    padding: 10px 15px;
-    font-weight: bold;
+.fa-minus-circle {
+	padding-left: 4px;
 }
