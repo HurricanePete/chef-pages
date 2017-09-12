@@ -23,8 +23,13 @@ fieldset {
 	width: 75%;
 }
 
+fieldset > input, fieldset > button, fieldset > span {
+	float: left;
+	margin: 0;
+}
+
 ul {
-	margin: 0px;
+	margin: 0px 10px;
 	padding: 0px;
 }
 
@@ -57,7 +62,6 @@ select {
 
 input, textarea {
 	margin-bottom: 5px;
-	background-color: lightgrey;
 }
 
 button {
@@ -77,7 +81,15 @@ div.js-get {
 }
 
 #search {
-	margin-left: 15px;
+	padding: 10px 15px;
+    width: 40%;
+    margin-right: 0;
+}
+
+#filter {
+	height: 40px;
+	font-weight: bold;
+	padding-left: 5px;
 }
 
 #prep {
@@ -89,6 +101,11 @@ div.js-get {
     width: 56%;
     margin: 20px auto;
     padding: 20px 50px;
+}
+
+div.results-frame > a {
+	text-decoration: none;
+	color: green;
 }
 
 .js-getButton {
@@ -115,4 +132,8 @@ div.js-get {
     border: 1px solid lightgrey;
     padding: 10px 15px;
     font-weight: bold;
+}
+
+.js-input-delete {
+	margin-right: 5px;
 }
