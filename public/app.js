@@ -1,4 +1,4 @@
-const SERVER_URL = require('../config');
+const SERVER_URL = 'http://localhost:8080/recipes/'
 
 let state = {
     request: 'get',
@@ -20,7 +20,7 @@ function displayRecipes(data) {
             $('.js-results').append(
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + item.id + '</p>' +
-            '<p>' + item.name + '</p>' +
+            '<h4>' + item.name + '</h4>' +
             '<a href="#">' + item.link + '</a>' +
             '<ul>' + ingredientsList(item.ingredients) + '</ul>' +
             '<p>' + item.prep + '</p>' +
@@ -36,7 +36,7 @@ function displayRecipes(data) {
         $('.js-results').append(
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + data.id + '</p>' +
-            '<p>' + data.name + '</p>' +
+            '<h4>' + data.name + '</h4>' +
             '<a href="#">' + data.link + '</a>' +
             '<ul>' + ingredientsList(data.ingredients) + '</ul>' +
             '<p>' + data.prep + '</p>' +
@@ -196,7 +196,7 @@ $('body').on('click', '.js-input-delete', function(event) {
 $('button.search-submit').click(function(event) {
     event.preventDefault();
     $(this).closest('body').find('.js-results').empty();
-    $.ajax({url: SERVER_URL, success: resultSwitcher});
+    $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
 })
 
 $('button.post-submit').click(function(event) {
@@ -304,13 +304,13 @@ $('button.put-submit').click(function(event) {
     stateToggle(state, $('body'));
 })
 
-$('button.js-getButton').click(function(event) {
+$('a.js-getButton').click(function(event) {
     event.preventDefault();
     state.request = 'get';
     stateToggle(state, $('body'));
 })
 
-$('button.js-postButton').click(function(event) {
+$('a.js-postButton').click(function(event) {
     event.preventDefault();
     resetForm($('#post-form'));
     state.request = 'post';
