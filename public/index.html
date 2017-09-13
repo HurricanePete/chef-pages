@@ -7,7 +7,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<script src="https://use.fontawesome.com/0a73a04ea4.js"></script>
 </head>
-<body>
+<body class="darken">
 	<nav>
 		<a href="#" class="js-getButton"><i class="fa fa-search" aria-hidden="true"></i> View Recipes</a>
 		<a href="#" class="js-postButton"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add a Recipe</a>
@@ -36,7 +36,6 @@
 	</div>
 	<div class="js-post hidden">
 		<form action="" method="" id="post-form">
-			<!-- convert to unordered list items containing sections-->
 			<ul id="post">
 				<li>
 					<label for="name">Name:</label>
@@ -85,7 +84,41 @@
 			<button class="post-submit">Create Recipe</button><button class="put-submit hidden">Spice it!</button>
 		</form>
 	</div>
-	<div class="js-results"></div>
+	<div class="js-results hidden"></div>
+	<div class="js-display hidden">
+		<ul id="display">
+			<li id="name">
+				<label for="name">Name:</label><br>
+				<p name="name" class="js-display-name"></p>
+			</li>
+			<li id="link">
+				<label for="link">Link:</label>
+				<p name="link"><a href="" class="js-display-link"></a></p>
+			</li>
+			<li id="ingredients">
+				<label for="ingredients">Ingredients:</label><br>
+				<div>
+					<ul class="js-display-ingredients"></ul>
+				</div>
+			</li>
+			<li id="prep">
+				<label for="prep">Instructions:</label><br>
+				<p name="prep" class="js-display-prep"></p>
+			</li>
+			<li id="notes">
+				<label for="notes">Notes:</label><br> 
+				<p name="notes" class="js-display-notes"></p>
+			</li>
+			<li id="books">
+				<label for="books">Books:</label><br>
+				<ul class="js-display-books"></ul>
+			</li>
+			<li id="categories">
+				<label for="categories">Categories:</label><br>
+				<ul class="js-display-categories"></ul>
+			</li>
+		</ul>
+	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type="text/javascript" src="app.js"></script>
 </body>
