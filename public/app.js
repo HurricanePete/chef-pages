@@ -14,7 +14,8 @@ function ingredientsList(list) {
 }
 
 
-function displayRecipes(data) {            
+function displayRecipes(data) { 
+//remove if statement           
     if (Array.isArray(data)) {
         data.forEach(function(item) {
             $('.js-results').append(
@@ -33,22 +34,23 @@ function displayRecipes(data) {
                 '</div>');
         })
     }
-    //else {
-      //$('.js-results').append(
-    //        '<div class="results-frame">' +
-    //      '<p class="js-id hidden">' + data.id + '</p>' +
-    //        '<h4>' + data.name + '</h4>' +
-    //       '<a href="#">' + data.link + '</a>' + '<br>' +
-    //        '<label for="ingredients">Ingredients</label>' + '<br>' +
-    //        '<ul class="ingredients-list" id="ingredients">' + ingredientsList(data.ingredients) + '</ul>' +
-    //        '<p>' + data.prep + '</p>' +
-    //        '<p>' + data.notes + '</p>' +
-    //        '<span>' + 
-    //        '<button class="put-button">Put</button>' + 
-    //        '<button class="delete-button">Delete</button>' + 
-    //        '</span>' +
-    //        '</div>');
-    //}
+    //don't need you anymore
+    else {
+      $('.js-results').append(
+            '<div class="results-frame">' +
+          '<p class="js-id hidden">' + data.id + '</p>' +
+            '<h4>' + data.name + '</h4>' +
+           `<a href="${data.link}">` + data.link + '</a>' + '<br>' +
+            '<label for="ingredients">Ingredients</label>' + '<br>' +
+            '<ul class="ingredients-list" id="ingredients">' + ingredientsList(data.ingredients) + '</ul>' +
+            '<p>' + data.prep + '</p>' +
+            '<p>' + data.notes + '</p>' +
+            '<span>' + 
+            '<button class="put-button">Put</button>' + 
+            '<button class="delete-button">Delete</button>' + 
+            '</span>' +
+            '</div>');
+    }
 }
 
 function inputAdder(target, type, nameId) {
@@ -198,9 +200,27 @@ function populateDisplay(data) {
     displayLinkContentHandler(data['tags'], 'categories');
 }
 
+function inputToLowerCase(inputArray) {
+    if (Array.isArray(inputArray)) {
+        let result = inputArray.map(function(item) {
+            return item.toLowerCase();
+        })
+        return result;
+    }
+    else {
+        return;
+    }
+}
+
+function stringToLowerCase(name) {
+    return name.toLowerCase();
+}
+
 function filterAll(input, data) {
-    results = data.filter(function(recipe) {
-        if (recipe['name'].includes(input) || recipe['books'].includes(input) || recipe['tags'].includes(input)) {
+    let results = data.filter(function(recipe) {
+        let caseName = stringToLowerCase(recipe.name)
+        let caseTags  = inputToLowerCase(recipe.tags);
+        if (caseName.includes(input) || (recipe.books).includes(input) || (caseTags).includes(input)) {
             return recipe
         }
     })
@@ -208,8 +228,8 @@ function filterAll(input, data) {
 }
 
 function filterName(input, data) {
-    results = data.filter(function(recipe) {
-        if (recipe['name'].includes(input)) {
+    let results = data.filter(function(recipe) {
+        if ((stringToLowerCase(recipe.name)).includes(input)) {
             return recipe
         }
     })
@@ -217,8 +237,8 @@ function filterName(input, data) {
 }
 
 function filterBook(input, data) {
-    results = data.filter(function(recipe) {
-        if (recipe['books'].includes(input)) {
+    let results = data.filter(function(recipe) {
+        if ((inputToLowerCase(recipe.books)).includes(input)) {
             return recipe
         }
     })
@@ -226,8 +246,8 @@ function filterBook(input, data) {
 }
 
 function filterCategory(input, data) {
-    results = data.filter(function(recipe) {
-        if (recipe['tags'].includes(input)) {
+    let results = data.filter(function(recipe) {
+        if ((inputToLowerCase(recipe.tags)).includes(input)) {
             return recipe
         }
     })
@@ -250,7 +270,6 @@ function resultSwitcher(data) {
         case 'category':
             displayRecipes(filterCategory(searchTerm, data));
     }
-
 }
 
 $('i.ingredients-adder').click(function(event) {
