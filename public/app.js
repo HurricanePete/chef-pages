@@ -62,18 +62,18 @@ function inputAdder(target, type, nameId) {
 
 function stateToggle(state, target) {
     if (state.request === 'get') {
+        target.find('div.js-get').removeClass('hidden');
         target.find('div.js-post').addClass('hidden');
         target.find('div.js-display').addClass('hidden');
-        target.find('div.js-get').removeClass('hidden');
         target.find('div.js-results').removeClass('hidden');
     }
     else if (state.request === 'post') {
         target.find('div.js-post').removeClass('hidden');
         target.find('div.js-get').addClass('hidden');
         target.find('div.js-display').addClass('hidden');
+        target.find('div.js-results').addClass('hidden');
         target.find('button.post-submit').removeClass('hidden');
         target.find('button.put-submit').addClass('hidden');
-        target.find('div.js-results').addClass('hidden');
     }
     else if (state.request === 'put') {
         target.find('div.js-post').removeClass('hidden');
@@ -85,8 +85,8 @@ function stateToggle(state, target) {
     else if (state.request === 'display') {
         target.find('div.js-post').addClass('hidden');
         target.find('div.js-get').addClass('hidden');
-        target.find('div.js-results').addClass('hidden');
         target.find('div.js-display').removeClass('hidden');
+        target.find('div.js-results').addClass('hidden');
     }
 }
 
@@ -113,10 +113,26 @@ function formAdditionsHandler(array, type, nameId) {
 }
 
 function displayListAdder(target, nameId) {
-    console.log('fire');
     target.append(
         `<li class="js-added" id="${nameId}">` + '</li>'
         );
+}
+
+function displayLinkAdder(target, nameId) {
+    target.append(
+        `<li id="${nameId}">` +
+        '<button class="js-display-link-button"></button>' + 
+        '</li>'
+        );
+}
+
+function displayLinkHandler(array, target, nameId) {
+    if (nameId === "ingredients") {
+        displayListAdder(target, nameId);
+    }
+    else {
+        displayLinkAdder(target, nameId);
+    }
 }
 
 function displayAdditionsHandler(array, nameId) {
@@ -127,9 +143,22 @@ function displayAdditionsHandler(array, nameId) {
     }
     for (let i=0; i<=additions; i) {
         $(`ul.js-display-${nameId}`).find('li').each(function(item) {
-            console.log('fire-2');
             $(this).text(array[i]);
-            i++;
+        i++;
+        })
+    }
+}
+
+function displayLinkContentHandler(array, nameId) {
+    let additions = 0;
+    for (let i=1; i<=array.length; i++) {
+        displayLinkAdder(($('#display').find(`.js-display-${nameId}`)), nameId)
+        additions++;
+    }
+    for (let i=0; i<=additions; i) {
+        $(`ul.js-display-${nameId}`).find('button').each(function(item) {
+            $(this).text(array[i]);
+        i++;
         })
     }
 }
@@ -140,6 +169,12 @@ function resetForm(target) {
     target.find('.categories-field').find('.js-added').remove();
     target.find('input').val('');
     target.find('textarea').val('');
+}
+
+function resetDisplay(target) {
+    target.find('p').val('');
+    target.find('.js-added').remove();
+    target.find('.js-display-link-button').remove();
 }
 
 function populateForm(data) {
@@ -159,8 +194,8 @@ function populateDisplay(data) {
     displayAdditionsHandler(data['ingredients'], 'ingredients');
     $('.js-display-prep').text(data.prep);
     $('.js-display-notes').text(data.notes);
-    displayAdditionsHandler(data['books'], 'books');
-    displayAdditionsHandler(data['tags'], 'categories');
+    displayLinkContentHandler(data['books'], 'books');
+    displayLinkContentHandler(data['tags'], 'categories');
 }
 
 function filterAll(input, data) {
@@ -278,28 +313,27 @@ $('button.post-submit').click(function(event) {
     });
 })
 
-$('div.js-results').on('click', '.delete-button', function(event) {
+$('div.js-display').on('click', '.delete-button', function(event) {
     event.preventDefault();
-    let id = $('div.js-results').find(this).closest('div').find('p:first').text();
+    let id = state.putId;
     const settings = {
         url: SERVER_URL + id,
         type: 'delete'
     };
     return new Promise ((resolve, reject) => {
         $.ajax(settings);
-        resolve($('div.js-results').find(this).closest('div').remove());
+        resolve();
         reject(function(err) {
             console.log(err)
         });
     });
 })
 
-$('div.js-results').on('click', '.put-button', function(event) {
+$('div.js-display').on('click', '.put-button', function(event) {
     event.preventDefault();
     state.request = "put";
     stateToggle(state, $('body'));
-    let id = $('div.js-results').find(this).closest('div').find('p:first').text();
-    state.putId = id;
+    let id = state.putId;
     const settings = {
         url: SERVER_URL + id,
         type: 'get',
@@ -367,6 +401,7 @@ $('a.js-postButton').click(function(event) {
 
 $('div.js-results').on('click', 'div.results-frame', function(event) {
     event.preventDefault();
+    resetDisplay($('div.js-display'));
     state.request = 'display';
     stateToggle(state, $('body'));
     let id = $('div.js-results').find(this).closest('div').find('p:first').text();

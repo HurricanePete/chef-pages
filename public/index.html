@@ -39,24 +39,24 @@
 			<ul id="post">
 				<li>
 					<label for="name">Name:</label>
-					<input type="text" name="name" id="name"><br>
+					<input type="text" name="name" id="name" required><br>
 				</li>
 				<li>
 					<label for="link">Link:</label>
-					<input type="text" name="link" id="link">
+					<input type="url" name="link" id="link">
 				</li>
 				<li>
 					<label for="ingredients">Ingredients:</label>
 					<ul class="ingredients-field" id="ingredients">
 						<li>
-							<input type="text" name="ingredients" id="ingredients">
+							<input type="text" name="ingredients" id="ingredients" required>
 							<i class="fa fa-plus-circle fa-lg ingredients-adder" aria-hidden="true"></i>
 						</li>				
 					</ul>
 				</li>
 				<li>
 					<label for="prep">Instructions:</label>
-					<textarea type="text" name="prep" id="prep"></textarea><br>
+					<textarea type="text" name="prep" id="prep" required></textarea><br>
 				</li>
 				<li>
 					<label for="notes">Notes:</label> 
@@ -81,41 +81,49 @@
 					</ul>
 				</li>
 			</ul>
-			<button class="post-submit">Create Recipe</button><button class="put-submit hidden">Spice it!</button>
+			<button class="post-submit">Create Recipe</button><button class="put-submit hidden">Update Recipe</button>
 		</form>
 	</div>
 	<div class="js-results hidden"></div>
 	<div class="js-display hidden">
 		<ul id="display">
 			<li id="name">
-				<label for="name">Name:</label><br>
-				<p name="name" class="js-display-name"></p>
-			</li>
+				<h3 name="name" class="js-display-name"></h3>
+			</li><hr>
 			<li id="link">
-				<label for="link">Link:</label>
 				<p name="link"><a href="" class="js-display-link"></a></p>
-			</li>
+			</li><hr><br>
 			<li id="ingredients">
 				<label for="ingredients">Ingredients:</label><br>
-				<div>
+				<div class="display-lists">
 					<ul class="js-display-ingredients"></ul>
 				</div>
-			</li>
+			</li><br><hr><br>
 			<li id="prep">
 				<label for="prep">Instructions:</label><br>
 				<p name="prep" class="js-display-prep"></p>
-			</li>
+			</li><br><hr><br>
 			<li id="notes">
 				<label for="notes">Notes:</label><br> 
 				<p name="notes" class="js-display-notes"></p>
-			</li>
+			</li><br><hr>
 			<li id="books">
-				<label for="books">Books:</label><br>
-				<ul class="js-display-books"></ul>
-			</li>
+				<div class="display-lists">
+					<label for="books">Books:</label><br>
+					<ul class="js-display-books"></ul>
+				</div>
+			</li><hr>
 			<li id="categories">
-				<label for="categories">Categories:</label><br>
-				<ul class="js-display-categories"></ul>
+				<div class="display-lists">
+					<label for="categories">Categories:</label><br>
+					<ul class="js-display-categories"></ul>
+				</div>
+			</li><hr>
+			<li class="edit-buttons"> 
+				<span>
+					<button class="put-button">Edit</button>
+					<button class="delete-button">Delete</button>
+				</span>
 			</li>
 		</ul>
 	</div>

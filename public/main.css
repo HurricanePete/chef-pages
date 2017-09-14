@@ -67,10 +67,6 @@ h4 {
 	margin-bottom: 14px;
 }
 
-hr {
-	width: 70%;
-}
-
 select {
 	background-color: lightgrey;
 }
@@ -202,24 +198,55 @@ ul.js-display-ingredients > li {
 	list-style: circle;
 }
 
-.js-getButton {
+ul.js-display-books, ul.js-display-categories {
+	display: block;
+	margin-top: 13px;
+}
+
+ul.js-display-books > li, ul.js-display-categories > li {
+	display: inline-block;
+	width: auto;
+}
+
+li.edit-buttons {
+	text-align: center;
+	margin: 0 auto;
+}
+
+a.js-getButton {
 	font-weight: 700;
     color: grey;
     text-decoration: none;
     margin-left: 25px;
 } 
 
-.js-postButton {
+a.js-postButton {
 	font-weight: 700;
     color: green;
     text-decoration: none;
     margin-left: 25px;
 }
 
-.put-button, .delete-button {
+button.put-button, button.delete-button {
 	margin-left: 5px;
+	width: 100px;
 }
 
-.fa-minus-circle {
+i.fa-minus-circle {
 	padding-left: 4px;
+}
+
+button.js-display-link-button {
+	background-color: darkseagreen;
+	margin: 7.5px;
+}
+
+div.display-lists {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+div.js-display label {
+	text-decoration: underline;
+	font-weight: 600;
 }
