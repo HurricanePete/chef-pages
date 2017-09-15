@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://localhost:8080/recipes/'
+const SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/'
 
 let state = {
     request: 'get',
@@ -37,19 +37,19 @@ function displayRecipes(data) {
     //don't need you anymore
     else {
       $('.js-results').append(
-            '<div class="results-frame">' +
-          '<p class="js-id hidden">' + data.id + '</p>' +
-            '<h4>' + data.name + '</h4>' +
-           `<a href="${data.link}">` + data.link + '</a>' + '<br>' +
-            '<label for="ingredients">Ingredients</label>' + '<br>' +
-            '<ul class="ingredients-list" id="ingredients">' + ingredientsList(data.ingredients) + '</ul>' +
-            '<p>' + data.prep + '</p>' +
-            '<p>' + data.notes + '</p>' +
-            '<span>' + 
-            '<button class="put-button">Put</button>' + 
-            '<button class="delete-button">Delete</button>' + 
-            '</span>' +
-            '</div>');
+                '<div class="results-frame">' +
+                '<p class="js-id hidden">' + data.id + '</p>' +
+                '<h4>' + data.name + '</h4>' +
+                '<p><a href="#">' + data.link + '</a></p>' +
+                '<label for="ingredients">Ingredients</label>' + '<br>' +
+                '<div id="ingredients">' +
+                '<ul class="ingredients-list">' + ingredientsList(data.ingredients) + '</ul>' +
+                '</div>' +
+                '<label for="prep">Preparation</label>' + '<br>' +
+                '<p id="prep">' + data.prep + '</p>' +
+                '<label for="notes">Notes</label>' + '<br>' +
+                '<p id="notes">' + data.notes + '</p>' +
+                '</div>');
     }
 }
 
@@ -62,33 +62,49 @@ function inputAdder(target, type, nameId) {
         );
 }
 
+function displayGet(target) {
+    target.find('div.js-get').removeClass('hidden');
+    target.find('div.js-post').addClass('hidden');
+    target.find('div.js-display').addClass('hidden');
+    target.find('div.js-results').removeClass('hidden');
+}
+
+function displayPost(target) {
+    target.find('div.js-post').removeClass('hidden');
+    target.find('div.js-get').addClass('hidden');
+    target.find('div.js-display').addClass('hidden');
+    target.find('div.js-results').addClass('hidden');
+    target.find('button.post-submit').removeClass('hidden');
+    target.find('button.put-submit').addClass('hidden');    
+}
+
+function displayPut(target) {
+    target.find('div.js-post').removeClass('hidden');
+    target.find('div.js-get').addClass('hidden');
+    target.find('div.js-display').addClass('hidden');
+    target.find('button.post-submit').addClass('hidden');
+    target.find('button.put-submit').removeClass('hidden');   
+}
+
+function displayDisplay(target) {
+    target.find('div.js-post').addClass('hidden');
+    target.find('div.js-get').addClass('hidden');
+    target.find('div.js-display').removeClass('hidden');
+    target.find('div.js-results').addClass('hidden');    
+}
+
 function stateToggle(state, target) {
     if (state.request === 'get') {
-        target.find('div.js-get').removeClass('hidden');
-        target.find('div.js-post').addClass('hidden');
-        target.find('div.js-display').addClass('hidden');
-        target.find('div.js-results').removeClass('hidden');
+        displayGet(target);
     }
     else if (state.request === 'post') {
-        target.find('div.js-post').removeClass('hidden');
-        target.find('div.js-get').addClass('hidden');
-        target.find('div.js-display').addClass('hidden');
-        target.find('div.js-results').addClass('hidden');
-        target.find('button.post-submit').removeClass('hidden');
-        target.find('button.put-submit').addClass('hidden');
+        displayPost(target);
     }
     else if (state.request === 'put') {
-        target.find('div.js-post').removeClass('hidden');
-        target.find('div.js-get').addClass('hidden');
-        target.find('div.js-display').addClass('hidden');
-        target.find('button.post-submit').addClass('hidden');
-        target.find('button.put-submit').removeClass('hidden');
+        displayPut(target);
     }
     else if (state.request === 'display') {
-        target.find('div.js-post').addClass('hidden');
-        target.find('div.js-get').addClass('hidden');
-        target.find('div.js-display').removeClass('hidden');
-        target.find('div.js-results').addClass('hidden');
+        displayDisplay(target);
     }
 }
 
@@ -122,7 +138,7 @@ function displayListAdder(target, nameId) {
 
 function displayLinkAdder(target, nameId) {
     target.append(
-        `<li id="${nameId}">` +
+        `<li id="${nameId}" class="js-added-link">` +
         '<button class="js-display-link-button"></button>' + 
         '</li>'
         );
@@ -176,7 +192,7 @@ function resetForm(target) {
 function resetDisplay(target) {
     target.find('p').val('');
     target.find('.js-added').remove();
-    target.find('.js-display-link-button').remove();
+    target.find('.js-added-link').remove();
 }
 
 function populateForm(data) {
@@ -191,6 +207,8 @@ function populateForm(data) {
 }
 
 function populateDisplay(data) {
+    resetDisplay($('div.js-display'));
+    $('.recipe-id').text(data.id);
     $('.js-display-name').text(data.name);
     $('.js-display-link').text(data.link);
     displayAdditionsHandler(data['ingredients'], 'ingredients');
@@ -255,7 +273,7 @@ function filterCategory(input, data) {
 }
 
 function resultSwitcher(data) {
-    const searchTerm = $('#search').val();
+    const searchTerm = stringToLowerCase($('#search').val());
     const filter = $('#filter').val();
     switch(filter) {
         case 'all':
@@ -267,7 +285,7 @@ function resultSwitcher(data) {
         case 'book':
             displayRecipes(filterBook(searchTerm, data));
             break;
-        case 'category':
+        case 'categories':
             displayRecipes(filterCategory(searchTerm, data));
     }
 }
@@ -292,7 +310,7 @@ $('body').on('click', '.js-input-delete', function(event) {
     $(this).closest('li.js-added').remove();
 })
 
-$('button.search-submit').click(function(event) {
+$('#get-form').submit(function(event) {
     event.preventDefault();
     state.request = 'get';
     stateToggle(state, $('body'));
@@ -321,38 +339,43 @@ $('button.post-submit').click(function(event) {
         url: SERVER_URL,
         data: JSON.stringify(data),
         contentType: 'application/json',
-        success: displayRecipes
+        success: populateDisplay
     }
+    resetForm($('#post-form'));
+    state.request = 'display';
     return new Promise ((resolve, reject) => {
         $.post(settings);
-        resolve(resetForm($('#post-form')))
+        resolve(stateToggle(state, $('body')))
         reject(function(err) {
             console.log(err)
         });
-    });
+    })
+    alert("Recipe Created");
 })
 
 $('div.js-display').on('click', '.delete-button', function(event) {
     event.preventDefault();
-    let id = state.putId;
+    let id = $('.recipe-id').text();
     const settings = {
         url: SERVER_URL + id,
         type: 'delete'
     };
+    state.request = 'get';
     return new Promise ((resolve, reject) => {
         $.ajax(settings);
-        resolve();
+        resolve(location.reload());
         reject(function(err) {
             console.log(err)
         });
     });
+    alert("Recipe Deleted");
 })
 
 $('div.js-display').on('click', '.put-button', function(event) {
     event.preventDefault();
     state.request = "put";
     stateToggle(state, $('body'));
-    let id = state.putId;
+    let id = $('.recipe-id').text();
     const settings = {
         url: SERVER_URL + id,
         type: 'get',
@@ -390,21 +413,22 @@ $('button.put-submit').click(function(event) {
         type: 'put',
         data: JSON.stringify(data),
         contentType: 'application/json',
-        success: displayRecipes
+        success: populateDisplay
     };
+    state.request = 'display';
     return new Promise ((resolve, reject) => {
         $.ajax(settings);
-        resolve(resetForm($('#post-form')));
+        resolve(stateToggle(state, $('body')));
         reject(function(err) {
             console.log(err)
         });
     });
     state.putId = null;
-    state.request = 'post';
-    stateToggle(state, $('body'));
+    alert("Recipe Updated")
 })
 
 $('a.js-getButton').click(function(event) {
+    location.reload();
     event.preventDefault();
     state.request = 'get';
     $(this).closest('body').find('.js-results').empty();
@@ -431,4 +455,22 @@ $('div.js-results').on('click', 'div.results-frame', function(event) {
         success: populateDisplay
     };
     $.ajax(settings);
+})
+
+$('button.return-button').click(function(event) {
+    event.preventDefault();
+    state.request = 'get';
+    stateToggle(state, $('body'));
+})
+
+$('div.js-display').on('click', 'button.js-display-link-button', function(event) {
+    event.preventDefault();
+    $(this).closest('body').find('.js-results').empty();
+    const search = $(this).text();
+    const filter = $(this).closest('li').attr('id');
+    state.request = 'get';
+    stateToggle(state, $('body'));
+    $('#search').val(search);
+    $('#filter').val(filter);
+    $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
 })

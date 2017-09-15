@@ -21,20 +21,21 @@
 	<legend>Search For Recipes</legend>
 		<div class="search-bar"></div>
 			<input type="text" name="search" id="search" placeholder="">
-			<button class="search-submit" type="submit" form="search-form">
+			<button class="search-submit" type="submit" form="get-form">
 				<i class="fa fa-search" aria-hidden="true"></i>
 			</button>
 			<select id="filter">
 				<option value="all" default>All</option>
 				<option value="name">Name</option>
 				<option value="user">User</option>
-				<option value="book">Cookbook</option>
-				<option value="category">Category</option>
+				<option value="books">Cookbook</option>
+				<option value="categories">Category</option>
 			</select>
 		</div>
 	</form><hr>
 	</div>
 	<div class="js-post hidden">
+		<h4>Add A New Recipe</h4>
 		<form action="" method="" id="post-form">
 			<ul id="post">
 				<li>
@@ -86,7 +87,11 @@
 	</div>
 	<div class="js-results hidden"></div>
 	<div class="js-display hidden">
+		<div class="return-container">
+			<button class="return-button">Return</button>
+		</div>
 		<ul id="display">
+			<li class="recipe-id hidden"></li>
 			<li id="name">
 				<h3 name="name" class="js-display-name"></h3>
 			</li><hr>

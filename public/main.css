@@ -2,16 +2,6 @@
 	font-family: 'Roboto', sans-serif;
 }
 
-/*body {
-	background-image: url('images/background.jpeg');
-}
-
-.darken {
-	background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(images/background.jpeg);
-	height: 100%;
-	width: 100%;
-}*/
-
 nav {
 	text-align: right;
     padding: 15px 50px 15px 15px;
@@ -41,6 +31,7 @@ form {
 }
 
 form#post-form {
+	margin-top: 2.5%;
 	padding-left: 5%;
 	padding-right: 10%
 }
@@ -49,7 +40,7 @@ div.js-post {
 	margin: 0 auto;
 	width: 60%;
 	border: 1px solid grey;
-	padding: 5%;
+	padding: 1.5% 5% 5% 5%;
 	text-align: center;
 }
 
@@ -73,6 +64,11 @@ select {
 
 i {
 	display: inline-block;
+}
+
+a {
+	color: green;
+	text-decoration: none;
 }
 
 button {
@@ -180,7 +176,7 @@ div.js-display {
 	margin: 0 auto;
 	width: 60%;
 	border: 1px solid grey;
-	padding: 5%;
+	padding: 2.5% 5% 5% 5%;
 	text-align: center;
 }
 
@@ -188,6 +184,10 @@ ul.ingredients-list {
 	margin-top: 10px;
 	margin-left: 0px;
 	padding: 0;
+}
+
+ul#display {
+	padding-top: 1%;
 }
 
 ul.ingredients-list > li {
@@ -249,4 +249,9 @@ div.display-lists {
 div.js-display label {
 	text-decoration: underline;
 	font-weight: 600;
+}
+
+div.return-container {
+	margin-left: -3%;
+	text-align: left;
 }
