@@ -14,38 +14,42 @@ function ingredientsList(list) {
 }
 
 
-function displayRecipes(data) {
+function displayRecipes(data) { 
+//remove if statement           
     if (Array.isArray(data)) {
         data.forEach(function(item) {
             $('.js-results').append(
-            '<div class="results-frame">' +
-            '<p class="js-id hidden">' + item.id + '</p>' +
-            '<h4>' + item.name + '</h4>' +
-            '<a href="#">' + item.link + '</a>' +
-            '<ul class="ingredients-list">' + ingredientsList(item.ingredients) + '</ul>' +
-            '<p>' + item.prep + '</p>' +
-            '<p>' + item.notes + '</p>' +
-            '<span>' + 
-            '<button class="put-button">Put</button>' + 
-            '<button class="delete-button">Delete</button>' + 
-            '</span>' +
-            '</div>');
+                '<div class="results-frame">' +
+                '<p class="js-id hidden">' + item.id + '</p>' +
+                '<h4>' + item.name + '</h4>' +
+                '<p><a href="#">' + item.link + '</a></p>' +
+                '<label for="ingredients">Ingredients</label>' + '<br>' +
+                '<div id="ingredients">' +
+                '<ul class="ingredients-list">' + ingredientsList(item.ingredients) + '</ul>' +
+                '</div>' +
+                '<label for="prep">Preparation</label>' + '<br>' +
+                '<p id="prep">' + item.prep + '</p>' +
+                '<label for="notes">Notes</label>' + '<br>' +
+                '<p id="notes">' + item.notes + '</p>' +
+                '</div>');
         })
     }
+    //don't need you anymore
     else {
-        $('.js-results').append(
-            '<div class="results-frame">' +
-            '<p class="js-id hidden">' + data.id + '</p>' +
-            '<h4>' + data.name + '</h4>' +
-            '<a href="#">' + data.link + '</a>' +
-            '<ul class="ingredients-list">' + ingredientsList(data.ingredients) + '</ul>' +
-            '<p>' + data.prep + '</p>' +
-            '<p>' + data.notes + '</p>' +
-            '<span>' + 
-            '<button class="put-button">Put</button>' + 
-            '<button class="delete-button">Delete</button>' + 
-            '</span>' +
-            '</div>');
+      $('.js-results').append(
+                '<div class="results-frame">' +
+                '<p class="js-id hidden">' + data.id + '</p>' +
+                '<h4>' + data.name + '</h4>' +
+                '<p><a href="#">' + data.link + '</a></p>' +
+                '<label for="ingredients">Ingredients</label>' + '<br>' +
+                '<div id="ingredients">' +
+                '<ul class="ingredients-list">' + ingredientsList(data.ingredients) + '</ul>' +
+                '</div>' +
+                '<label for="prep">Preparation</label>' + '<br>' +
+                '<p id="prep">' + data.prep + '</p>' +
+                '<label for="notes">Notes</label>' + '<br>' +
+                '<p id="notes">' + data.notes + '</p>' +
+                '</div>');
     }
 }
 
@@ -58,22 +62,49 @@ function inputAdder(target, type, nameId) {
         );
 }
 
+function displayGet(target) {
+    target.find('div.js-get').removeClass('hidden');
+    target.find('div.js-post').addClass('hidden');
+    target.find('div.js-display').addClass('hidden');
+    target.find('div.js-results').removeClass('hidden');
+}
+
+function displayPost(target) {
+    target.find('div.js-post').removeClass('hidden');
+    target.find('div.js-get').addClass('hidden');
+    target.find('div.js-display').addClass('hidden');
+    target.find('div.js-results').addClass('hidden');
+    target.find('button.post-submit').removeClass('hidden');
+    target.find('button.put-submit').addClass('hidden');    
+}
+
+function displayPut(target) {
+    target.find('div.js-post').removeClass('hidden');
+    target.find('div.js-get').addClass('hidden');
+    target.find('div.js-display').addClass('hidden');
+    target.find('button.post-submit').addClass('hidden');
+    target.find('button.put-submit').removeClass('hidden');   
+}
+
+function displayDisplay(target) {
+    target.find('div.js-post').addClass('hidden');
+    target.find('div.js-get').addClass('hidden');
+    target.find('div.js-display').removeClass('hidden');
+    target.find('div.js-results').addClass('hidden');    
+}
+
 function stateToggle(state, target) {
     if (state.request === 'get') {
-        target.find('div.js-post').addClass('hidden');
-        target.find('div.js-get').removeClass('hidden');
+        displayGet(target);
     }
     else if (state.request === 'post') {
-        target.find('div.js-post').removeClass('hidden');
-        target.find('div.js-get').addClass('hidden');
-        target.find('button.post-submit').removeClass('hidden');
-        target.find('button.put-submit').addClass('hidden');
+        displayPost(target);
     }
     else if (state.request === 'put') {
-        target.find('div.js-post').removeClass('hidden');
-        target.find('div.js-get').addClass('hidden');
-        target.find('button.post-submit').addClass('hidden');
-        target.find('button.put-submit').removeClass('hidden');
+        displayPut(target);
+    }
+    else if (state.request === 'display') {
+        displayDisplay(target);
     }
 }
 
@@ -99,6 +130,57 @@ function formAdditionsHandler(array, type, nameId) {
     }
 }
 
+function displayListAdder(target, nameId) {
+    target.append(
+        `<li class="js-added" id="${nameId}">` + '</li>'
+        );
+}
+
+function displayLinkAdder(target, nameId) {
+    target.append(
+        `<li id="${nameId}" class="js-added-link">` +
+        '<button class="js-display-link-button"></button>' + 
+        '</li>'
+        );
+}
+
+function displayLinkHandler(array, target, nameId) {
+    if (nameId === "ingredients") {
+        displayListAdder(target, nameId);
+    }
+    else {
+        displayLinkAdder(target, nameId);
+    }
+}
+
+function displayAdditionsHandler(array, nameId) {
+    let additions = 0;
+    for (let i=1; i<=array.length; i++) {
+        displayListAdder(($('#display').find(`.js-display-${nameId}`)), nameId);
+        additions++;
+    }
+    for (let i=0; i<=additions; i) {
+        $(`ul.js-display-${nameId}`).find('li').each(function(item) {
+            $(this).text(array[i]);
+        i++;
+        })
+    }
+}
+
+function displayLinkContentHandler(array, nameId) {
+    let additions = 0;
+    for (let i=1; i<=array.length; i++) {
+        displayLinkAdder(($('#display').find(`.js-display-${nameId}`)), nameId)
+        additions++;
+    }
+    for (let i=0; i<=additions; i) {
+        $(`ul.js-display-${nameId}`).find('button').each(function(item) {
+            $(this).text(array[i]);
+        i++;
+        })
+    }
+}
+
 function resetForm(target) {
     target.find('.ingredients-field').find('.js-added').remove();
     target.find('.books-field').find('.js-added').remove();
@@ -107,20 +189,56 @@ function resetForm(target) {
     target.find('textarea').val('');
 }
 
+function resetDisplay(target) {
+    target.find('p').val('');
+    target.find('.js-added').remove();
+    target.find('.js-added-link').remove();
+}
+
 function populateForm(data) {
     $('#name').val(data.name);
-    $('body').find('#post-form').find('#link').val(data.link);
-    $('body').find('#post-form').find('#ingredients').val(data.ingredients[0]);
+    $('#link').val(data.link);
+    $('#ingredients').val(data.ingredients[0]);
     formAdditionsHandler(data['ingredients'], 'text', 'ingredients');
-    $('body').find('form#post-form').find('textarea#prep').val(data.prep);
-    $('body').find('form#post-form').find('input#notes').val(data.notes);
+    $('textarea#prep').val(data.prep);
+    $('input#notes').val(data.notes);
     formAdditionsHandler(data['books'], 'number', 'books');
     formAdditionsHandler(data['tags'], 'text', 'categories');
 }
 
+function populateDisplay(data) {
+    resetDisplay($('div.js-display'));
+    $('.recipe-id').text(data.id);
+    $('.js-display-name').text(data.name);
+    $('.js-display-link').text(data.link);
+    displayAdditionsHandler(data['ingredients'], 'ingredients');
+    $('.js-display-prep').text(data.prep);
+    $('.js-display-notes').text(data.notes);
+    displayLinkContentHandler(data['books'], 'books');
+    displayLinkContentHandler(data['tags'], 'categories');
+}
+
+function inputToLowerCase(inputArray) {
+    if (Array.isArray(inputArray)) {
+        let result = inputArray.map(function(item) {
+            return item.toLowerCase();
+        })
+        return result;
+    }
+    else {
+        return;
+    }
+}
+
+function stringToLowerCase(name) {
+    return name.toLowerCase();
+}
+
 function filterAll(input, data) {
-    results = data.filter(function(recipe) {
-        if (recipe['name'].includes(input) || recipe['books'].includes(input) || recipe['tags'].includes(input)) {
+    let results = data.filter(function(recipe) {
+        let caseName = stringToLowerCase(recipe.name)
+        let caseTags  = inputToLowerCase(recipe.tags);
+        if (caseName.includes(input) || (recipe.books).includes(input) || (caseTags).includes(input)) {
             return recipe
         }
     })
@@ -128,8 +246,8 @@ function filterAll(input, data) {
 }
 
 function filterName(input, data) {
-    results = data.filter(function(recipe) {
-        if (recipe['name'].includes(input)) {
+    let results = data.filter(function(recipe) {
+        if ((stringToLowerCase(recipe.name)).includes(input)) {
             return recipe
         }
     })
@@ -137,8 +255,8 @@ function filterName(input, data) {
 }
 
 function filterBook(input, data) {
-    results = data.filter(function(recipe) {
-        if (recipe['books'].includes(input)) {
+    let results = data.filter(function(recipe) {
+        if ((inputToLowerCase(recipe.books)).includes(input)) {
             return recipe
         }
     })
@@ -146,8 +264,8 @@ function filterBook(input, data) {
 }
 
 function filterCategory(input, data) {
-    results = data.filter(function(recipe) {
-        if (recipe['tags'].includes(input)) {
+    let results = data.filter(function(recipe) {
+        if ((inputToLowerCase(recipe.tags)).includes(input)) {
             return recipe
         }
     })
@@ -155,7 +273,7 @@ function filterCategory(input, data) {
 }
 
 function resultSwitcher(data) {
-    const searchTerm = $('#search').val();
+    const searchTerm = stringToLowerCase($('#search').val());
     const filter = $('#filter').val();
     switch(filter) {
         case 'all':
@@ -167,10 +285,9 @@ function resultSwitcher(data) {
         case 'book':
             displayRecipes(filterBook(searchTerm, data));
             break;
-        case 'category':
+        case 'categories':
             displayRecipes(filterCategory(searchTerm, data));
     }
-
 }
 
 $('i.ingredients-adder').click(function(event) {
@@ -193,8 +310,10 @@ $('body').on('click', '.js-input-delete', function(event) {
     $(this).closest('li.js-added').remove();
 })
 
-$('button.search-submit').click(function(event) {
+$('#get-form').submit(function(event) {
     event.preventDefault();
+    state.request = 'get';
+    stateToggle(state, $('body'));
     $(this).closest('body').find('.js-results').empty();
     $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
 })
@@ -220,39 +339,43 @@ $('button.post-submit').click(function(event) {
         url: SERVER_URL,
         data: JSON.stringify(data),
         contentType: 'application/json',
-        success: displayRecipes
+        success: populateDisplay
     }
+    resetForm($('#post-form'));
+    state.request = 'display';
     return new Promise ((resolve, reject) => {
         $.post(settings);
-        resolve(resetForm($('#post-form')))
+        resolve(stateToggle(state, $('body')))
         reject(function(err) {
             console.log(err)
         });
-    });
+    })
+    alert("Recipe Created");
 })
 
-$('div.js-results').on('click', '.delete-button', function(event) {
+$('div.js-display').on('click', '.delete-button', function(event) {
     event.preventDefault();
-    let id = $('div.js-results').find(this).closest('div').find('p:first').text();
+    let id = $('.recipe-id').text();
     const settings = {
         url: SERVER_URL + id,
         type: 'delete'
     };
+    state.request = 'get';
     return new Promise ((resolve, reject) => {
         $.ajax(settings);
-        resolve($('div.js-results').find(this).closest('div').remove());
+        resolve(location.reload());
         reject(function(err) {
             console.log(err)
         });
     });
+    alert("Recipe Deleted");
 })
 
-$('div.js-results').on('click', '.put-button', function(event) {
+$('div.js-display').on('click', '.put-button', function(event) {
     event.preventDefault();
     state.request = "put";
     stateToggle(state, $('body'));
-    let id = $('div.js-results').find(this).closest('div').find('p:first').text();
-    state.putId = id;
+    let id = $('.recipe-id').text();
     const settings = {
         url: SERVER_URL + id,
         type: 'get',
@@ -290,23 +413,25 @@ $('button.put-submit').click(function(event) {
         type: 'put',
         data: JSON.stringify(data),
         contentType: 'application/json',
-        success: displayRecipes
+        success: populateDisplay
     };
+    state.request = 'display';
     return new Promise ((resolve, reject) => {
         $.ajax(settings);
-        resolve(resetForm($('#post-form')));
+        resolve(stateToggle(state, $('body')));
         reject(function(err) {
             console.log(err)
         });
     });
     state.putId = null;
-    state.request = 'post';
-    stateToggle(state, $('body'));
+    alert("Recipe Updated")
 })
 
 $('a.js-getButton').click(function(event) {
+    location.reload();
     event.preventDefault();
     state.request = 'get';
+    $(this).closest('body').find('.js-results').empty();
     stateToggle(state, $('body'));
 })
 
@@ -315,4 +440,37 @@ $('a.js-postButton').click(function(event) {
     resetForm($('#post-form'));
     state.request = 'post';
     stateToggle(state, $('body'));
+})
+
+$('div.js-results').on('click', 'div.results-frame', function(event) {
+    event.preventDefault();
+    resetDisplay($('div.js-display'));
+    state.request = 'display';
+    stateToggle(state, $('body'));
+    let id = $('div.js-results').find(this).closest('div').find('p:first').text();
+    state.putId = id;
+    const settings = {
+        url: SERVER_URL + id,
+        type: 'get',
+        success: populateDisplay
+    };
+    $.ajax(settings);
+})
+
+$('button.return-button').click(function(event) {
+    event.preventDefault();
+    state.request = 'get';
+    stateToggle(state, $('body'));
+})
+
+$('div.js-display').on('click', 'button.js-display-link-button', function(event) {
+    event.preventDefault();
+    $(this).closest('body').find('.js-results').empty();
+    const search = $(this).text();
+    const filter = $(this).closest('li').attr('id');
+    state.request = 'get';
+    stateToggle(state, $('body'));
+    $('#search').val(search);
+    $('#filter').val(filter);
+    $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
 })

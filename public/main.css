@@ -4,9 +4,8 @@
 
 nav {
 	text-align: right;
-    padding: 0;
+    padding: 15px 50px 15px 15px;
     background-color: lightblue;
-    padding: 15px;
 }
 
 header {
@@ -29,13 +28,19 @@ form {
 	width: 100%;
     text-align: center;
     margin: 0 auto;
-    padding: 5px;
 }
+
+form#post-form {
+	margin-top: 2.5%;
+	padding-left: 5%;
+	padding-right: 10%
+}
+
 div.js-post {
 	margin: 0 auto;
-	width: 75%;
+	width: 60%;
 	border: 1px solid grey;
-	padding: 10px;
+	padding: 1.5% 5% 5% 5%;
 	text-align: center;
 }
 
@@ -49,8 +54,8 @@ label {
 	float: left;
 }
 
-hr {
-	width: 70%;
+h4 {
+	margin-bottom: 14px;
 }
 
 select {
@@ -59,6 +64,11 @@ select {
 
 i {
 	display: inline-block;
+}
+
+a {
+	color: green;
+	text-decoration: none;
 }
 
 button {
@@ -77,7 +87,7 @@ li {
 
 input, textarea {
 	padding: 10px 15px;
-    width: 70%;
+    width: 65%;
     margin-right: 0;
     border: 1px solid black;
 }
@@ -105,6 +115,13 @@ ul#post > li {
 	margin: 0 0 0 0;
 }
 
+.post-submit {
+	text-align: center;
+	position: relative;
+	right: 5%;
+	width: 25%;
+}
+
 #search {
     width: 40%;
     margin: 0 0 0 0;
@@ -123,16 +140,44 @@ ul#post > li {
 	padding-right: 40px;
 }
 
-.results-frame {
+.js-results {
+	padding: 0% 10%;
+}
+
+div.results-frame {
 	border: 1px solid black;
-    width: 56%;
+    width: 45%;
     margin: 20px auto;
     padding: 20px 50px;
+    background-color: ghostwhite;
+}
+
+div.results-frame > label {
+	text-decoration: underline;
+	font-weight: 600;
+	margin-bottom: 2.5px;
 }
 
 div.results-frame > a {
 	text-decoration: none;
 	color: green;
+}
+
+div.results-frame > p {
+	margin: 15px 0px 15px 0px;
+}
+
+div.results-frame > div {
+	margin-bottom: 15px;
+	margin-top: 15px;
+}
+
+div.js-display {
+	margin: 0 auto;
+	width: 60%;
+	border: 1px solid grey;
+	padding: 2.5% 5% 5% 5%;
+	text-align: center;
 }
 
 ul.ingredients-list {
@@ -141,27 +186,72 @@ ul.ingredients-list {
 	padding: 0;
 }
 
+ul#display {
+	padding-top: 1%;
+}
+
 ul.ingredients-list > li {
 	list-style: circle;
 }
 
-.js-getButton {
+ul.js-display-ingredients > li {
+	list-style: circle;
+}
+
+ul.js-display-books, ul.js-display-categories {
+	display: block;
+	margin-top: 13px;
+}
+
+ul.js-display-books > li, ul.js-display-categories > li {
+	display: inline-block;
+	width: auto;
+}
+
+li.edit-buttons {
+	text-align: center;
+	margin: 0 auto;
+}
+
+a.js-getButton {
 	font-weight: 700;
     color: grey;
     text-decoration: none;
+    margin-left: 25px;
 } 
 
-.js-postButton {
+a.js-postButton {
 	font-weight: 700;
     color: green;
     text-decoration: none;
     margin-left: 25px;
 }
 
-.put-button, .delete-button {
+button.put-button, button.delete-button {
 	margin-left: 5px;
+	width: 100px;
 }
 
-.fa-minus-circle {
+i.fa-minus-circle {
 	padding-left: 4px;
+}
+
+button.js-display-link-button {
+	background-color: darkseagreen;
+	margin: 7.5px;
+}
+
+div.display-lists {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+div.js-display label {
+	text-decoration: underline;
+	font-weight: 600;
+}
+
+div.return-container {
+	margin-left: -3%;
+	text-align: left;
 }
