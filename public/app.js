@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://localhost:8080/recipes/'
+const SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/'
 
 let state = {
     request: 'get',
