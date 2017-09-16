@@ -4,9 +4,8 @@
 
 nav {
 	text-align: right;
-    padding: 0;
+    padding: 15px 50px 15px 15px;
     background-color: lightblue;
-    padding: 15px;
 }
 
 header {
@@ -19,49 +18,38 @@ legend {
     margin: 0 auto;
 }
 
-fieldset {
-	width: 75%;
-}
-
-fieldset > input, fieldset > button, fieldset > span {
-	float: left;
-	margin: 0;
-}
-
 ul {
 	margin: 0px 10px;
 	padding: 0px;
+	text-align: left;
 }
-
-fieldset > legend {
-	margin-left: 45px;
-}
-
-fieldset:last-child {
-	margin-left: 5px;
-}
-
 
 form {
 	width: 100%;
     text-align: center;
     margin: 0 auto;
-    padding: 5px;
 }
 
 label {
+	width: 99px;
 	float: left;
-	text-align: right;
-	margin-right: 15px;
-	width: 100px;
+}
+
+h4 {
+	margin-bottom: 14px;
 }
 
 select {
 	background-color: lightgrey;
 }
 
-input, textarea {
-	margin-bottom: 5px;
+i {
+	display: inline-block;
+}
+
+a {
+	color: green;
+	text-decoration: none;
 }
 
 button {
@@ -72,18 +60,69 @@ button {
     font-weight: bold;
 }
 
+li {
+	list-style: none;
+	width: 100%;
+}
+
+input, textarea {
+	padding: 10px 15px;
+    width: 65%;
+    margin-right: 0;
+    border: 1px solid black;
+}
+form#post-form {
+	margin-top: 2.5%;
+	padding-left: 5%;
+	padding-right: 10%
+}
+
+div.js-post {
+	margin: 0 auto;
+	width: 60%;
+	border: 1px solid grey;
+	padding: 1.5% 5% 5% 5%;
+	text-align: center;
+}
+
+div.books, div.categories {
+	margin: 0 auto;
+	text-align: center;
+}
+
 div.js-get {
 	text-align: center;
 }
+
+ul.ingredients-field, ul.books-field, ul.categories-field {
+	text-align: left;
+	width: 100%;
+	margin-left: 69px;
+}
+
+ul#post > li {
+	margin: 15px auto;
+}
+
 
 .hidden {
 	display: none;
 }
 
+.search-submit {
+	margin: 0 0 0 0;
+}
+
+.post-submit {
+	text-align: center;
+	position: relative;
+	right: 5%;
+	width: 25%;
+}
+
 #search {
-	padding: 10px 15px;
     width: 40%;
-    margin-right: 0;
+    margin: 0 0 0 0;
 }
 
 #filter {
@@ -92,15 +131,29 @@ div.js-get {
 	padding-left: 5px;
 }
 
-#prep {
-	margin-top: 5px;
+.js-added {
+	margin-right: 1px;
+	margin: 1px auto;
+	padding-left: 30px;
+	padding-right: 40px;
 }
 
-.results-frame {
+.js-results {
+	padding: 0% 10%;
+}
+
+div.results-frame {
 	border: 1px solid black;
-    width: 56%;
+    width: 45%;
     margin: 20px auto;
     padding: 20px 50px;
+    background-color: ghostwhite;
+}
+
+div.results-frame > label {
+	text-decoration: underline;
+	font-weight: 600;
+	margin-bottom: 2.5px;
 }
 
 div.results-frame > a {
@@ -108,32 +161,100 @@ div.results-frame > a {
 	color: green;
 }
 
-.js-getButton {
+div.results-frame > p {
+	margin: 15px 0px 15px 0px;
+}
+
+div.results-frame > div {
+	margin-bottom: 15px;
+	margin-top: 15px;
+}
+
+div.js-display {
+	margin: 0 auto;
+	width: 60%;
+	border: 1px solid grey;
+	padding: 2.5% 5% 5% 5%;
+	text-align: center;
+}
+
+ul.ingredients-list {
+	margin-top: 10px;
+	margin-left: 0px;
+	padding: 0;
+}
+
+ul#display {
+	padding-top: 1%;
+}
+
+ul.ingredients-list > li {
+	list-style: circle;
+}
+
+ul.js-display-ingredients > li {
+	list-style: circle;
+}
+
+ul.js-display-books, ul.js-display-categories {
+	display: block;
+	margin-top: 13px;
+}
+
+ul.js-display-books > li, ul.js-display-categories > li {
+	display: inline-block;
+	width: auto;
+}
+
+li.edit-buttons {
+	text-align: center;
+	margin: 0 auto;
+}
+
+a.js-getButton {
 	font-weight: 700;
     color: grey;
     text-decoration: none;
     margin-left: 25px;
 } 
 
-.js-postButton {
+a.js-postButton {
 	font-weight: 700;
     color: green;
     text-decoration: none;
     margin-left: 25px;
 }
 
-.put-button, .delete-button {
+button.put-button, button.delete-button {
 	margin-left: 5px;
+	width: 100px;
 }
 
-.put-submit, .search-submit, .post-submit {
-	margin: 15px 0;
-    background-color: lightgrey;
-    border: 1px solid lightgrey;
-    padding: 10px 15px;
-    font-weight: bold;
+i.fa-minus-circle {
+	padding-left: 4px;
 }
 
-.js-input-delete {
-	margin-right: 5px;
+button.js-display-link-button {
+	background-color: darkseagreen;
+	margin: 7.5px;
+}
+
+div.display-lists {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+div.js-display label {
+	text-decoration: underline;
+	font-weight: 600;
+}
+
+div.return-container {
+	margin-left: -3%;
+	text-align: left;
+}
+
+.no-link, .no-notes, .no-books, .no-categories {
+	font-style: italic;
+    color: grey;
 }
