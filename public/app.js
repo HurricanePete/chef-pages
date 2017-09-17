@@ -5,6 +5,8 @@ let state = {
     putId: null
 }
 
+
+//normalizes text in order to compare inputs to recipe data
 function stringToLowerCase(name) {
     return name.toLowerCase();
 }
@@ -21,6 +23,7 @@ function inputToLowerCase(inputArray) {
     }
 }
 
+//lines 25 through 79 create a search function for results when all recipes are returned from the database
 function filterAll(input, data) {
     let results = data.filter(function(recipe) {
         let caseName = stringToLowerCase(recipe.name)
@@ -77,6 +80,7 @@ function resultSwitcher(data) {
     }
 }
 
+
 function ingredientsList(list) {
     let htmlList = ""
     list.forEach(function(item) {
@@ -123,6 +127,7 @@ function formToArry(target, submitValue) {
     })
 }
 
+//adds and fills the appropriate amount of HTML list elements from result arrays
 function formAdditionsHandler(array, type, nameId) {
     let additions = 0;
     if (array.length > 1) {
@@ -139,6 +144,7 @@ function formAdditionsHandler(array, type, nameId) {
     }
 }
 
+//adds and fills the appropriate amount of HTML list elements from result array for individual recipe display
 function displayAdditionsHandler(array, nameId) {
     let additions = 0;
     for (let i=1; i<=array.length; i++) {
@@ -153,6 +159,7 @@ function displayAdditionsHandler(array, nameId) {
     }
 }
 
+//adds and fills the appropriate amount of HTML button elements from result arrays
 function displayLinkContentHandler(array, nameId) {
     let additions = 0;
     for (let i=1; i<=array.length; i++) {
@@ -197,6 +204,7 @@ function clearEmptyCategories() {
     }
 }
 
+//removes empty html elements from the individual results display and replaces them with a message
 function clearEmptyFields() {
     clearEmptyLink();
     clearEmptyNotes();
@@ -204,6 +212,7 @@ function clearEmptyFields() {
     clearEmptyCategories();
 }
 
+//resets the .hidden elements in order to display individual results normally
 function resetEmptyFields() {
     $('.js-display-link').removeClass('hidden');
     $('.no-link').addClass('hidden');
@@ -230,6 +239,7 @@ function resetDisplay(target) {
     resetEmptyFields();
 }
 
+//fills the POST form upon selecting the update button
 function populateForm(data) {
     resetForm($('#post-form'));
     $('#name').val(data.name);
@@ -242,6 +252,7 @@ function populateForm(data) {
     formAdditionsHandler(data['tags'], 'text', 'categories');
 }
 
+//fills the individual results display pane upon selection
 function populateDisplay(data) {
     state.putId = data.id;
     resetDisplay($('div.js-display'));
@@ -256,6 +267,7 @@ function populateDisplay(data) {
     clearEmptyFields();
 }
 
+//populates the search screen with results after search submission
 function displayRecipes(data) { 
     data.forEach(function(item) {
         $('.js-results').append(
@@ -306,6 +318,7 @@ function displayDisplay(target) {
     target.find('div.js-results').addClass('hidden');    
 }
 
+//handles DOM rendering by hiding and revealing elements as users navigate the app
 function stateToggle(state, target) {
     if (state.request === 'get') {
         displayGet(target);
