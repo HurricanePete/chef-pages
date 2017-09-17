@@ -3,6 +3,7 @@ Fullstack Capstone project for Thinkful - create, manage, and view user-made coo
 
 ## Table of Contents
 
+- [API Docs](#API Docs)
 - [Screenshots](#screenshots)
 - [Summary](#summary)
 - [Technologies](#technologies)
