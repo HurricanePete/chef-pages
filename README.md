@@ -11,11 +11,11 @@ Fullstack Capstone project for Thinkful - create, manage, and view user-made coo
 
 The RESTful API serves five endpoints:
 
--A GET request to /recipes will return a list ofr all existing recipes in the database
--A GET request to /recipes/:recipeID will return an individual recipe with the matching ID if it exists
--A POST request to /recipes will add a recipe to the database with the supplied information and return the created recipe
--A PUT request to /recipes/:recipeID will edit an existing recipe with the matching ID and return the updated recipe
--A DELETE request to /recipes/:recipeID will delete an individual recipe with the matching ID if it exists
+- A GET request to /recipes will return a list ofr all existing recipes in the database
+- A GET request to /recipes/:recipeID will return an individual recipe with the matching ID if it exists
+- A POST request to /recipes will add a recipe to the database with the supplied information and return the created recipe
+- A PUT request to /recipes/:recipeID will edit an existing recipe with the matching ID and return the updated recipe
+- A DELETE request to /recipes/:recipeID will delete an individual recipe with the matching ID if it exists
 
 ## Screenshots 
 
