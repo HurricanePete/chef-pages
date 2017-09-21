@@ -4,6 +4,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
+const fs = require('fs');
+const request = require ('request');
+const cheerio = require('cheerio');
+
 const {DATABASE_URL, PORT} = require('./config');
 const {Recipe} = require('./models');
 
@@ -39,7 +43,20 @@ app.get('/recipes/:id', (req, res) => {
 	});
 });
 
-app.get('/recipes/')
+app.get('/scrape/', function(req, res) {
+
+	url = 'http://allrecipes.com/recipe/232582/mama-longs-goulash-soup/?internalSource=hn_carousel%2001_Mama%20Long%27s%20Goulash%20Soup&referringId=17046&referringContentType=recipe%20hub&referringPosition=carousel%2001';
+
+	return new Promise ((resolve, reject) => {
+		request(url, function(error, response, html) {
+			const $ = cheerio.load(html);
+			let ingredients;
+			let json = {title: "", release: "", rating: ""};
+			$('')
+
+		})
+	})
+})
 
 app.post('/recipes', (req, res) => {
 	const requiredFields = ['name', 'ingredients', 'prep'];
