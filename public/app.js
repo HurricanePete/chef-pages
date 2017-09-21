@@ -1,4 +1,4 @@
-const SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/'
+const {SERVER_URL} = require('./config');
 
 let state = {
     request: 'get',
