@@ -43,10 +43,6 @@ select {
 	background-color: lightgrey;
 }
 
-i {
-	display: inline-block;
-}
-
 a {
 	color: green;
 	text-decoration: none;
@@ -148,6 +144,15 @@ div.results-frame {
     margin: 20px auto;
     padding: 20px 50px;
     background-color: ghostwhite;
+    transition-property: background, border-radius;
+    transition-duration: .25s;
+    transition-timing-function: linear;
+}
+
+div.results-frame:hover {
+	background-color: lightgrey;
+	border-radius: 15px; 
+	cursor: pointer;
 }
 
 div.results-frame > label {
