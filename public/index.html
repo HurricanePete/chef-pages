@@ -50,11 +50,7 @@
 					<label for="ingredients">Ingredients:</label>
 					<ul class="ingredients-field" id="ingredients">
 						<li>
-							<input type="text" name="ingredients" id="ingredients" required>
-							<i class="fa fa-plus-circle fa-lg ingredients-adder" aria-hidden="true"></i>
-						</li>
-						<li>
-							<button class="ingredients-adder">
+							<button class="ingredients-adder adder">
 							<i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add Ingredient
 							</button>
 						</li>			
@@ -72,8 +68,9 @@
 					<label for="books">Books:</label>
 					<ul class="books-field" id="books">
 						<li>
-							<input type="number" name="books" id="books">
-							<i class="fa fa-plus-circle fa-lg books-adder" aria-hidden="true"></i>
+							<button class="books-adder adder">
+							<i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add Book
+							</button>
 						</li>	
 					</ul>
 				</li>
@@ -81,13 +78,14 @@
 					<label for="categories">Categories:</label>
 					<ul class="categories-field" id="categories">
 						<li>
-							<input type="text" name="categories" id="categories">
-							<i class="fa fa-plus-circle fa-lg categories-adder" aria-hidden="true"></i>
+							<button class="categories-adder adder">
+							<i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add Category
+							</button>
 						</li>			
 					</ul>
 				</li>
 			</ul>
-			<button class="post-submit">Create Recipe</button><button class="put-submit hidden">Update Recipe</button>
+			<input value="Create Recipe" type="submit" class="post-submit" form="post-form"/><input value="Update Recipe" type="submit" class="put-submit hidden" form="post-form"/>
 		</form>
 	</div>
 	<div class="js-results hidden"></div>

@@ -1,4 +1,5 @@
-const SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/'
+const SERVER_URL = 'http://localhost:8080/recipes/';
+//'https://sleepy-ravine-11904.herokuapp.com/recipes/'
 
 let state = {
     request: 'get',
@@ -90,9 +91,13 @@ function ingredientsList(list) {
 }
 
 function inputAdder(target, type, nameId) {
-    target.closest('ul').find('li').last().after(
+    let required = "";
+    if (nameId === 'ingredients') {
+        required = "required";
+    }
+    target.closest('li').before(
         '<li class="js-added">' + 
-        `<input type="${type}" name="${nameId}" id="${nameId}">` + 
+        `<input type="${type}" name="${nameId}" id="${nameId}"/>` + 
         '<i class="fa fa-minus-circle fa-lg js-input-delete" aria-hidden="true"></i>' +
         '</li>'
         );
@@ -228,8 +233,22 @@ function resetForm(target) {
     target.find('.ingredients-field').find('.js-added').remove();
     target.find('.books-field').find('.js-added').remove();
     target.find('.categories-field').find('.js-added').remove();
-    target.find('input').val('');
+    target.find('input').not('input[type="submit"]').val('');
     target.find('textarea').val('');
+}
+
+function replaceInitialInputs(target) {
+    let fields = ['ingredients', 'books', 'categories'];
+    for (let i=0; i<fields.length; i++) {
+        let type;
+        if (fields[i] === books) {
+            type = 'number';
+        }
+        else {
+            type = 'text';
+        }
+        inputAdder(target.find(`button.${fields[i]}-adder`), type, fields[i]);
+    }
 }
 
 function resetDisplay(target) {
@@ -334,23 +353,26 @@ function stateToggle(state, target) {
     }
 }
 
-$('i.ingredients-adder').click(function(event) {
+$('button.ingredients-adder').click(function(event) {
     event.preventDefault();
     inputAdder($(this), 'text', 'ingredients');
 })
 
-$('i.books-adder').click(function(event) {
+$('button.books-adder').click(function(event) {
     event.preventDefault();
     inputAdder($(this), 'number', 'books');
 })
 
-$('i.categories-adder').click(function(event) {
+$('button.categories-adder').click(function(event) {
     event.preventDefault();
     inputAdder($(this), 'text', 'categories');
 })
 
 $('body').on('click', '.js-input-delete', function(event) {
     event.preventDefault();
+    if ($(this).closest('li').is('#ingredients')) {
+        console.log('true');
+    }
     $(this).closest('li.js-added').remove();
 })
 
@@ -362,7 +384,7 @@ $('#get-form').submit(function(event) {
     $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
 })
 
-$('button.post-submit').click(function(event) {
+$('input.post-submit').click(function(event) {
     event.preventDefault();
     const data = {
         "filters": {
@@ -478,6 +500,7 @@ $('a.js-getButton').click(function(event) {
 $('a.js-postButton').click(function(event) {
     event.preventDefault();
     resetForm($('#post-form'));
+    replaceInitialInputs($('body'));
     state.request = 'post';
     stateToggle(state, $('body'));
 })

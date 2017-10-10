@@ -67,6 +67,16 @@ input, textarea {
     margin-right: 0;
     border: 1px solid black;
 }
+
+button.adder {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	border: 1px solid black;
+	width: 70%;
+	position: relative;
+	left: 30px;
+}
+
 form#post-form {
 	margin-top: 2.5%;
 	padding-left: 5%;
@@ -109,7 +119,7 @@ ul#post > li {
 	margin: 0 0 0 0;
 }
 
-.post-submit {
+.post-submit, .put-submit {
 	text-align: center;
 	position: relative;
 	right: 5%;
