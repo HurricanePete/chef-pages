@@ -3,9 +3,25 @@ const SERVER_URL = 'http://localhost:8080/recipes/';
 
 let state = {
     request: 'get',
-    putId: null
+    putId: null,
+    ingredientsCount: 1,
+    booksCount: 1,
+    categoriesCount: 1
 }
 
+function addCount(target) {
+    state[`${target}Count`]++;
+}
+
+function minusCount(target) {
+    state[`${target}Count`]--;
+}
+
+function resetCounts() {
+    state.ingredientsCount = 1;
+    state.booksCount = 1;
+    state.categoriesCount = 1;
+}
 
 //normalizes text in order to compare inputs to recipe data
 function stringToLowerCase(name) {
@@ -237,7 +253,9 @@ function resetForm(target) {
     target.find('textarea').val('');
 }
 
+//replaces first inputs for ingredients, books, and categories after they are cleared by reset
 function replaceInitialInputs(target) {
+    resetCounts();
     let fields = ['ingredients', 'books', 'categories'];
     for (let i=0; i<fields.length; i++) {
         let type;
@@ -261,6 +279,7 @@ function resetDisplay(target) {
 //fills the POST form upon selecting the update button
 function populateForm(data) {
     resetForm($('#post-form'));
+    replaceInitialInputs($('body'));
     $('#name').val(data.name);
     $('#link').val(data.link);
     $('#ingredients').val(data.ingredients[0]);
@@ -318,16 +337,16 @@ function displayPost(target) {
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
     target.find('div.js-results').addClass('hidden');
-    target.find('button.post-submit').removeClass('hidden');
-    target.find('button.put-submit').addClass('hidden');    
+    target.find('input.post-submit').removeClass('hidden');
+    target.find('input.put-submit').addClass('hidden');    
 }
 
 function displayPut(target) {
     target.find('div.js-post').removeClass('hidden');
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
-    target.find('button.post-submit').addClass('hidden');
-    target.find('button.put-submit').removeClass('hidden');   
+    target.find('input.post-submit').addClass('hidden');
+    target.find('input.put-submit').removeClass('hidden');   
 }
 
 function displayDisplay(target) {
@@ -355,23 +374,32 @@ function stateToggle(state, target) {
 
 $('button.ingredients-adder').click(function(event) {
     event.preventDefault();
+    addCount('ingredients');
     inputAdder($(this), 'text', 'ingredients');
 })
 
 $('button.books-adder').click(function(event) {
     event.preventDefault();
+    addCount('books');
     inputAdder($(this), 'number', 'books');
 })
 
 $('button.categories-adder').click(function(event) {
     event.preventDefault();
+    addCount('categories');
     inputAdder($(this), 'text', 'categories');
 })
 
 $('body').on('click', '.js-input-delete', function(event) {
     event.preventDefault();
-    if ($(this).closest('li').is('#ingredients')) {
-        console.log('true');
+    if (($(this).closest('input#ingredients'))) {
+        minusCount('ingredients');
+    }
+    else if (($(this).closest('input#books'))) {
+        minusCount('books');
+    }
+    else if (($(this).closest('input#categories'))) {
+        minusCount('categories');
     }
     $(this).closest('li.js-added').remove();
 })
@@ -453,7 +481,7 @@ $('div.js-display').on('click', '.put-button', function(event) {
     });
 })
 
-$('button.put-submit').click(function(event) {
+$('input.put-submit').click(function(event) {
     event.preventDefault();
     const data = {
         "id": state.putId,
@@ -524,6 +552,8 @@ $('button.return-button').click(function(event) {
     event.preventDefault();
     state.request = 'get';
     stateToggle(state, $('body'));
+    $(this).closest('body').find('.js-results').empty();
+    $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
 })
 
 $('div.js-display').on('click', 'button.js-display-link-button', function(event) {

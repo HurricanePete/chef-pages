@@ -121,8 +121,6 @@ ul#post > li {
 
 .post-submit, .put-submit {
 	text-align: center;
-	position: relative;
-	right: 5%;
 	width: 25%;
 }
 
