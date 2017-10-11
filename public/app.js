@@ -17,10 +17,58 @@ function minusCount(target) {
     state[`${target}Count`]--;
 }
 
+function minusCountHandler(target) {
+    if ((target.closest('ul').attr("id")) === 'ingredients') {
+        minusCount('ingredients');
+    }
+    else if ((target.closest('ul').attr("id")) === 'books') {
+        minusCount('books');
+    }
+    else if ((target.closest('ul').attr("id")) === 'categories') {
+        minusCount('categories');
+    }
+}
+
 function resetCounts() {
     state.ingredientsCount = 1;
     state.booksCount = 1;
     state.categoriesCount = 1;
+}
+
+function ingredientsCountError() {
+    alert('At least one ingredient is required');
+    state.ingredientsCount = 1;
+}
+
+function booksCountCheck(target) {
+    const BOOKS_CHECK_TEMPLATE = 'Press the Add Books button to add books';
+    if ((target.closest('ul').find('p.empty').text()) === BOOKS_CHECK_TEMPLATE) {
+        return;
+    }
+    else if (state.booksCount < 1) {
+        target.closest('li').before(`<li class="message"><p class="empty">${BOOKS_CHECK_TEMPLATE}</li></p>`);
+    }
+    else {
+        target.closest('label').find('li.message').remove();
+    }
+}
+
+function categoriesCountCheck(target) {
+    const CATEGORIES_CHECK_TEMPLATE = 'Press the Add Categories button to add category tags';
+    if ((target.closest('ul').find('p.empty').text()) === CATEGORIES_CHECK_TEMPLATE) {
+        return;
+    }
+    else if (state.categoriesCount < 1) {
+        target.closest('li').before(`<li class="message"><p class="empty">${CATEGORIES_CHECK_TEMPLATE}</p><li>`);
+    }
+    else {
+        target.closest('label').find('li.message').remove();
+    }
+}
+
+function countHandler(booksTarget, categoriesTarget) {
+    booksCountCheck(booksTarget);
+    categoriesCountCheck(categoriesTarget);
 }
 
 //normalizes text in order to compare inputs to recipe data
@@ -392,16 +440,13 @@ $('button.categories-adder').click(function(event) {
 
 $('body').on('click', '.js-input-delete', function(event) {
     event.preventDefault();
-    if (($(this).closest('input#ingredients'))) {
-        minusCount('ingredients');
-    }
-    else if (($(this).closest('input#books'))) {
-        minusCount('books');
-    }
-    else if (($(this).closest('input#categories'))) {
-        minusCount('categories');
+    minusCountHandler($(this));
+    if (state.ingredientsCount < 1) {
+        alert('Cannot have zero ingredients');
+        return;
     }
     $(this).closest('li.js-added').remove();
+    countHandler($('button.books-adder'), $('button.categories-adder'));
 })
 
 $('#get-form').submit(function(event) {

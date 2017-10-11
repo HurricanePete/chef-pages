@@ -271,3 +271,8 @@ div.return-container {
 	font-style: italic;
     color: grey;
 }
+
+.empty {
+	font-style: italic;
+	color: grey;
+}
