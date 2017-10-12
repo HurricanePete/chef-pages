@@ -1,5 +1,4 @@
-const SERVER_URL = 'http://localhost:8080/recipes/';
-//'https://sleepy-ravine-11904.herokuapp.com/recipes/'
+const SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/';
 
 let state = {
     request: 'get',

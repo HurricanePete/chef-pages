@@ -73,8 +73,6 @@ button.adder {
 	margin-bottom: 5px;
 	border: 1px solid black;
 	width: 70%;
-	position: relative;
-	left: 30px;
 }
 
 form#post-form {
@@ -135,7 +133,7 @@ ul#post > li {
 	padding-left: 5px;
 }
 
-.js-added {
+.js-added, .add-buttons {
 	margin-right: 1px;
 	margin: 1px auto;
 	padding-left: 30px;
