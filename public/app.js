@@ -9,12 +9,12 @@ let state = {
     categoriesCount: 1
 }
 
-function addCount(target) {
-    state[`${target}Count`]++;
+function addCount(item) {
+    state[`${item}Count`]++;
 }
 
-function minusCount(target) {
-    state[`${target}Count`]--;
+function minusCount(item) {
+    state[`${item}Count`]--;
 }
 
 function minusCountHandler(target) {
@@ -35,40 +35,56 @@ function resetCounts() {
     state.categoriesCount = 1;
 }
 
-function ingredientsCountError() {
-    alert('At least one ingredient is required');
-    state.ingredientsCount = 1;
+//extra line hides the submit button if no ingredient inputs are present
+function ingredientsCountCheck(target) {
+    const INGREDIENTS_MESSAGE_TEMPLATE = 'Must have at least one ingredient in order to submit';
+    if ((target.closest('ul').find('p.empty-ingredients').text()) === INGREDIENTS_MESSAGE_TEMPLATE) {
+        return;
+    }
+    else if (state.ingredientsCount < 1) {
+        target.closest('li').before(`<li class="message"><p class="empty-ingredients">${INGREDIENTS_MESSAGE_TEMPLATE}</li></p>`);
+        target.closest('form').find('input.post-submit').addClass('hidden');
+    }
 }
 
 function booksCountCheck(target) {
-    const BOOKS_CHECK_TEMPLATE = 'Press the Add Books button to add books';
-    if ((target.closest('ul').find('p.empty').text()) === BOOKS_CHECK_TEMPLATE) {
+    const BOOKS_MESSAGE_TEMPLATE = 'Press the Add Books button to add books';
+    if ((target.closest('ul').find('p.empty').text()) === BOOKS_MESSAGE_TEMPLATE) {
         return;
     }
     else if (state.booksCount < 1) {
-        target.closest('li').before(`<li class="message"><p class="empty">${BOOKS_CHECK_TEMPLATE}</li></p>`);
-    }
-    else {
-        target.closest('label').find('li.message').remove();
+        target.closest('li').before(`<li class="message"><p class="empty">${BOOKS_MESSAGE_TEMPLATE}</li></p>`);
     }
 }
 
 function categoriesCountCheck(target) {
-    const CATEGORIES_CHECK_TEMPLATE = 'Press the Add Categories button to add category tags';
-    if ((target.closest('ul').find('p.empty').text()) === CATEGORIES_CHECK_TEMPLATE) {
+    const CATEGORIES_MESSAGE_TEMPLATE = 'Press the Add Categories button to add category tags';
+    if ((target.closest('ul').find('p.empty').text()) === CATEGORIES_MESSAGE_TEMPLATE) {
         return;
     }
     else if (state.categoriesCount < 1) {
-        target.closest('li').before(`<li class="message"><p class="empty">${CATEGORIES_CHECK_TEMPLATE}</p><li>`);
-    }
-    else {
-        target.closest('label').find('li.message').remove();
+        target.closest('li').before(`<li class="message"><p class="empty">${CATEGORIES_MESSAGE_TEMPLATE}</p><li>`);
     }
 }
 
-function countHandler(booksTarget, categoriesTarget) {
+function countHandler(ingredientsTarget, booksTarget, categoriesTarget) {
+    ingredientsCountCheck(ingredientsTarget);
     booksCountCheck(booksTarget);
     categoriesCountCheck(categoriesTarget);
+}
+
+function allowPostSubmit(item, target) {
+    if (item === 'ingredients') {
+        target.closest('form').find('input.post-submit').removeClass('hidden');
+    }
+}
+
+function messageRemover(item, target) {
+    if (state[`${item}Count`] > 0) {
+        target.closest('ul').find('li.message').remove();
+//if messageRemover is called for ingredients it will reveal the submit button again
+        allowPostSubmit(item, target);
+    }
 }
 
 //normalizes text in order to compare inputs to recipe data
@@ -423,30 +439,34 @@ function stateToggle(state, target) {
 $('button.ingredients-adder').click(function(event) {
     event.preventDefault();
     addCount('ingredients');
+    messageRemover('ingredients', $('button.ingredients-adder'));
     inputAdder($(this), 'text', 'ingredients');
 })
 
 $('button.books-adder').click(function(event) {
     event.preventDefault();
     addCount('books');
+    messageRemover('books', $('button.books-adder'));
     inputAdder($(this), 'number', 'books');
 })
 
 $('button.categories-adder').click(function(event) {
     event.preventDefault();
     addCount('categories');
+    messageRemover('categories', $('button.categories-adder'));
     inputAdder($(this), 'text', 'categories');
 })
 
 $('body').on('click', '.js-input-delete', function(event) {
     event.preventDefault();
     minusCountHandler($(this));
-    if (state.ingredientsCount < 1) {
-        alert('Cannot have zero ingredients');
-        return;
-    }
+    //if (state.ingredientsCount < 1) {
+      //  state.ingredientsCount++;
+        //alert('Cannot have zero ingredients');
+        //return;
+    //}
     $(this).closest('li.js-added').remove();
-    countHandler($('button.books-adder'), $('button.categories-adder'));
+    countHandler($('button.ingredients-adder'), $('button.books-adder'), $('button.categories-adder'));
 })
 
 $('#get-form').submit(function(event) {
