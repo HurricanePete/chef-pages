@@ -17,14 +17,14 @@
 		<h3>Create and view custom cookbooks</h3>
 	</header>
 	<div class="js-get">
-	<form action="" method="" id="get-form">
+	<form class="get-form" action="" method="" id="get-form">
 	<legend>Search For Recipes</legend>
 		<div class="search-bar"></div>
-			<input type="text" name="search" id="search" placeholder="Try to search for a recipe or use an empty search to view all...">
+			<input class="search" type="text" name="search" id="search" placeholder="Try to search for a recipe or submit an empty search to view all...">
 			<button class="search-submit" type="submit" form="get-form">
 				<i class="fa fa-search" aria-hidden="true"></i>
 			</button>
-			<select id="filter">
+			<select class="filter" id="filter">
 				<option value="all" default>All</option>
 				<option value="name">Name</option>
 				<option value="user">User</option>
@@ -35,9 +35,12 @@
 	</form><hr>
 	</div>
 	<div class="js-post hidden">
-		<h4>Add A New Recipe</h4>
-		<form action="" method="" id="post-form">
-			<ul id="post">
+		<div class="return-container">
+			<button class="return-button">Return</button>
+		</div>
+		<h4 class="post-title">Add a Recipe</h4>
+		<form class="post-form" action="" method="" id="post-form">
+			<ul class="post" id="post">
 				<li>
 					<label for="name">Name:</label>
 					<input type="text" name="name" id="name" required><br>
@@ -49,10 +52,7 @@
 				<li>
 					<label for="ingredients">Ingredients:</label>
 					<ul class="ingredients-field" id="ingredients">
-						<li>
-							<input type="text" name="ingredients" id="ingredients" required>
-							<i class="fa fa-plus-circle fa-lg ingredients-adder" aria-hidden="true"></i>
-						</li>				
+						<li class="ingredients-seed"></li>				
 					</ul>
 				</li>
 				<li>
@@ -66,23 +66,17 @@
 				<li>
 					<label for="books">Books:</label>
 					<ul class="books-field" id="books">
-						<li>
-							<input type="number" name="books" id="books">
-							<i class="fa fa-plus-circle fa-lg books-adder" aria-hidden="true"></i>
-						</li>	
+						<li class="books-seed"></li>	
 					</ul>
 				</li>
 				<li>
 					<label for="categories">Categories:</label>
 					<ul class="categories-field" id="categories">
-						<li>
-							<input type="text" name="categories" id="categories">
-							<i class="fa fa-plus-circle fa-lg categories-adder" aria-hidden="true"></i>
-						</li>			
+						<li class="categories-seed"></li>			
 					</ul>
 				</li>
 			</ul>
-			<button class="post-submit">Create Recipe</button><button class="put-submit hidden">Update Recipe</button>
+			<button type="submit" class="post-submit">Create Recipe</button><button type="submit" class="put-submit hidden">Update Recipe</button>
 		</form>
 	</div>
 	<div class="js-results hidden"></div>
@@ -90,13 +84,13 @@
 		<div class="return-container">
 			<button class="return-button">Return</button>
 		</div>
-		<ul id="display">
+		<ul class="display" id="display">
 			<li class="recipe-id hidden"></li>
 			<li id="name">
 				<h3 name="name" class="js-display-name"></h3>
 			</li><hr>
 			<li id="link">
-				<p name="link"><a href="" class="js-display-link"></a></p>
+				<p name="link"><a href="" class="js-display-link" target="_blank"></a></p>
 				<p class="no-link hidden">No URL added</p>
 			</li><hr><br>
 			<li id="ingredients">
