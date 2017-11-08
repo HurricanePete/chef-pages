@@ -54,6 +54,7 @@ function ingredientsCountCheck(target) {
         target.closest('ul').append(`<li class="message"><span class="empty empty-ingredients">${INGREDIENTS_MESSAGE_TEMPLATE}</span>` + 
             `<i class="fa fa-plus-circle fa-lg ingredients-adder" aria-hidden="true"></i></li>`);
         target.closest('form').find('button.post-submit').addClass('hidden');
+        target.closest('form').find('button.put-submit').addClass('hidden');
     }
 }
 
@@ -86,18 +87,18 @@ function countHandler(ingredientsTarget, booksTarget, categoriesTarget) {
 }
 
 function allowPostSubmit(item, target) {
-    if (item === 'ingredients') {
+    if (item === 'ingredients' && state.request === 'post') {
         target.closest('form').find('button.post-submit').removeClass('hidden');
+    }
+    else if (item === 'ingredients' && state.request === 'put') {
+        target.closest('form').find('button.put-submit').removeClass('hidden');
     }
 }
 
 function messageRemover(item, target) {
-    if (state[`${item}Count`] > 0 && state.request === 'post') {
+    if (state[`${item}Count`] > 0) {
 //if messageRemover is called for ingredients it will reveal the submit button again
         allowPostSubmit(item, target);
-        target.closest('ul').find('li.message').remove();
-    }
-    else if (state[`${item}Count`] > 0) {
         target.closest('ul').find('li.message').remove();
     }
 }
