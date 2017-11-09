@@ -13,11 +13,11 @@ let state = {
 }
 
 function addCount(item) {
-    state[`${item}Count`]++;
+    state[item + 'Count']++;
 }
 
 function minusCount(item) {
-    state[`${item}Count`]--;
+    state[item + 'Count']--;
 }
 
 function minusCountHandler(target) {
@@ -51,8 +51,8 @@ function ingredientsCountCheck(target) {
         return;
     }
     else if (state.ingredientsCount < 1) {
-        target.closest('ul').append(`<li class="message"><span class="empty empty-ingredients">${INGREDIENTS_MESSAGE_TEMPLATE}</span>` + 
-            `<i class="fa fa-plus-circle fa-lg ingredients-adder" aria-hidden="true"></i></li>`);
+        target.closest('ul').append('<li class="message"><span class="empty empty-ingredients">' + INGREDIENTS_MESSAGE_TEMPLATE + '</span>' + 
+            '<i class="fa fa-plus-circle fa-lg ingredients-adder" aria-hidden="true"></i></li>');
         target.closest('form').find('button.post-submit').addClass('hidden');
         target.closest('form').find('button.put-submit').addClass('hidden');
     }
@@ -64,8 +64,8 @@ function booksCountCheck(target) {
         return;
     }
     else if (state.booksCount < 1) {
-        target.closest('li').before(`<li class="message"><span class="empty empty-books">${BOOKS_MESSAGE_TEMPLATE}</span>` + 
-            `<i class="fa fa-plus-circle fa-lg books-adder" aria-hidden="true"></i></li>`);
+        target.closest('li').before('<li class="message"><span class="empty empty-books">' + BOOKS_MESSAGE_TEMPLATE + '</span>' + 
+            '<i class="fa fa-plus-circle fa-lg books-adder" aria-hidden="true"></i></li>');
     }
 }
 
@@ -75,8 +75,8 @@ function categoriesCountCheck(target) {
         return;
     }
     else if (state.categoriesCount < 1) {
-        target.closest('li').before(`<li class="message"><span class="empty empty-categories">${CATEGORIES_MESSAGE_TEMPLATE}</span>` +
-            `<i class="fa fa-plus-circle fa-lg categories-adder" aria-hidden="true"></i><li>`);
+        target.closest('li').before('<li class="message"><span class="empty empty-categories">' + CATEGORIES_MESSAGE_TEMPLATE + '</span>' +
+            '<i class="fa fa-plus-circle fa-lg categories-adder" aria-hidden="true"></i><li>');
     }
 }
 
@@ -96,7 +96,7 @@ function allowPostSubmit(item, target) {
 }
 
 function messageRemover(item, target) {
-    if (state[`${item}Count`] > 0) {
+    if (state[item + 'Count'] > 0) {
 //if messageRemover is called for ingredients it will reveal the submit button again
         allowPostSubmit(item, target);
         target.closest('ul').find('li.message').remove();
@@ -119,6 +119,14 @@ function inputToLowerCase(inputArray) {
         return;
     }
 }
+
+//polyfill of .includes() method for internet explorer compatability
+if (!String.prototype.includes) {
+     String.prototype.includes = function() {
+         'use strict';
+         return String.prototype.indexOf.apply(this, arguments) !== -1;
+     };
+ }
 
 //lines 25 through 79 create a search function for results when all recipes are returned from the database
 function filterAll(input, data) {
@@ -189,22 +197,22 @@ function ingredientsList(list) {
 function inputAdder(target, type, nameId) {
     target.closest('ul').append(
         '<li class="js-added">' + 
-        `<input type="${type}" name="${nameId}" id="${nameId}">` + 
+        '<input type="' + type + '"" name="' + nameId + '" id="' + nameId + '">' + 
         '<i class="fa fa-minus-circle fa-lg js-input-delete" aria-hidden="true"></i>' +
-        `<i class="fa fa-plus-circle fa-lg ${nameId}-adder" aria-hidden="true"></i>` +
+        '<i class="fa fa-plus-circle fa-lg ' + nameId + '-adder" aria-hidden="true"></i>' +
         '</li>'
         );
 }
 
 function displayListAdder(target, nameId) {
     target.append(
-        `<li class="js-added" id="${nameId}">` + '</li>'
+        '<li class="js-added" id="' + nameId + '"></li>'
         );
 }
 
 function displayLinkAdder(target, nameId) {
     target.append(
-        `<li id="${nameId}" class="js-added-link">` +
+        '<li id="' + nameId + '" class="js-added-link">' +
         '<button class="js-display-link-button"></button>' + 
         '</li>'
         );
@@ -222,7 +230,10 @@ function displayLinkHandler(array, target, nameId) {
 function formToArray(target, submitValue) {
     if(target.length !== 0) {
         target.each(function() {
-            submitValue.push($(this).val());
+            if(($(this).val()) === '') {
+                return
+            }
+            submitValue.push($.trim(($(this).val())));
         })
     }
     else{
@@ -232,17 +243,17 @@ function formToArray(target, submitValue) {
 
 //adds and fills the appropriate amount of HTML list elements from result arrays
 function formAdditionsHandler(array, type, nameId) {
-    if(array.length === 0 || array[0] === null) {
-        state[`${nameId}Count`] = 0
+    if(array.length === 0 || array[0] === null || array[0] === '') {
+        state[nameId + 'Count'] = 0
     }
     else if(array.length > 0) {
         let additions = 0;
         for (let i=1; i<=array.length; i++) {
-            inputAdder(($('#post-form')).find(`.${nameId}-seed`), type, nameId);
+            inputAdder(($('#post-form')).find('.' + nameId + '-seed'), type, nameId);
             additions++;
         }
         for (let i=0; i<=additions; i++) {
-            $(`ul.${nameId}-field`).find('input').each(function(item) {
+            $('ul.' + nameId + '-field').find('input').each(function(item) {
                 $(this).val(array[i]);
                 i++;
                 addCount(nameId);
@@ -256,11 +267,11 @@ function displayAdditionsHandler(array, nameId) {
     if(array.length > 0) {
         let additions = 0;
         for (let i=1; i<=array.length; i++) {
-            displayListAdder(($('#display').find(`.js-display-${nameId}`)), nameId);
+            displayListAdder(($('#display').find('.js-display-' + nameId)), nameId);
             additions++;
         }
         for (let i=0; i<=additions; i++) {
-            $(`ul.js-display-${nameId}`).find('li').each(function(item) {
+            $('ul.js-display-' + nameId).find('li').each(function(item) {
                 $(this).text(array[i]);
             i++;
             })
@@ -273,11 +284,11 @@ function displayLinkContentHandler(array, nameId) {
     if(array.length > 0) {
         let additions = 0;
         for (let i=1; i<=array.length; i++) {
-            displayLinkAdder(($('#display').find(`.js-display-${nameId}`)), nameId)
+            displayLinkAdder(($('#display').find('.js-display-' + nameId)), nameId)
             additions++;
         }
         for (let i=0; i<=additions; i++) {
-            $(`ul.js-display-${nameId}`).find('button').each(function(item) {
+            $('ul.js-display-' + nameId).find('button').each(function(item) {
                 $(this).text(array[i]);
             i++;
             })
@@ -360,7 +371,7 @@ function replaceInitialInputs(target) {
         else {
             type = 'text';
         }
-        inputAdder(target.find(`li.${fields[i]}-seed`), type, fields[i]);
+        inputAdder(target.find('li.' + fields[i] + '-seed'), type, fields[i]);
     }
 }
 
@@ -525,7 +536,7 @@ $('.post-submit').click(function(event) {
         success: populateDisplay
     }
     state.request = 'display';
-    return new Promise ((resolve, reject) => {
+    return new Promise (function(resolve, reject) {
         $.post(settings);
         resolve(stateToggle(state, $('body')))
         reject(function(err) {
@@ -542,7 +553,7 @@ $('div.js-display').on('click', '.delete-button', function(event) {
         type: 'delete'
     };
     state.request = 'get';
-    return new Promise ((resolve, reject) => {
+    return new Promise (function(resolve, reject) {
         $.ajax(settings);
         resolve(location.reload());
         reject(function(err) {
@@ -561,7 +572,7 @@ $('div.js-display').on('click', '.put-button', function(event) {
         type: 'get',
         success: populateForm
     };
-    return new Promise ((resolve, reject) => {
+    return new Promise (function(resolve, reject) {
         $.ajax(settings);
         resolve($('div.js-results').find(this).closest('div').remove());
         reject(function(err) {
@@ -596,7 +607,7 @@ $('button.put-submit').click(function(event) {
         success: populateDisplay
     };
     state.request = 'display';
-    return new Promise ((resolve, reject) => {
+    return new Promise (function(resolve, reject) {
         $.ajax(settings);
         resolve(stateToggle(state, $('body')));
         reject(function(err) {
