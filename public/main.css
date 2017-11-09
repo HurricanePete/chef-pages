@@ -43,10 +43,6 @@ select {
 	background-color: lightgrey;
 }
 
-i {
-	display: inline-block;
-}
-
 a {
 	color: green;
 	text-decoration: none;
@@ -65,13 +61,17 @@ li {
 	width: 100%;
 }
 
+textarea {
+	height: 100px;
+}
+
 input, textarea {
 	padding: 10px 15px;
     width: 65%;
     margin-right: 0;
     border: 1px solid black;
 }
-form#post-form {
+form.post-form {
 	margin-top: 2.5%;
 	padding-left: 5%;
 	padding-right: 10%
@@ -100,7 +100,7 @@ ul.ingredients-field, ul.books-field, ul.categories-field {
 	margin-left: 69px;
 }
 
-ul#post > li {
+ul.post > li {
 	margin: 15px auto;
 }
 
@@ -120,12 +120,12 @@ ul#post > li {
 	width: 25%;
 }
 
-#search {
+.search {
     width: 40%;
     margin: 0 0 0 0;
 }
 
-#filter {
+.filter {
 	height: 40px;
 	font-weight: bold;
 	padding-left: 5px;
@@ -138,6 +138,10 @@ ul#post > li {
 	padding-right: 40px;
 }
 
+.js-added > input {
+	margin-right: 3px;
+}
+
 .js-results {
 	padding: 0% 10%;
 }
@@ -148,6 +152,15 @@ div.results-frame {
     margin: 20px auto;
     padding: 20px 50px;
     background-color: ghostwhite;
+    transition-property: background, border-radius;
+    transition-duration: .25s;
+    transition-timing-function: linear;
+}
+
+div.results-frame:hover {
+	background-color: lightgrey;
+	border-radius: 15px; 
+	cursor: pointer;
 }
 
 div.results-frame > label {
@@ -184,7 +197,7 @@ ul.ingredients-list {
 	padding: 0;
 }
 
-ul#display {
+ul.display {
 	padding-top: 1%;
 }
 
@@ -234,9 +247,17 @@ i.fa-minus-circle {
 	padding-left: 4px;
 }
 
+.js-added > i.fa-plus-circle {
+	margin-left: 5px;
+}
+
 button.js-display-link-button {
 	background-color: darkseagreen;
 	margin: 7.5px;
+}
+
+button.js-display-link-button:hover {
+	cursor: pointer;
 }
 
 div.display-lists {
@@ -257,4 +278,36 @@ div.return-container {
 .no-link, .no-notes, .no-books, .no-categories {
 	font-style: italic;
     color: grey;
+}
+
+.empty {
+	width: 60%;
+	margin-right: 15px;
+    font-style: italic;
+    color: grey;
+}
+
+.empty-ingredients {
+	width: 60%;
+	margin-right: 15px;
+    font-style: italic;
+    font-weight: bold;
+    color: coral;
+}
+
+@media only screen and (max-width: 675px) {
+    label {
+        width: 100%;
+        display: block;
+    }
+    ul {
+        margin: 0 auto;
+    }
+    ul.ingredients-field, ul.books-field, ul.categories-field {
+        margin-left: 0px;
+    }
+    .js-added, .add-buttons {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
 }
