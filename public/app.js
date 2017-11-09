@@ -2,7 +2,7 @@ let SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/'
 
 if (window.location.host === 'localhost:8080') {
     SERVER_URL = 'http://localhost:8080/recipes/'
-} 
+}
 
 let state = {
     request: 'get',
@@ -10,6 +10,17 @@ let state = {
     ingredientsCount: 1,
     booksCount: 1,
     categoriesCount: 1
+}
+
+//polyfill to replace includes for IE compatibility
+function doesContain(array, value) {
+    if(array.indexOf(value) === -1) {
+        return false
+    }
+    else {
+        return true
+        console.log('chicken')
+    }
 }
 
 function addCount(item) {
@@ -120,20 +131,12 @@ function inputToLowerCase(inputArray) {
     }
 }
 
-//polyfill of .includes() method for internet explorer compatability
-if (!String.prototype.includes) {
-     String.prototype.includes = function() {
-         'use strict';
-         return String.prototype.indexOf.apply(this, arguments) !== -1;
-     };
- }
-
 //lines 25 through 79 create a search function for results when all recipes are returned from the database
 function filterAll(input, data) {
     let results = data.filter(function(recipe) {
-        let caseName = stringToLowerCase(recipe.name)
+        let caseName = stringToLowerCase(recipe.name);
         let caseTags  = inputToLowerCase(recipe.tags);
-        if (caseName.includes(input) || (recipe.books).includes(input) || (caseTags).includes(input)) {
+        if (doesContain(caseName, input) || doesContain(recipe.books, input) || doesContain(caseTags, input)) {
             return recipe
         }
     })
@@ -142,7 +145,7 @@ function filterAll(input, data) {
 
 function filterName(input, data) {
     let results = data.filter(function(recipe) {
-        if ((stringToLowerCase(recipe.name)).includes(input)) {
+        if(doesContain((stringToLowerCase(recipe.name)), input)) {
             return recipe
         }
     })
@@ -151,7 +154,7 @@ function filterName(input, data) {
 
 function filterBook(input, data) {
     let results = data.filter(function(recipe) {
-        if ((inputToLowerCase(recipe.books)).includes(input)) {
+        if(doesContain(recipe.books, parseInt(input, 10))) {
             return recipe
         }
     })
@@ -160,7 +163,7 @@ function filterBook(input, data) {
 
 function filterCategory(input, data) {
     let results = data.filter(function(recipe) {
-        if ((inputToLowerCase(recipe.tags)).includes(input)) {
+        if(doesContain(inputToLowerCase(recipe.tags), input)) {
             return recipe
         }
     })
@@ -177,7 +180,7 @@ function resultSwitcher(data) {
         case 'name':
             displayRecipes(filterName(searchTerm, data));
             break;
-        case 'book':
+        case 'books':
             displayRecipes(filterBook(searchTerm, data));
             break;
         case 'categories':
