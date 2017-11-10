@@ -20,6 +20,7 @@ app.get('/recipes', (req, res) => {
 	.find()
 	.exec()
 	.then(recipes => {
+		res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
 		res.json(recipes.map(recipe => recipe.recipeRepr()));
 	}) 
 	.catch(err => {
@@ -32,14 +33,15 @@ app.get('/recipes/:id', (req, res) => {
 	Recipe
 	.findById(req.params.id)
 	.exec()
-	.then(recipe => res.json(recipe.recipeRepr()))
+	.then(recipe => {
+		res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+		res.json(recipe.recipeRepr())
+	})
 	.catch(err => {
 		console.error(err);
 		res.status(500).json({error: 'Something went wrong'});
 	});
 });
-
-app.get('/recipes/')
 
 app.post('/recipes', (req, res) => {
 	const requiredFields = ['name', 'ingredients', 'prep'];
