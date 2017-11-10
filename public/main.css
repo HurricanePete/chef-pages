@@ -1,21 +1,35 @@
 * {
-	font-family: 'Roboto', sans-serif;
+	font-family: 'Roboto Slab', serif;
+}
+
+body {
+	background-image: url('./images/chef-pages_bg_edit.jpeg');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
 }
 
 nav {
 	text-align: right;
-    padding: 15px 50px 15px 15px;
-    background-color: lightblue;
+    padding: 15px 15px 15px 15px;
+    background-color: #CA924B;
 }
 
 header {
 	text-align: center;
+	padding-top: 2rem;
+	padding-bottom: 1rem;
+}
+
+header > h1, header > h2 {
+	color: #FFE19B;
 }
 
 legend {
 	font-weight: bold;
-    padding-bottom: 5px;
+    padding-bottom: 1rem;
     margin: 0 auto;
+    color: #FFE19B;
 }
 
 ul {
@@ -30,13 +44,24 @@ form {
     margin: 0 auto;
 }
 
+p, label, ul {
+	color: #863A14;
+	font-size: 18px;
+}
+
 label {
 	width: 99px;
 	float: left;
 }
 
-h4 {
+h1, h2, h3 {
+	font-weight: 600;
+	text-transform: capitalize;
+}
+
+h3 {
 	margin-bottom: 14px;
+	color: #863A14;
 }
 
 select {
@@ -44,13 +69,13 @@ select {
 }
 
 a {
-	color: green;
+	color: #113A55;
 	text-decoration: none;
 }
 
 button {
 	margin: 15px 0;
-    background-color: lightgrey;
+    background-color: #356381;
     border: 1px solid lightgrey;
     padding: 10px 15px;
     font-weight: bold;
@@ -65,12 +90,32 @@ textarea {
 	height: 100px;
 }
 
+hr.separator {
+	margin: 0 0 3rem 0;
+}
+
 input, textarea {
 	padding: 10px 15px;
     width: 65%;
     margin-right: 0;
-    border: 1px solid black;
+    border: 1px solid lightgrey;
+    background-color: #FFF7D1;
 }
+
+nav > h4 {
+	float: left;
+    margin: 0;
+    text-align: center;
+    width: 10rem;
+    color: #356381;
+    font-weight: bold;
+}
+
+form.get-form {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+}
+
 form.post-form {
 	margin-top: 2.5%;
 	padding-left: 5%;
@@ -78,11 +123,19 @@ form.post-form {
 }
 
 div.js-post {
-	margin: 0 auto;
+	margin: 3rem auto;
 	width: 60%;
 	border: 1px solid grey;
 	padding: 1.5% 5% 5% 5%;
 	text-align: center;
+	background-color: #FFE19B;
+	opacity: .96;
+}
+
+div.js-post label {
+	text-align: right;
+	position: relative;
+	right: 1rem;
 }
 
 div.books, div.categories {
@@ -113,7 +166,7 @@ ul.post > li {
 	margin: 0 0 0 0;
 }
 
-.post-submit {
+.post-submit, .put-submit {
 	text-align: center;
 	position: relative;
 	right: 5%;
@@ -123,12 +176,15 @@ ul.post > li {
 .search {
     width: 40%;
     margin: 0 0 0 0;
+    border: 1px solid lightgrey;
+    background-color: #FFE19B;
 }
 
 .filter {
 	height: 40px;
 	font-weight: bold;
 	padding-left: 5px;
+	background-color: #356381;
 }
 
 .js-added {
@@ -147,18 +203,19 @@ ul.post > li {
 }
 
 div.results-frame {
-	border: 1px solid black;
+	border: 1px solid lightgrey;
     width: 45%;
     margin: 20px auto;
     padding: 20px 50px;
-    background-color: ghostwhite;
+    background-color: #FFE19B;
+    opacity: .96;
     transition-property: background, border-radius;
     transition-duration: .25s;
     transition-timing-function: linear;
 }
 
 div.results-frame:hover {
-	background-color: lightgrey;
+	background-color: #CA774B;
 	border-radius: 15px; 
 	cursor: pointer;
 }
@@ -169,13 +226,9 @@ div.results-frame > label {
 	margin-bottom: 2.5px;
 }
 
-div.results-frame > a {
-	text-decoration: none;
-	color: green;
-}
-
 div.results-frame > p {
 	margin: 15px 0px 15px 0px;
+	overflow: hidden;
 }
 
 div.results-frame > div {
@@ -184,11 +237,17 @@ div.results-frame > div {
 }
 
 div.js-display {
-	margin: 0 auto;
+	margin: 3rem auto;
 	width: 60%;
 	border: 1px solid grey;
 	padding: 2.5% 5% 5% 5%;
 	text-align: center;
+	background-color: #FFE19B;
+	opacity: .96;
+}
+
+.js-display-link {
+	color: #113A55;
 }
 
 ul.ingredients-list {
@@ -226,14 +285,14 @@ li.edit-buttons {
 
 a.js-getButton {
 	font-weight: 700;
-    color: grey;
+    color: #FFF8EF;
     text-decoration: none;
     margin-left: 25px;
 } 
 
 a.js-postButton {
 	font-weight: 700;
-    color: green;
+    color: #FFD39B;
     text-decoration: none;
     margin-left: 25px;
 }
@@ -245,6 +304,11 @@ button.put-button, button.delete-button {
 
 i.fa-minus-circle {
 	padding-left: 4px;
+	color: #294F6D;
+}
+
+i.fa-plus-circle {
+	color: #294F6D;
 }
 
 .js-added > i.fa-plus-circle {
@@ -252,12 +316,16 @@ i.fa-minus-circle {
 }
 
 button.js-display-link-button {
-	background-color: darkseagreen;
+	background-color: #356381;
 	margin: 7.5px;
+	transition-property: background;
+    transition-duration: .25s;
+    transition-timing-function: linear;
 }
 
 button.js-display-link-button:hover {
 	cursor: pointer;
+	background-color: #7199B3;
 }
 
 div.display-lists {
@@ -277,14 +345,14 @@ div.return-container {
 
 .no-link, .no-notes, .no-books, .no-categories {
 	font-style: italic;
-    color: grey;
+    color: steelblue;
 }
 
 .empty {
 	width: 60%;
 	margin-right: 15px;
     font-style: italic;
-    color: grey;
+    color: #312200;
 }
 
 .empty-ingredients {
@@ -292,13 +360,15 @@ div.return-container {
 	margin-right: 15px;
     font-style: italic;
     font-weight: bold;
-    color: coral;
+    color: #01131F;
 }
 
 @media only screen and (max-width: 675px) {
     label {
         width: 100%;
         display: block;
+        text-align: left;
+        position: static;
     }
     ul {
         margin: 0 auto;
