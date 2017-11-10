@@ -37,6 +37,8 @@ app.get('/recipes/:id', (req, res) => {
 	.exec()
 	.then(recipe => {
 		res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+		res.setHeader("Pragma", "no-cache");
+		res.setHeader("Expires", "0");
 		res.json(recipe.recipeRepr())
 	})
 	.catch(err => {

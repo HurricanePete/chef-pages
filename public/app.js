@@ -6,6 +6,8 @@ if (window.location.host === 'localhost:8080') {
 
 let state = {
     request: 'get',
+    previousPage: null,
+    history: null,
     putId: null,
     ingredientsCount: 1,
     booksCount: 1,
@@ -21,6 +23,10 @@ function doesContain(array, value) {
         return true
         console.log('chicken')
     }
+}
+
+function setReturn() {
+    state.previousPage = state.request;
 }
 
 function addCount(item) {
@@ -414,8 +420,8 @@ function displayRecipes(data) {
         $('.js-results').append(
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + item.id + '</p>' +
-            '<h4>' + item.name + '</h4>' +
-            '<p><a href="item.link" target="_blank">' + item.link + '</a></p>' +
+            '<h3>' + item.name + '</h3>' +
+            '<p><a href="' + item.link + '" target="_blank">' + item.link + '</a></p>' +
             '<label for="ingredients">Ingredients</label>' + '<br>' +
             '<div id="ingredients">' +
             '<ul class="ingredients-list">' + ingredientsList(item.ingredients) + '</ul>' +
@@ -434,7 +440,7 @@ function displayGet(target) {
 }
 
 function displayPost(target) {
-    target.find('h4.post-title').text('Add a Recipe');
+    target.find('h3.post-title').text('Add A Recipe');
     target.find('div.js-post').removeClass('hidden');
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
@@ -444,7 +450,7 @@ function displayPost(target) {
 }
 
 function displayPut(target) {
-    target.find('h4.post-title').text('Edit a Recipe');
+    target.find('h3.post-title').text('Edit A Recipe');
     target.find('div.js-post').removeClass('hidden');
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
@@ -505,6 +511,7 @@ $('.js-post').on('click', '.js-input-delete', function(event) {
 
 $('#get-form').submit(function(event) {
     event.preventDefault();
+    setReturn();
     state.request = 'get';
     stateToggle(state, $('body'));
     $(this).closest('body').find('.js-results').empty();
@@ -538,6 +545,7 @@ $('.post-submit').click(function(event) {
         contentType: 'application/json',
         success: populateDisplay
     }
+    setReturn();
     state.request = 'display';
     return new Promise (function(resolve, reject) {
         $.post(settings);
@@ -555,6 +563,7 @@ $('div.js-display').on('click', '.delete-button', function(event) {
         url: SERVER_URL + id,
         type: 'delete'
     };
+    setReturn();
     state.request = 'get';
     return new Promise (function(resolve, reject) {
         $.ajax(settings);
@@ -567,6 +576,7 @@ $('div.js-display').on('click', '.delete-button', function(event) {
 
 $('div.js-display').on('click', '.put-button', function(event) {
     event.preventDefault();
+    setReturn();
     state.request = "put";
     stateToggle(state, $('body'));
     let id = $('.recipe-id').text();
@@ -609,6 +619,7 @@ $('button.put-submit').click(function(event) {
         contentType: 'application/json',
         success: populateDisplay
     };
+    setReturn();
     state.request = 'display';
     return new Promise (function(resolve, reject) {
         $.ajax(settings);
@@ -623,6 +634,7 @@ $('button.put-submit').click(function(event) {
 $('a.js-getButton').click(function(event) {
     location.reload();
     event.preventDefault();
+    setReturn();
     state.request = 'get';
     $(this).closest('body').find('.js-results').empty();
     stateToggle(state, $('body'));
@@ -633,6 +645,7 @@ $('a.js-postButton').click(function(event) {
     resetCounts();
     resetForm($('#post-form'));
     replaceInitialInputs($('body'));
+    setReturn();
     state.request = 'post';
     stateToggle(state, $('body'));
 })
@@ -640,6 +653,7 @@ $('a.js-postButton').click(function(event) {
 $('div.js-results').on('click', 'div.results-frame', function(event) {
     event.preventDefault();
     resetDisplay($('div.js-display'));
+    setReturn();
     state.request = 'display';
     stateToggle(state, $('body'));
     let id = $('div.js-results').find(this).closest('div').find('p:first').text();
@@ -654,10 +668,16 @@ $('div.js-results').on('click', 'div.results-frame', function(event) {
 
 $('button.return-button').click(function(event) {
     event.preventDefault();
-    state.request = 'get';
+    state.history = state.request;
+    if(state.request === 'display' && state.history === 'display') {
+        state.previousPage = 'get';
+    }
+    else if(state.previousPage === 'put' && state.history === 'post') {
+        state.previousPage = 'display';
+    }
+    state.request = state.previousPage;
+    state.previousPage = state.history;
     stateToggle(state, $('body'));
-    $(this).closest('body').find('.js-results').empty();
-    $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
 })
 
 $('div.js-display').on('click', 'button.js-display-link-button', function(event) {
@@ -665,6 +685,7 @@ $('div.js-display').on('click', 'button.js-display-link-button', function(event)
     $(this).closest('body').find('.js-results').empty();
     const search = $(this).text();
     const filter = $(this).closest('li').attr('id');
+    setReturn();
     state.request = 'get';
     stateToggle(state, $('body'));
     $('#search').val(search);
