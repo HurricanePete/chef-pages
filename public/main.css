@@ -169,7 +169,6 @@ ul.post > li {
 	margin: 15px auto;
 }
 
-
 .hidden {
 	display: none;
 }
@@ -207,7 +206,7 @@ ul.post > li {
 }
 
 .js-added > input {
-	margin-right: 3px;
+	margin: 0 0 3px 3px;
 }
 
 .js-results {
@@ -306,7 +305,8 @@ a.js-postButton {
 	font-weight: 700;
     color: #FFD39B;
     text-decoration: none;
-    margin-left: 25px;
+    margin-left: 2rem;
+    margin-right: 3rem;
 }
 
 button.put-button, button.delete-button {
@@ -314,12 +314,17 @@ button.put-button, button.delete-button {
 	width: 100px;
 }
 
-i.fa-minus-circle {
-	padding-left: 4px;
-	color: #294F6D;
+div.add-remove {
+	display: inline-block;
 }
 
-i.fa-plus-circle {
+div i.fa-minus-circle, div i.fa-plus-circle {
+	font-size: 1.5em;
+	vertical-align: -20%;
+	margin-left: 10px;
+}
+
+i.fa-minus-circle, i.fa-plus-circle {
 	color: #294F6D;
 }
 
@@ -391,8 +396,8 @@ div.return-container {
 	nav > h4 {
 		display: none;
 	}
-	div.add-remove {
-		display: inline-block;
+	a.js-postButton, a.js-getButton {
+		margin: 1rem;
 	}
 	div i.fa-minus-circle, div i.fa-plus-circle {
 		font-size: 2em;
