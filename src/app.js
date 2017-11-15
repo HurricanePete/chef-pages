@@ -21,7 +21,6 @@ function doesContain(array, value) {
     }
     else {
         return true
-        console.log('chicken')
     }
 }
 
@@ -137,6 +136,11 @@ function inputToLowerCase(inputArray) {
     }
 }
 
+//returns a random recipe if a search returns zero results
+function randomOnEmpty(data) {
+    return ['empty', data[Math.floor(Math.random() * (data.length + 1))]];
+}
+
 //lines 25 through 79 create a search function for results when all recipes are returned from the database
 function filterAll(input, data) {
     let results = data.filter(function(recipe) {
@@ -146,6 +150,9 @@ function filterAll(input, data) {
             return recipe
         }
     })
+    if(results.length < 1) {
+        results = randomOnEmpty(data);
+    }
     return results
 }
 
@@ -155,6 +162,9 @@ function filterName(input, data) {
             return recipe
         }
     })
+    if(results.length < 1) {
+        results = randomOnEmpty(data);
+    }
     return results
 }
 
@@ -164,6 +174,9 @@ function filterBook(input, data) {
             return recipe
         }
     })
+    if(results.length < 1) {
+        results = randomOnEmpty(data);
+    }
     return results
 }
 
@@ -173,6 +186,9 @@ function filterCategory(input, data) {
             return recipe
         }
     })
+    if(results.length < 1) {
+        results = randomOnEmpty(data);
+    }
     return results
 }
 
@@ -207,8 +223,8 @@ function inputAdder(target, type, nameId) {
     target.closest('ul').append(
         '<li class="js-added">' + 
         '<input type="' + type + '"" name="' + nameId + '" id="' + nameId + '">' + 
-        '<i class="fa fa-minus-circle fa-lg js-input-delete" aria-hidden="true"></i>' +
-        '<i class="fa fa-plus-circle fa-lg ' + nameId + '-adder" aria-hidden="true"></i>' +
+        '<div class="add-remove"><span><i class="fa fa-minus-circle fa-lg js-input-delete" aria-hidden="true"></i></span>' +
+        '<span><i class="fa fa-plus-circle fa-lg ' + nameId + '-adder" aria-hidden="true"></i></span></div>' +
         '</li>'
         );
 }
@@ -415,7 +431,23 @@ function populateDisplay(data) {
 }
 
 //populates the search screen with results after search submission
-function displayRecipes(data) { 
+function displayRecipes(data) {
+    if(data[0] === 'empty') {
+        $('.js-results').append(
+            '<div class="no-results"><p>Sorry, your search didn\'t return any results. Here\'s a random recipe to cheer you up.</p></div>' +
+            '<div class="results-frame">' +
+            '<p class="js-id hidden">' + data[1].id + '</p>' +
+            '<h3>' + data[1].name + '</h3>' +
+            '<p><a href="' + data[1].link + '" target="_blank">' + data[1].link + '</a></p>' +
+            '<label for="ingredients">Ingredients</label>' + '<br>' +
+            '<div id="ingredients">' +
+            '<ul class="ingredients-list">' + ingredientsList(data[1].ingredients) + '</ul>' +
+            '</div>' +
+            '<label for="prep">Preparation</label>' + '<br>' +
+            '<p id="prep">' + data[1].prep + '</p>' +
+            '</div>');
+        return false;
+    }
     data.forEach(function(item) {
         $('.js-results').append(
             '<div class="results-frame">' +

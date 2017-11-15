@@ -122,6 +122,18 @@ form.post-form {
 	padding-right: 10%
 }
 
+div.no-results {
+	text-align: center;
+	margin-bottom: 3rem;
+}
+
+div.no-results > p {
+	color: #FFE19B;
+	font-size: 20px;
+	font-weight: bold;
+	font-style: italic;
+}
+
 div.js-post {
 	margin: 3rem auto;
 	width: 60%;
@@ -364,7 +376,50 @@ div.return-container {
 }
 
 @media only screen and (max-width: 675px) {
-    label {
+	body {
+		background-size: auto;
+	}
+	h2, h2, h3 {
+		font-size: larger;
+	}
+	p, label, ul {
+		font-size: small;
+	}
+	nav {
+		text-align: center;
+	}
+	nav > h4 {
+		display: none;
+	}
+	div.add-remove {
+		display: inline-block;
+	}
+	div i.fa-minus-circle, div i.fa-plus-circle {
+		font-size: 2em;
+		vertical-align: -20%;
+		margin-left: 10px;
+	}
+	input.search {
+		width: 85%;
+		margin-bottom: 1rem;
+	}
+	input.name, input.url, textarea.prep, input.notes {
+		width: 82%;
+	}
+	button.search-submit {
+		width: 25%;
+	}
+	div.js-results {
+		padding: 0;
+		width: 100%;
+	}
+	div.results-frame, div.js-display, div.js-post {
+		width: 85%;
+	}
+	div.results-frame {
+		padding: 20px;
+	}
+    div.js-post label {
         width: 100%;
         display: block;
         text-align: left;
