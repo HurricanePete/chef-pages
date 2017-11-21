@@ -13,6 +13,13 @@
 	<nav>
 		<h4>Chef Pages</h4>
 		<a href="#" class="js-getButton"><i class="fa fa-search" aria-hidden="true"></i> Find Recipes</a>
+		<div class="dropdown">
+		  	<button class="dropbtn"> Find Recipes<i class="fa fa-caret-down"></i></button>
+		  	<div id="myDropdown" class="dropdown-content hidden">
+			    <button class="tablinks edamam">Web Search</button>
+				<button class="tablinks local">Chef Pages Search</button>
+			</div>
+		</div>
 		<a href="#" class="js-postButton"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add a Recipe</a>
 	</nav>
 	<main>
@@ -21,22 +28,26 @@
 			<h2>Create And View Custom Cookbooks</h2>
 		</header>
 		<div class="js-get">
-		<form class="get-form" action="" method="" id="get-form">
-		<legend>Search For Recipes</legend>
-			<div class="search-bar"></div>
-				<input class="search" type="text" name="search" id="search" placeholder="You can filter your search with the dropdown">
-				<button class="search-submit" type="submit" form="get-form">
-					<i class="fa fa-search" aria-hidden="true"></i>
-				</button>
-				<select class="filter" id="filter">
-					<option value="all" default>All</option>
-					<option value="name">Name</option>
-					<option value="user">User</option>
-					<option value="books">Cookbook</option>
-					<option value="categories">Category</option>
-				</select>
-			</div>
-		</form><hr class="separator">
+			<form class="get-form" action="" method="" id="get-form">
+			<legend>Search For Recipes</legend>
+				<div class="search-bar"></div>
+					<div>
+						<button class="tablinks edamam">Web Search</button>
+						<button class="tablinks local">Chef Pages Search</button>
+					</div>
+					<input class="search" type="text" name="search" id="search" placeholder="You can filter your search with the dropdown">
+					<button class="search-submit" type="submit" form="get-form">
+						<i class="fa fa-search" aria-hidden="true"></i>
+					</button>
+					<select class="filter" id="filter">
+						<option value="all" default>All</option>
+						<option value="name">Name</option>
+						<option value="user">User</option>
+						<option value="books">Cookbook</option>
+						<option value="categories">Category</option>
+					</select>
+				</div>
+			</form><hr class="separator">
 		</div>
 		<div class="js-post hidden">
 			<div class="return-container">

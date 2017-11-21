@@ -4,6 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
+const {router} = require('./edamam');
+
 const {DATABASE_URL, PORT} = require('./config');
 const {Recipe} = require('./models');
 
@@ -12,6 +14,8 @@ const app = express();
 app.use(morgan('common'));
 app.use(bodyParser.json());
 app.use(express.static('public'));
+
+app.use('/edamam/', router);
 
 mongoose.Promise = global.Promise;
 

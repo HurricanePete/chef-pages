@@ -1,15 +1,18 @@
 'use strict';
 
 var SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/';
+var API_URL = 'https://sleepy-ravine-11904.herokuapp.com/edamam/';
 
 if (window.location.host === 'localhost:8080') {
     SERVER_URL = 'http://localhost:8080/recipes/';
+    API_URL = 'http://localhost:8080/edamam/';
 }
 
 var state = {
     request: 'get',
     previousPage: null,
     history: null,
+    search: 'local',
     putId: null,
     ingredientsCount: 1,
     booksCount: 1,
@@ -22,6 +25,10 @@ var state = {
     } else {
         return true;
     }
+}
+
+function setSearch(term) {
+    state.search = term;
 }
 
 function setReturn() {
@@ -397,7 +404,6 @@ function populateForm(data) {
     zeroCounts();
     $('#name').val(data.name);
     $('#link').val(data.link);
-    //$('#ingredients').val(data.ingredients[0]);
     formAdditionsHandler(data['ingredients'], 'text', 'ingredients');
     $('textarea#prep').val(data.prep);
     $('input#notes').val(data.notes);
@@ -421,6 +427,35 @@ function populateDisplay(data) {
     clearEmptyFields();
 }
 
+function recipePasser(response) {
+    var prepBlock = response.instructions.join('<br><br>');
+    $('.js-display-prep').html(prepBlock);
+}
+
+//uses the choppingsboard.recipes api to scrape and parse the directions from the original source website
+function recipePrepHandler(url) {
+    var settings = {
+        method: 'get',
+        url: 'https://choppingboard.recipes/api/v0/recipe?key=63dfd3bb758a602be06ef2790d9926e6&q=' + url,
+        success: recipePasser
+    };
+    $.ajax(settings);
+}
+
+function populateEdamamDisplay(data) {
+    var recipe = data[0];
+    state.putId = recipe.uri;
+    resetDisplay($('div.js-display'));
+    $('.recipe-id').text(recipe.uri);
+    $('.js-display-name').text(recipe.label);
+    $('.js-display-link').text(recipe.url).attr('href', recipe.url);
+    displayAdditionsHandler(recipe['ingredientLines'], 'ingredients');
+    recipePrepHandler(recipe.url);
+    $('.js-display-notes').text(recipe.notes);
+    displayLinkContentHandler(recipe['dietLabels'], 'categories');
+    clearEmptyFields();
+}
+
 //populates the search screen with results after search submission
 function displayRecipes(data) {
     if (data[0] === 'empty') {
@@ -429,6 +464,16 @@ function displayRecipes(data) {
     }
     data.forEach(function (item) {
         $('.js-results').append('<div class="results-frame">' + '<p class="js-id hidden">' + item.id + '</p>' + '<h3>' + item.name + '</h3>' + '<p><a href="' + item.link + '" target="_blank">' + item.link + '</a></p>' + '<label for="ingredients">Ingredients</label>' + '<br>' + '<div id="ingredients">' + '<ul class="ingredients-list">' + ingredientsList(item.ingredients) + '</ul>' + '</div>' + '<label for="prep">Preparation</label>' + '<br>' + '<p id="prep">' + item.prep + '</p>' + '</div>');
+    });
+}
+
+function displayEdamam(data) {
+    if (data['hits'].length === 0) {
+        $('.js-results').append('<div class="no-results"><p>Sorry, your search didn\'t return any results.</p></div>');
+        return false;
+    }
+    data['hits'].forEach(function (item) {
+        $('.js-results').append('<div class="results-frame">' + '<p class="js-id hidden">' + item.recipe.uri + '</p>' + '<h3>' + item.recipe.label + '</h3>' + '<p><a href="' + item.recipe.url + '" target="_blank">' + item.recipe.url + '</a></p>' + '<label for="ingredients">Ingredients</label>' + '<br>' + '<div id="ingredients">' + '<ul class="ingredients-list">' + ingredientsList(item.recipe.ingredientLines) + '</ul>' + '</div>' + '</div>');
     });
 }
 
@@ -478,6 +523,16 @@ function stateToggle(state, target) {
     }
 }
 
+$('button.local').click(function (event) {
+    event.preventDefault();
+    setSearch('local');
+});
+
+$('button.edamam').click(function (event) {
+    event.preventDefault();
+    setSearch('edamam');
+});
+
 $('ul.ingredients-field').on('click', 'i.ingredients-adder', function (event) {
     event.preventDefault();
     addCount('ingredients');
@@ -512,7 +567,36 @@ $('#get-form').submit(function (event) {
     state.request = 'get';
     stateToggle(state, $('body'));
     $(this).closest('body').find('.js-results').empty();
-    $.ajax({ url: SERVER_URL, type: 'get', success: resultSwitcher });
+    var settings = void 0;
+    if (state.search === 'local') {
+        settings = {
+            url: SERVER_URL,
+            type: 'get',
+            success: resultSwitcher
+        };
+    } else if (state.search === 'edamam') {
+        settings = {
+            url: API_URL,
+            type: 'post',
+            data: JSON.stringify({
+                "search": stringToLowerCase($('#search').val()),
+                "from": 0,
+                "to": 10
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: displayEdamam
+        };
+    }
+    $.ajax(settings);
+});
+
+$('.edamam-search').submit(function (event) {
+    event.preventDefault();
+    setReturn();
+    state.request = 'get';
+    stateToggle(state, $('body'));
+    $(this).closest('body').find('.js-results').empty();
 });
 
 $('.post-submit').click(function (event) {
@@ -655,11 +739,25 @@ $('div.js-results').on('click', 'div.results-frame', function (event) {
     stateToggle(state, $('body'));
     var id = $('div.js-results').find(this).closest('div').find('p:first').text();
     state.putId = id;
-    var settings = {
-        url: SERVER_URL + id,
-        type: 'get',
-        success: populateDisplay
-    };
+    var settings = void 0;
+    if (state.search === 'local') {
+        settings = {
+            url: SERVER_URL + id,
+            type: 'get',
+            success: populateDisplay
+        };
+    } else if (state.search === 'edamam') {
+        settings = {
+            url: API_URL + 'single',
+            type: 'post',
+            data: JSON.stringify({
+                "singleUrl": state.putId
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: populateEdamamDisplay
+        };
+    }
     $.ajax(settings);
 });
 
@@ -688,3 +786,15 @@ $('div.js-display').on('click', 'button.js-display-link-button', function (event
     $('#filter').val(filter);
     $.ajax({ url: SERVER_URL, type: 'get', success: resultSwitcher });
 });
+
+$('button.dropbtn').click(function (event) {
+    event.preventDefault();
+    $('div.dropdown-content').toggleClass('hidden');
+});
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn')) {
+        $('button.dropdown-content').toggleClass('show');
+    }
+};
