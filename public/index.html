@@ -11,8 +11,7 @@
 </head>
 <body>
 	<nav>
-		<h4>Chef Pages</h4>
-		<a href="#" class="js-getButton"><i class="fa fa-search" aria-hidden="true"></i> Find Recipes</a>
+		<span class="logo"><img src="./images/chef-pages-logo.png" alt="chef-hat" /></span>
 		<div class="dropdown">
 		  	<button class="dropbtn"><i class="fa fa-search" aria-hidden="true"></i> Find Recipes <i class="fa fa-caret-down"></i></button>
 		  	<div id="myDropdown" class="dropdown-content hidden">
@@ -29,7 +28,7 @@
 		</header>
 		<div class="js-get">
 			<form class="get-form" action="" method="" id="get-form">
-			<legend>Search For Recipes</legend>
+			<legend>Search <span>Chef Pages</span> For Recipes</legend>
 				<div class="search-bar">
 					<input class="search" type="text" name="search" id="search" placeholder="You can filter your search with the dropdown">
 					<button class="search-submit" type="submit" form="get-form">
@@ -90,7 +89,9 @@
 				<button type="submit" class="post-submit">Create Recipe</button><button type="submit" class="put-submit hidden">Update Recipe</button>
 			</form>
 		</div>
-		<div class="js-results hidden"></div>
+		<div class="js-results hidden">
+		</div>
+		<div class="hidden edamam-nav"><button class="hidden edamam-prev"><i class="fa fa-angle-left" aria-hidden="true"></i> Prev</button><button class="edamam-next">Next <i class="fa fa-angle-right" aria-hidden="true"></i></button></div>
 		<div class="js-display hidden">
 			<div class="return-container">
 				<button class="return-button">Return</button>

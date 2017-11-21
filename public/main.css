@@ -11,7 +11,7 @@ body {
 
 nav {
 	text-align: right;
-    padding: 15px 15px 15px 15px;
+    padding: 10px 15px;
     background-color: #CA924B;
 }
 
@@ -102,13 +102,18 @@ input, textarea {
     background-color: #FFF7D1;
 }
 
-nav > h4 {
+legend > span {
+	font-size: large;
+	color: #F8F8FF;
+}
+
+span.logo {
 	float: left;
-    margin: 0;
-    text-align: center;
-    width: 10rem;
-    color: #356381;
-    font-weight: bold;
+    position: absolute;
+    letter-spacing: left;
+    left: 1rem;
+    top: -1.2rem;
+    cursor: pointer;
 }
 
 form.get-form {
@@ -167,6 +172,20 @@ ul.ingredients-field, ul.books-field, ul.categories-field {
 
 ul.post > li {
 	margin: 15px auto;
+}
+
+div.edamam-nav {
+	text-align: center;
+	margin: 0 auto;
+	width: 23%;
+}
+
+button.edamam-prev {
+	float: left;
+}
+
+button.edamam-next {
+	float: right;
 }
 
 .hidden {
@@ -259,6 +278,10 @@ div.js-display {
 
 .js-display-link {
 	color: #113A55;
+}
+
+p.js-display-prep {
+	white-space: pre-wrap;
 }
 
 ul.ingredients-list {
@@ -380,6 +403,15 @@ div.return-container {
     color: #01131F;
 }
 
+button.edamam-add {
+	float: right;
+}
+
+p.choppingboard-error {
+	color: coral;
+	font-style: italic;
+}
+
 button.tablinks {
 	background-color: #FFE19B;
     border: none;
@@ -387,13 +419,14 @@ button.tablinks {
     margin: 0;
     font-size: small;
     padding: 5px 10px;
+    width: 100%;
 }
 
 .dropbtn {
 	margin: 0;
     background-color: #4CAF50;
     color: white;
-    padding: 16px;
+    padding: 10px;
     font-size: 16px;
     border: none;
     cursor: pointer;
@@ -438,7 +471,7 @@ button.tablinks {
 	nav {
 		text-align: center;
 	}
-	nav > h4 {
+	span.logo {
 		display: none;
 	}
 	a.js-postButton, a.js-getButton {

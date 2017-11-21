@@ -15,7 +15,9 @@ router.post('/', (req, res) => {
 		qs: {
 			"q": req.body.search,
 			"app_id": config.EDAMAM_APP_ID,
-			"app_key": config.EDAMAM_APP_KEY
+			"app_key": config.EDAMAM_APP_KEY,
+			"from": req.body.from,
+			"to": req.body.to
 		}
 	}, function(err, response, body) {
 		if(response.statusCode === 200) {
@@ -41,7 +43,7 @@ router.post('/single', (req, res) => {
 	}, function(err, response, body) {
 		if(response.statusCode === 200) {
 			console.log(response.statusCode);
-			res.status(response.statusCode).send(verify);
+			res.status(response.statusCode).send(body);
 		}
 		else {
 			console.log(response.statusCode);
