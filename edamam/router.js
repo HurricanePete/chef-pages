@@ -41,7 +41,7 @@ router.post('/single', (req, res) => {
 	}, function(err, response, body) {
 		if(response.statusCode === 200) {
 			console.log(response.statusCode);
-			res.status(response.statusCode).send(body);
+			res.status(response.statusCode).send(verify);
 		}
 		else {
 			console.log(response.statusCode);

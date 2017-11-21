@@ -14,7 +14,7 @@
 		<h4>Chef Pages</h4>
 		<a href="#" class="js-getButton"><i class="fa fa-search" aria-hidden="true"></i> Find Recipes</a>
 		<div class="dropdown">
-		  	<button class="dropbtn"> Find Recipes<i class="fa fa-caret-down"></i></button>
+		  	<button class="dropbtn"><i class="fa fa-search" aria-hidden="true"></i> Find Recipes <i class="fa fa-caret-down"></i></button>
 		  	<div id="myDropdown" class="dropdown-content hidden">
 			    <button class="tablinks edamam">Web Search</button>
 				<button class="tablinks local">Chef Pages Search</button>
@@ -30,11 +30,7 @@
 		<div class="js-get">
 			<form class="get-form" action="" method="" id="get-form">
 			<legend>Search For Recipes</legend>
-				<div class="search-bar"></div>
-					<div>
-						<button class="tablinks edamam">Web Search</button>
-						<button class="tablinks local">Chef Pages Search</button>
-					</div>
+				<div class="search-bar">
 					<input class="search" type="text" name="search" id="search" placeholder="You can filter your search with the dropdown">
 					<button class="search-submit" type="submit" form="get-form">
 						<i class="fa fa-search" aria-hidden="true"></i>
@@ -98,6 +94,7 @@
 		<div class="js-display hidden">
 			<div class="return-container">
 				<button class="return-button">Return</button>
+				<button class="edamam-add">Add to Chef Pages</button>
 			</div>
 			<ul class="display" id="display">
 				<li class="recipe-id hidden"></li>

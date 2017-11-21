@@ -14,6 +14,7 @@ var state = {
     history: null,
     search: 'local',
     putId: null,
+    edamamPostObject: null,
     ingredientsCount: 1,
     booksCount: 1,
     categoriesCount: 1
@@ -430,6 +431,7 @@ function populateDisplay(data) {
 function recipePasser(response) {
     var prepBlock = response.instructions.join('<br><br>');
     $('.js-display-prep').html(prepBlock);
+    return prepBlock;
 }
 
 //uses the choppingsboard.recipes api to scrape and parse the directions from the original source website
@@ -443,16 +445,24 @@ function recipePrepHandler(url) {
 }
 
 function populateEdamamDisplay(data) {
-    var recipe = data[0];
+    recipePrepHandler(data[0].url);
+    var recipe = {
+        uri: data[0].uri,
+        name: data[0].label,
+        url: data[0].url,
+        prep: null,
+        ingredients: data[0].ingredientLines,
+        categories: data[0].dietLabesl
+    };
     state.putId = recipe.uri;
+    state.edamamPostObject = recipe;
     resetDisplay($('div.js-display'));
     $('.recipe-id').text(recipe.uri);
-    $('.js-display-name').text(recipe.label);
+    $('.js-display-name').text(recipe.name);
     $('.js-display-link').text(recipe.url).attr('href', recipe.url);
-    displayAdditionsHandler(recipe['ingredientLines'], 'ingredients');
-    recipePrepHandler(recipe.url);
-    $('.js-display-notes').text(recipe.notes);
-    displayLinkContentHandler(recipe['dietLabels'], 'categories');
+    displayAdditionsHandler(recipe.ingredients, 'ingredients');
+    displayLinkContentHandler(recipe.categories, 'categories');
+    recipe.prep = $('.js-display-prep').html();
     clearEmptyFields();
 }
 
@@ -472,7 +482,11 @@ function displayEdamam(data) {
         $('.js-results').append('<div class="no-results"><p>Sorry, your search didn\'t return any results.</p></div>');
         return false;
     }
-    data['hits'].forEach(function (item) {
+    var verify = data['hits'].filter(function (item) {
+        return item.recipe.ingredientLines.length > 1;
+    });
+    console.log(verify);
+    verify.forEach(function (item) {
         $('.js-results').append('<div class="results-frame">' + '<p class="js-id hidden">' + item.recipe.uri + '</p>' + '<h3>' + item.recipe.label + '</h3>' + '<p><a href="' + item.recipe.url + '" target="_blank">' + item.recipe.url + '</a></p>' + '<label for="ingredients">Ingredients</label>' + '<br>' + '<div id="ingredients">' + '<ul class="ingredients-list">' + ingredientsList(item.recipe.ingredientLines) + '</ul>' + '</div>' + '</div>');
     });
 }
@@ -795,6 +809,6 @@ $('button.dropbtn').click(function (event) {
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function (event) {
     if (!event.target.matches('.dropbtn')) {
-        $('button.dropdown-content').toggleClass('show');
+        $('div.dropdown-content').addClass('hidden');
     }
 };
