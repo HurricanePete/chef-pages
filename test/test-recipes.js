@@ -267,3 +267,54 @@ describe('Chef Pages API resource', function() {
 	});
 
 });
+
+describe('Edamam proxy server', function() {
+	before(function() {
+		return runServer(DATABASE_URL);
+	});
+	after(function() {
+		return closeServer()
+	});
+
+	describe('POST endpoint for search', function() {
+		it('should return some recipes', function() {
+			const searchTerm = 'chicken';
+			let res;
+			return chai.request(app)
+			.post('/edamam/')
+			.set('Content-Type', 'application/json')
+			.send(JSON.stringify({
+				'search': searchTerm,
+				'from': 0,
+				'to': 5
+			}))
+			.then(function(res) {
+				const parse = JSON.parse(res.text);
+				res.should.have.status(200);
+				parse.should.be.a('object');
+				parse.should.not.be.null;
+				parse.q.should.equal(searchTerm);
+			})
+		});
+	});
+
+	describe('POST endpoint for single recipe', function() {
+		it('should return a single recipes', function() {
+			const searchSite = 'http://www.edamam.com/ontologies/edamam.owl#recipe_7bf4a371c6884d809682a72808da7dc2';
+			let res;
+			return chai.request(app)
+			.post('/edamam/single')
+			.set('Content-Type', 'application/json')
+			.send(JSON.stringify({
+				'singleUrl': searchSite
+			}))
+			.then(function(res) {
+				const parse = JSON.parse(res.text);
+				res.should.have.status(200);
+				parse.should.be.a('array');
+				parse.should.have.length.of.at.least(1);
+				parse[0].uri.should.equal(searchSite);				
+			})
+		});
+	});
+});

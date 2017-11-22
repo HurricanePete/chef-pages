@@ -412,6 +412,22 @@ p.choppingboard-error {
 	font-style: italic;
 }
 
+div.message {
+	text-align: center;
+	background-color: #4CAF50;
+    padding: 1rem;
+}
+
+div.message > p:first-of-type {
+    font-size: xx-large;
+}
+
+div.message > p {
+	margin: 5px;
+	color: white;
+	font-size: small;
+}
+
 button.tablinks {
 	background-color: #FFE19B;
     border: none;
@@ -457,6 +473,33 @@ button.tablinks {
 }
 
 .dropdown-content button:hover {background-color: #f1f1f1}
+
+.loader {
+	margin: 0 auto;
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-bottom: 16px solid #CA924B;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    animation: spin 1.5s cubic-bezier(0.24, 1.13, 0.4, 1.13) infinite;
+}
+
+.chopping-board-loader {
+	margin: 0 auto;
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-bottom: 16px solid #CA924B;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    animation: spin 1.5s cubic-bezier(0.24, 1.13, 0.4, 1.13) infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
 @media only screen and (max-width: 675px) {
 	body {

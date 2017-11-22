@@ -160,7 +160,7 @@ function inputToLowerCase(inputArray) {
 
 //returns a random recipe if a search returns zero results
 function randomOnEmpty(data) {
-    return ['empty', data[Math.floor(Math.random() * (data.length + 1))]];
+    return ['empty', data[Math.floor(Math.random() * (data.length))]];
 }
 
 //lines 25 through 79 create a search function for results when all recipes are returned from the database
@@ -402,6 +402,7 @@ function resetForm(target) {
 
 function resetDisplay(target) {
     target.find('p').val('');
+    target.find('p.js-display-prep').removeClass('choppingboard-error').text('');
     target.find('.js-added').remove();
     target.find('.js-added-link').remove();
     resetEmptyFields();
@@ -452,6 +453,7 @@ function populateDisplay(data) {
 }
 
 function recipePasser(response) {
+    $('div.chopping-board-loader').addClass('hidden');
     const prepBlock = (response.instructions).join('\r\n\n');
     $('.js-display-prep').removeClass('choppingboard-error');
     $('.js-display-prep').text(prepBlock);
@@ -460,16 +462,17 @@ function recipePasser(response) {
 }
 
 function failMessage(response) {
+    $('div.chopping-board-loader').addClass('hidden');
     const prepBlock = "We're very sorry, but we were unable to automatically find instructions for this recipe." + " This generally happens when the source website doesn't clearly identify their recipe sections." + "\n\n" + "If you still wish to add this recipe, please manually input these instructions on the next screen using the source link provided.";
     $('.js-display-prep').text(prepBlock);
     $('.js-display-prep').addClass('choppingboard-error');
 }
 
 //uses the choppingsboard.recipes api to scrape and parse the directions from the original source website
-function recipePrepHandler(url) {
+function recipePrepHandler(source) {
     const settings = {
         method: 'get',
-        url: `https://choppingboardrecipes/api/v0/recipe?key=63dfd3bb758a602be06ef2790d9926e6&q=${url}`,
+        url: `https://choppingboard.recipes/api/v0/recipe?key=63dfd3bb758a602be06ef2790d9926e6&q=${source}`,
         success: recipePasser,
         error: failMessage
     }
@@ -492,6 +495,7 @@ function populateEdamamDisplay(data) {
     state.putId = recipe.uri;
     state.edamamPostObject = recipe;
     resetDisplay($('div.js-display'));
+    $('.js-display-prep').text('');
     $('.recipe-id').text(recipe.uri);
     $('.js-display-name').text(recipe.name);
     $('.js-display-link').text(recipe.link).attr('href', recipe.link);
@@ -532,6 +536,7 @@ function displayRecipes(data) {
 }
 
 function displayEdamam(data) {
+    $('div.loader').addClass('hidden');
     if(data['hits'].length === 0) {
         $('.js-results').append(
             '<div class="no-results"><p>Sorry, your search didn\'t return any results.</p></div>'
@@ -541,7 +546,6 @@ function displayEdamam(data) {
     const verify = data['hits'].filter(item => {
         return item.recipe.ingredientLines.length > 1
     });
-    console.log(verify);
     verify.forEach(function(item) {
         $('.js-results').append(
             '<div class="results-frame">' +
@@ -553,15 +557,21 @@ function displayEdamam(data) {
             '<ul class="ingredients-list">' + ingredientsList(item.recipe.ingredientLines) + '</ul>' +
             '</div>' +
             '</div>');
-    })
+    });
+    $('div.edamam-nav').removeClass('hidden');
+    if(state.edamamFrom > 0) {
+        $('button.edamam-prev').removeClass('hidden');
+    }
+    else{
+        $('button.edamam-prev').addClass('hidden');
+    }
 }    
 
 function displayGet(target) {
     target.find('div.js-get').removeClass('hidden');
     target.find('div.js-post').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
-    target.find('div.js-results').removeClass('hidden');
-    target.find('div.edamam-nav').addClass('hidden');
+    target.find('section.js-resultWrap').removeClass('hidden');
 }
 
 function displayPost(target) {
@@ -569,10 +579,9 @@ function displayPost(target) {
     target.find('div.js-post').removeClass('hidden');
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
-    target.find('div.js-results').addClass('hidden');
+    target.find('section.js-resultWrap').addClass('hidden');
     target.find('button.post-submit').removeClass('hidden');
-    target.find('button.put-submit').addClass('hidden');
-    target.find('div.edamam-nav').addClass('hidden');    
+    target.find('button.put-submit').addClass('hidden');    
 }
 
 function displayPut(target) {
@@ -581,21 +590,21 @@ function displayPut(target) {
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
     target.find('button.post-submit').addClass('hidden');
-    target.find('button.put-submit').removeClass('hidden'); 
-    target.find('div.edamam-nav').addClass('hidden');  
+    target.find('button.put-submit').removeClass('hidden');  
 }
 
 function displayDisplay(target) {
     target.find('div.js-post').addClass('hidden');
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').removeClass('hidden');
-    target.find('div.js-results').addClass('hidden');
-    target.find('div.edamam-nav').addClass('hidden');
+    target.find('section.js-resultWrap').addClass('hidden');
     if(state.search === "edamam") {
+        target.find('button.edamam-add').removeClass('hidden');
         target.find('button.put-button').addClass('hidden');
         target.find('button.delete-button').addClass('hidden');
     }
     else{
+        target.find('button.edamam-add').addClass('hidden');
         target.find('button.put-button').removeClass('hidden');
         target.find('button.delete-button').removeClass('hidden');
     }    
@@ -603,6 +612,7 @@ function displayDisplay(target) {
 
 //handles DOM rendering by hiding and revealing elements as users navigate the app
 function stateToggle(state, target) {
+    $('div.message').addClass('hidden');
     if (state.request === 'get') {
         displayGet(target);
     }
@@ -617,15 +627,25 @@ function stateToggle(state, target) {
     }
 }
 
+function afterDelete() {
+    stateToggle(state, $('body'));
+    $('div.message').removeClass('hidden');
+    $('div.message').find('p:first').text('Recipe Deleted!');
+}
 
-
+function afterPost() {
+    stateToggle(state, $('body'));
+    $('div.message').removeClass('hidden');
+    $('div.message').find('p:first').text('Recipe Added!');
+}
 $('button.local').click(function(event) {
     event.preventDefault();
     setSearch('local');
     setReturn();
     state.request = 'get';
-    $('.js-results').empty();
     stateToggle(state, $('body'));
+    $('section.js-resultWrap').addClass('hidden');
+    $('.js-results').empty();
     $('legend').html("Search "+ "<span>Chef Pages</span>" + " For Recipes");
     $('select.filter').removeClass('hidden');
     $('input.search').attr('placeholder', 'You can filter your search with the dropdown');
@@ -636,8 +656,9 @@ $('button.edamam').click(function(event) {
     setSearch('edamam');
     setReturn();
     state.request = 'get';
-    $('.js-results').empty();
     stateToggle(state, $('body'));
+    $('section.js-resultWrap').addClass('hidden');
+    $('.js-results').empty();
     $('legend').html("Search " + "<span>the Web</span>" + " For Recipes");
     $('select.filter').addClass('hidden');
     $('input.search').attr('placeholder', 'Powered by Edamam');
@@ -699,14 +720,8 @@ $('#get-form').submit(function(event) {
             dataType: 'json',
             success: displayEdamam
         }
-        $('div.edamam-nav').removeClass('hidden');
-        if(state.edamamFrom > 0) {
-            $('button.edamam-prev').removeClass('hidden');
-        }
-        else{
-            $('button.edamam-prev').addClass('hidden');
-        }
-
+        $('div.edamam-nav').addClass('hidden');
+        $('div.loader').removeClass('hidden');
     }
     $.ajax(settings);
 })
@@ -751,7 +766,7 @@ $('.post-submit').click(function(event) {
     state.request = 'display';
     return new Promise (function(resolve, reject) {
         $.post(settings);
-        resolve(stateToggle(state, $('body')))
+        resolve(afterPost())
         reject(function(err) {
             console.log(err)
         });
@@ -769,7 +784,7 @@ $('div.js-display').on('click', '.delete-button', function(event) {
     state.request = 'get';
     return new Promise (function(resolve, reject) {
         $.ajax(settings);
-        resolve(location.reload());
+        resolve(afterDelete());
         reject(function(err) {
             console.log(err)
         });
@@ -879,6 +894,7 @@ $('div.js-results').on('click', 'div.results-frame', function(event) {
             dataType: 'json',
             success: populateEdamamDisplay
         };
+        $('div.chopping-board-loader').removeClass('hidden');
     }
     $.ajax(settings);
 })
@@ -950,6 +966,8 @@ $('button.edamam-prev').click(function(event) {
         dataType: 'json',
         success: displayEdamam
     }
+    $('div.edamam-nav').addClass('hidden');
+    $('div.loader').removeClass('hidden');
     if(state.edamamFrom > 0) {
         $('button.edamam-prev').removeClass('hidden');
     }
@@ -975,6 +993,8 @@ $('button.edamam-next').click(function(event) {
         dataType: 'json',
         success: displayEdamam
     }
+    $('div.edamam-nav').addClass('hidden');
+    $('div.loader').removeClass('hidden');
     if(state.edamamFrom > 0) {
         $('button.edamam-prev').removeClass('hidden');
     }
@@ -982,4 +1002,9 @@ $('button.edamam-next').click(function(event) {
         $('button.edamam-prev').addClass('hidden');
     }
     $.ajax(settings);
+})
+
+$('div.message').click(function(event) {
+    event.preventDefault();
+    $('div.message').addClass('hidden');
 })

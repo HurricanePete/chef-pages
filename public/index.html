@@ -26,6 +26,7 @@
 			<h1>Welcome To Chef Pages</h1>
 			<h2>Create And View Custom Cookbooks</h2>
 		</header>
+		<div class="message hidden"><p></p><p>click to dismiss</p></div>
 		<div class="js-get">
 			<form class="get-form" action="" method="" id="get-form">
 			<legend>Search <span>Chef Pages</span> For Recipes</legend>
@@ -89,9 +90,11 @@
 				<button type="submit" class="post-submit">Create Recipe</button><button type="submit" class="put-submit hidden">Update Recipe</button>
 			</form>
 		</div>
-		<div class="js-results hidden">
-		</div>
-		<div class="hidden edamam-nav"><button class="hidden edamam-prev"><i class="fa fa-angle-left" aria-hidden="true"></i> Prev</button><button class="edamam-next">Next <i class="fa fa-angle-right" aria-hidden="true"></i></button></div>
+		<section class="js-resultWrap hidden">
+			<div class="js-results"></div>
+			<div class="hidden loader"></div>
+			<div class="hidden edamam-nav"><button class="hidden edamam-prev"><i class="fa fa-angle-left" aria-hidden="true"></i> Prev</button><button class="edamam-next">Next <i class="fa fa-angle-right" aria-hidden="true"></i></button></div>
+		</section>
 		<div class="js-display hidden">
 			<div class="return-container">
 				<button class="return-button">Return</button>
@@ -115,6 +118,7 @@
 				<li id="prep">
 					<label for="prep">Instructions:</label><br>
 					<p name="prep" class="js-display-prep"></p>
+					<div class="hidden chopping-board-loader"></div>
 				</li><br><hr><br>
 				<li id="notes">
 					<label for="notes">Notes:</label><br> 
