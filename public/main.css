@@ -11,7 +11,7 @@ body {
 
 nav {
 	text-align: right;
-    padding: 15px 15px 15px 15px;
+    padding: 10px 15px;
     background-color: #CA924B;
 }
 
@@ -102,13 +102,18 @@ input, textarea {
     background-color: #FFF7D1;
 }
 
-nav > h4 {
+legend > span {
+	font-size: large;
+	color: #F8F8FF;
+}
+
+span.logo {
 	float: left;
-    margin: 0;
-    text-align: center;
-    width: 10rem;
-    color: #356381;
-    font-weight: bold;
+    position: absolute;
+    letter-spacing: left;
+    left: 1rem;
+    top: -1.2rem;
+    cursor: pointer;
 }
 
 form.get-form {
@@ -167,6 +172,20 @@ ul.ingredients-field, ul.books-field, ul.categories-field {
 
 ul.post > li {
 	margin: 15px auto;
+}
+
+div.edamam-nav {
+	text-align: center;
+	margin: 0 auto;
+	width: 23%;
+}
+
+button.edamam-prev {
+	float: left;
+}
+
+button.edamam-next {
+	float: right;
 }
 
 .hidden {
@@ -259,6 +278,10 @@ div.js-display {
 
 .js-display-link {
 	color: #113A55;
+}
+
+p.js-display-prep {
+	white-space: pre-wrap;
 }
 
 ul.ingredients-list {
@@ -380,6 +403,104 @@ div.return-container {
     color: #01131F;
 }
 
+button.edamam-add {
+	float: right;
+}
+
+p.choppingboard-error {
+	color: coral;
+	font-style: italic;
+}
+
+div.message {
+	text-align: center;
+	background-color: #4CAF50;
+    padding: 1rem;
+}
+
+div.message > p:first-of-type {
+    font-size: xx-large;
+}
+
+div.message > p {
+	margin: 5px;
+	color: white;
+	font-size: small;
+}
+
+button.tablinks {
+	background-color: #FFE19B;
+    border: none;
+    outline: none;
+    margin: 0;
+    font-size: small;
+    padding: 5px 10px;
+    width: 100%;
+}
+
+.dropbtn {
+	margin: 0;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #3e8e41;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content button:hover {background-color: #f1f1f1}
+
+.loader {
+	margin: 0 auto;
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-bottom: 16px solid #CA924B;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    animation: spin 1.5s cubic-bezier(0.24, 1.13, 0.4, 1.13) infinite;
+}
+
+.chopping-board-loader {
+	margin: 0 auto;
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-bottom: 16px solid #CA924B;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    animation: spin 1.5s cubic-bezier(0.24, 1.13, 0.4, 1.13) infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 @media only screen and (max-width: 675px) {
 	body {
 		background-size: auto;
@@ -393,7 +514,7 @@ div.return-container {
 	nav {
 		text-align: center;
 	}
-	nav > h4 {
+	span.logo {
 		display: none;
 	}
 	a.js-postButton, a.js-getButton {

@@ -1,17 +1,23 @@
-let SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/'
+let SERVER_URL = 'https://sleepy-ravine-11904.herokuapp.com/recipes/';
+let API_URL = 'https://sleepy-ravine-11904.herokuapp.com/edamam/';
 
 if (window.location.host === 'localhost:8080') {
-    SERVER_URL = 'http://localhost:8080/recipes/'
+    SERVER_URL = 'http://localhost:8080/recipes/';
+    API_URL = 'http://localhost:8080/edamam/'
 }
 
 let state = {
     request: 'get',
     previousPage: null,
     history: null,
+    search: 'local',
     putId: null,
+    edamamPostObject: null,
     ingredientsCount: 1,
     booksCount: 1,
-    categoriesCount: 1
+    categoriesCount: 1,
+    edamamFrom: 0,
+    edamamTo: 15
 }
 
 //polyfill to replace includes for IE compatibility
@@ -24,8 +30,24 @@ function doesContain(array, value) {
     }
 }
 
+function setSearch(term) {
+    state.search = term;
+}
+
 function setReturn() {
     state.previousPage = state.request;
+}
+
+function edamamResultsNav(direction) {
+    if(direction === 'add') {
+        state.edamamTo += 15;
+        state.edamamFrom += 15; 
+    }
+    else if(direction === 'minus') {
+        state.edamamTo -= 15;
+        state.edamamFrom -= 15;
+    }
+
 }
 
 function addCount(item) {
@@ -138,7 +160,7 @@ function inputToLowerCase(inputArray) {
 
 //returns a random recipe if a search returns zero results
 function randomOnEmpty(data) {
-    return ['empty', data[Math.floor(Math.random() * (data.length + 1))]];
+    return ['empty', data[Math.floor(Math.random() * (data.length))]];
 }
 
 //lines 25 through 79 create a search function for results when all recipes are returned from the database
@@ -268,7 +290,7 @@ function formToArray(target, submitValue) {
 
 //adds and fills the appropriate amount of HTML list elements from result arrays
 function formAdditionsHandler(array, type, nameId) {
-    if(array.length === 0 || array[0] === null || array[0] === '') {
+    if( array === null || array.length === 0 || array[0] === null || array[0] === '') {
         state[nameId + 'Count'] = 0
     }
     else if(array.length > 0) {
@@ -380,6 +402,7 @@ function resetForm(target) {
 
 function resetDisplay(target) {
     target.find('p').val('');
+    target.find('p.js-display-prep').removeClass('choppingboard-error').text('');
     target.find('.js-added').remove();
     target.find('.js-added-link').remove();
     resetEmptyFields();
@@ -406,7 +429,6 @@ function populateForm(data) {
     zeroCounts();
     $('#name').val(data.name);
     $('#link').val(data.link);
-    //$('#ingredients').val(data.ingredients[0]);
     formAdditionsHandler(data['ingredients'], 'text', 'ingredients');
     $('textarea#prep').val(data.prep);
     $('input#notes').val(data.notes);
@@ -430,6 +452,59 @@ function populateDisplay(data) {
     clearEmptyFields();
 }
 
+function recipePasser(response) {
+    $('div.chopping-board-loader').addClass('hidden');
+    const prepBlock = (response.instructions).join('\r\n\n');
+    $('.js-display-prep').removeClass('choppingboard-error');
+    $('.js-display-prep').text(prepBlock);
+    state.edamamPostObject.prep = prepBlock;
+
+}
+
+function failMessage(response) {
+    $('div.chopping-board-loader').addClass('hidden');
+    const prepBlock = "We're very sorry, but we were unable to automatically find instructions for this recipe." + " This generally happens when the source website doesn't clearly identify their recipe sections." + "\n\n" + "If you still wish to add this recipe, please manually input these instructions on the next screen using the source link provided.";
+    $('.js-display-prep').text(prepBlock);
+    $('.js-display-prep').addClass('choppingboard-error');
+}
+
+//uses the choppingsboard.recipes api to scrape and parse the directions from the original source website
+function recipePrepHandler(source) {
+    const settings = {
+        method: 'get',
+        url: `https://choppingboard.recipes/api/v0/recipe?key=63dfd3bb758a602be06ef2790d9926e6&q=${source}`,
+        success: recipePasser,
+        error: failMessage
+    }
+    $.ajax(settings)
+}
+
+
+function populateEdamamDisplay(data) {
+    const recipe = {
+        uri: data[0].uri,
+        name: data[0].label,
+        link: data[0].url,
+        prep: null,
+        notes: null,
+        books: null,
+        ingredients: data[0].ingredientLines,
+        tags: data[0].dietLabels
+    };
+    recipePrepHandler(data[0].url);
+    state.putId = recipe.uri;
+    state.edamamPostObject = recipe;
+    resetDisplay($('div.js-display'));
+    $('.js-display-prep').text('');
+    $('.recipe-id').text(recipe.uri);
+    $('.js-display-name').text(recipe.name);
+    $('.js-display-link').text(recipe.link).attr('href', recipe.link);
+    displayAdditionsHandler(recipe.ingredients, 'ingredients');
+    displayLinkContentHandler(recipe.tags, 'categories');
+    recipe.prep = $('.js-display-prep').html();
+    clearEmptyFields();
+}
+
 //populates the search screen with results after search submission
 function displayRecipes(data) {
     if(data[0] === 'empty') {
@@ -443,8 +518,6 @@ function displayRecipes(data) {
             '<div id="ingredients">' +
             '<ul class="ingredients-list">' + ingredientsList(data[1].ingredients) + '</ul>' +
             '</div>' +
-            '<label for="prep">Preparation</label>' + '<br>' +
-            '<p id="prep">' + data[1].prep + '</p>' +
             '</div>');
         return false;
     }
@@ -458,17 +531,47 @@ function displayRecipes(data) {
             '<div id="ingredients">' +
             '<ul class="ingredients-list">' + ingredientsList(item.ingredients) + '</ul>' +
             '</div>' +
-            '<label for="prep">Preparation</label>' + '<br>' +
-            '<p id="prep">' + item.prep + '</p>' +
             '</div>');
     })
+}
+
+function displayEdamam(data) {
+    $('div.loader').addClass('hidden');
+    if(data['hits'].length === 0) {
+        $('.js-results').append(
+            '<div class="no-results"><p>Sorry, your search didn\'t return any results.</p></div>'
+            );
+        return false;
+    }
+    const verify = data['hits'].filter(item => {
+        return item.recipe.ingredientLines.length > 1
+    });
+    verify.forEach(function(item) {
+        $('.js-results').append(
+            '<div class="results-frame">' +
+            '<p class="js-id hidden">' + item.recipe.uri + '</p>' +
+            '<h3>' + item.recipe.label + '</h3>' +
+            '<p><a href="' + item.recipe.url + '" target="_blank">' + item.recipe.url + '</a></p>' +
+            '<label for="ingredients">Ingredients</label>' + '<br>' +
+            '<div id="ingredients">' +
+            '<ul class="ingredients-list">' + ingredientsList(item.recipe.ingredientLines) + '</ul>' +
+            '</div>' +
+            '</div>');
+    });
+    $('div.edamam-nav').removeClass('hidden');
+    if(state.edamamFrom > 0) {
+        $('button.edamam-prev').removeClass('hidden');
+    }
+    else{
+        $('button.edamam-prev').addClass('hidden');
+    }
 }    
 
 function displayGet(target) {
     target.find('div.js-get').removeClass('hidden');
     target.find('div.js-post').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
-    target.find('div.js-results').removeClass('hidden');
+    target.find('section.js-resultWrap').removeClass('hidden');
 }
 
 function displayPost(target) {
@@ -476,7 +579,7 @@ function displayPost(target) {
     target.find('div.js-post').removeClass('hidden');
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
-    target.find('div.js-results').addClass('hidden');
+    target.find('section.js-resultWrap').addClass('hidden');
     target.find('button.post-submit').removeClass('hidden');
     target.find('button.put-submit').addClass('hidden');    
 }
@@ -487,18 +590,29 @@ function displayPut(target) {
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').addClass('hidden');
     target.find('button.post-submit').addClass('hidden');
-    target.find('button.put-submit').removeClass('hidden');   
+    target.find('button.put-submit').removeClass('hidden');  
 }
 
 function displayDisplay(target) {
     target.find('div.js-post').addClass('hidden');
     target.find('div.js-get').addClass('hidden');
     target.find('div.js-display').removeClass('hidden');
-    target.find('div.js-results').addClass('hidden');    
+    target.find('section.js-resultWrap').addClass('hidden');
+    if(state.search === "edamam") {
+        target.find('button.edamam-add').removeClass('hidden');
+        target.find('button.put-button').addClass('hidden');
+        target.find('button.delete-button').addClass('hidden');
+    }
+    else{
+        target.find('button.edamam-add').addClass('hidden');
+        target.find('button.put-button').removeClass('hidden');
+        target.find('button.delete-button').removeClass('hidden');
+    }    
 }
 
 //handles DOM rendering by hiding and revealing elements as users navigate the app
 function stateToggle(state, target) {
+    $('div.message').addClass('hidden');
     if (state.request === 'get') {
         displayGet(target);
     }
@@ -512,6 +626,43 @@ function stateToggle(state, target) {
         displayDisplay(target);
     }
 }
+
+function afterDelete() {
+    stateToggle(state, $('body'));
+    $('div.message').removeClass('hidden');
+    $('div.message').find('p:first').text('Recipe Deleted!');
+}
+
+function afterPost() {
+    stateToggle(state, $('body'));
+    $('div.message').removeClass('hidden');
+    $('div.message').find('p:first').text('Recipe Added!');
+}
+$('button.local').click(function(event) {
+    event.preventDefault();
+    setSearch('local');
+    setReturn();
+    state.request = 'get';
+    stateToggle(state, $('body'));
+    $('section.js-resultWrap').addClass('hidden');
+    $('.js-results').empty();
+    $('legend').html("Search "+ "<span>Chef Pages</span>" + " For Recipes");
+    $('select.filter').removeClass('hidden');
+    $('input.search').attr('placeholder', 'You can filter your search with the dropdown');
+})
+
+$('button.edamam').click(function(event) {
+    event.preventDefault();
+    setSearch('edamam');
+    setReturn();
+    state.request = 'get';
+    stateToggle(state, $('body'));
+    $('section.js-resultWrap').addClass('hidden');
+    $('.js-results').empty();
+    $('legend').html("Search " + "<span>the Web</span>" + " For Recipes");
+    $('select.filter').addClass('hidden');
+    $('input.search').attr('placeholder', 'Powered by Edamam');
+})
 
 $('ul.ingredients-field').on('click', 'i.ingredients-adder', function(event) {
     event.preventDefault();
@@ -546,8 +697,42 @@ $('#get-form').submit(function(event) {
     setReturn();
     state.request = 'get';
     stateToggle(state, $('body'));
-    $(this).closest('body').find('.js-results').empty();
-    $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
+    $('.js-results').empty();
+    let settings;
+    if(state.search === 'local') {
+        settings = {
+            url: SERVER_URL, 
+            type: 'get', 
+            success: resultSwitcher
+        }
+        $('div.edamam-nav').addClass('hidden');        
+    }
+    else if (state.search === 'edamam') {
+        settings = {
+            url: API_URL,
+            type: 'post',
+            data: JSON.stringify({
+                "search": stringToLowerCase($('#search').val()),
+                "from": state.edamamFrom,
+                "to": state.edamamTo 
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: displayEdamam
+        }
+        $('div.edamam-nav').addClass('hidden');
+        $('div.loader').removeClass('hidden');
+    }
+    $.ajax(settings);
+})
+
+$('.edamam-search').submit(function(event) {
+    event.preventDefault();
+    setReturn();
+    state.request = 'get';
+    stateToggle(state, $('body'));
+    $('.js-results').empty();
+   
 })
 
 $('.post-submit').click(function(event) {
@@ -581,7 +766,7 @@ $('.post-submit').click(function(event) {
     state.request = 'display';
     return new Promise (function(resolve, reject) {
         $.post(settings);
-        resolve(stateToggle(state, $('body')))
+        resolve(afterPost())
         reject(function(err) {
             console.log(err)
         });
@@ -599,7 +784,7 @@ $('div.js-display').on('click', '.delete-button', function(event) {
     state.request = 'get';
     return new Promise (function(resolve, reject) {
         $.ajax(settings);
-        resolve(location.reload());
+        resolve(afterDelete());
         reject(function(err) {
             console.log(err)
         });
@@ -668,7 +853,7 @@ $('a.js-getButton').click(function(event) {
     event.preventDefault();
     setReturn();
     state.request = 'get';
-    $(this).closest('body').find('.js-results').empty();
+    $('.js-results').empty();
     stateToggle(state, $('body'));
 })
 
@@ -690,11 +875,27 @@ $('div.js-results').on('click', 'div.results-frame', function(event) {
     stateToggle(state, $('body'));
     let id = $('div.js-results').find(this).closest('div').find('p:first').text();
     state.putId = id;
-    const settings = {
-        url: SERVER_URL + id,
-        type: 'get',
-        success: populateDisplay
-    };
+    let settings;
+    if(state.search === 'local') {
+        settings = {
+            url: SERVER_URL + id,
+            type: 'get',
+            success: populateDisplay
+        };
+    }
+    else if(state.search === 'edamam') {
+        settings = {
+            url: API_URL + 'single',
+            type: 'post',
+            data: JSON.stringify({
+                "singleUrl": state.putId 
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: populateEdamamDisplay
+        };
+        $('div.chopping-board-loader').removeClass('hidden');
+    }
     $.ajax(settings);
 })
 
@@ -714,7 +915,7 @@ $('button.return-button').click(function(event) {
 
 $('div.js-display').on('click', 'button.js-display-link-button', function(event) {
     event.preventDefault();
-    $(this).closest('body').find('.js-results').empty();
+    $('.js-results').empty();
     const search = $(this).text();
     const filter = $(this).closest('li').attr('id');
     setReturn();
@@ -723,4 +924,87 @@ $('div.js-display').on('click', 'button.js-display-link-button', function(event)
     $('#search').val(search);
     $('#filter').val(filter);
     $.ajax({url: SERVER_URL, type: 'get', success: resultSwitcher});
+})
+
+$('button.dropbtn').click(function(event) {
+    event.preventDefault();
+    $('div.dropdown-content').toggleClass('hidden');
+})
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    $('div.dropdown-content').addClass('hidden');
+  }
+}
+
+$('button.edamam-add').click(function(event) {
+    event.preventDefault();
+    populateForm(state.edamamPostObject);
+    setReturn();
+    state.request = 'post';
+    stateToggle(state, $('body'));
+})
+
+$('span.logo').click(function(event) {
+    location.reload();
+})
+
+$('button.edamam-prev').click(function(event) {
+    event.preventDefault();
+    $('.js-results').empty();
+    edamamResultsNav('minus');
+    const settings = {
+        url: API_URL,
+        type: 'post',
+        data: JSON.stringify({
+            "search": stringToLowerCase($('#search').val()),
+            "from": state.edamamFrom,
+            "to": state.edamamTo             
+        }),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: displayEdamam
+    }
+    $('div.edamam-nav').addClass('hidden');
+    $('div.loader').removeClass('hidden');
+    if(state.edamamFrom > 0) {
+        $('button.edamam-prev').removeClass('hidden');
+    }
+    else{
+        $('button.edamam-prev').addClass('hidden');
+    }
+    $.ajax(settings);
+})
+
+$('button.edamam-next').click(function(event) {
+    event.preventDefault();
+    $('.js-results').empty();
+    edamamResultsNav('add');
+    const settings = {
+        url: API_URL,
+        type: 'post',
+        data: JSON.stringify({
+            "search": stringToLowerCase($('#search').val()),
+            "from": state.edamamFrom,
+            "to": state.edamamTo             
+        }),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: displayEdamam
+    }
+    $('div.edamam-nav').addClass('hidden');
+    $('div.loader').removeClass('hidden');
+    if(state.edamamFrom > 0) {
+        $('button.edamam-prev').removeClass('hidden');
+    }
+    else{
+        $('button.edamam-prev').addClass('hidden');
+    }
+    $.ajax(settings);
+})
+
+$('div.message').click(function(event) {
+    event.preventDefault();
+    $('div.message').addClass('hidden');
 })
