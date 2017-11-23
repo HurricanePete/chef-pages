@@ -69,7 +69,7 @@ select {
 	background-color: lightgrey;
 }
 
-a {
+p > a {
 	color: #4CAF50;
 	text-decoration: none;
 }
