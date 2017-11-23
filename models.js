@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const recipeSchema = mongoose.Schema({
   filters: {
     userId: Number,
-    bookIds: [Number], 
+    bookIds: [String], 
     categories: [String]
   },
   name: {type: String, required: true},

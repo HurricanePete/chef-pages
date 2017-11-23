@@ -1,5 +1,6 @@
 * {
 	font-family: 'Roboto Slab', serif;
+	box-sizing: border-box;
 }
 
 body {
@@ -69,7 +70,7 @@ select {
 }
 
 a {
-	color: #113A55;
+	color: #4CAF50;
 	text-decoration: none;
 }
 
@@ -501,6 +502,51 @@ button.tablinks {
     100% { transform: rotate(360deg); }
 }
 
+section.landing {
+	padding: 5% 0%;
+    position: absolute;
+    background-color: #FFE19B;
+    text-align: center;
+    z-index: 1;
+    width: 60%;
+    float: center;
+    left: 0%;
+    right: 0%;
+    bottom: 5%;
+    top: 3%;
+    border-radius: 25px;
+    margin: 0 auto;
+    height: 800px;
+}
+
+section.landing > h1 {
+	color: #294F6D;
+    margin: 1.5rem 0;
+}
+
+section.landing > h3 {
+	color: #294F6D;
+}
+
+section.landing > div {
+	margin: 1% 20%;
+}
+
+section.landing p {
+	text-align: justify;
+   	color: #294F6D;
+   	margin: 5%;
+}
+
+section.landing p.dismiss-wrapper {
+	text-align: center;
+}
+
+a.landing-dismiss {
+	color: #4CAF50;
+	text-decoration: underline;
+}
+
 @media only screen and (max-width: 675px) {
 	body {
 		background-size: auto;
@@ -514,8 +560,41 @@ button.tablinks {
 	nav {
 		text-align: center;
 	}
+
+	section.landing {
+		padding: 1% 0;
+		width: 90%;
+		bottom: 3%;
+		height: unset;
+	}
+
+	section.landing > h1 {
+    	font-size: large;
+   		margin-top: 1.5rem;
+    	margin-bottom: 1rem;
+	}
+
+	section.landing > h3 {
+		margin: 0 1.5rem 1.5rem 1.5rem;
+    	text-align: center;
+    	font-size: smaller;
+	}
+
+	section.landing > div {
+		margin: 1% 10%;
+	}
+
+	section.landing p {  
+    	font-size: small;
+    	margin: 5%;
+	}
+
 	span.logo {
 		display: none;
+	}
+	a.js-display-link {
+		font-size: smaller;
+		overflow: hidden;
 	}
 	a.js-postButton, a.js-getButton {
 		margin: 1rem;
@@ -553,6 +632,9 @@ button.tablinks {
     }
     ul {
         margin: 0 auto;
+    }
+    ul.js-display-ingredients, ul.ingredients-list {
+    	margin: 0 auto 0 0.75rem; 
     }
     ul.ingredients-field, ul.books-field, ul.categories-field {
         margin-left: 0px;

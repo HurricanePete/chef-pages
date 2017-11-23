@@ -10,7 +10,7 @@ let state = {
     request: 'get',
     previousPage: null,
     history: null,
-    search: 'local',
+    search: 'edamam',
     putId: null,
     edamamPostObject: null,
     ingredientsCount: 1,
@@ -192,7 +192,7 @@ function filterName(input, data) {
 
 function filterBook(input, data) {
     let results = data.filter(function(recipe) {
-        if(doesContain(recipe.books, parseInt(input, 10))) {
+        if(doesContain(stringToLowerCase(recipe.books), input)) {
             return recipe
         }
     })
@@ -638,6 +638,22 @@ function afterPost() {
     $('div.message').removeClass('hidden');
     $('div.message').find('p:first').text('Recipe Added!');
 }
+
+$(document).ready(function(event) {
+    if(document.cookie === 'landing-page=false') {
+        $('section.landing').addClass('hidden');
+    }
+    else{
+        $('section.landing').removeClass('hidden');
+    }
+})
+
+$('a.landing-dismiss').click(function(event) {
+    event.preventDefault();
+    $('section.landing').addClass('hidden');
+    document.cookie = "landing-page=false";
+})
+
 $('button.local').click(function(event) {
     event.preventDefault();
     setSearch('local');
