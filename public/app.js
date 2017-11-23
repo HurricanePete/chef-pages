@@ -20,9 +20,10 @@ var state = {
     categoriesCount: 1,
     edamamFrom: 0,
     edamamTo: 15
+};
 
-    //polyfill to replace includes for IE compatibility
-};function doesContain(array, value) {
+//polyfill to replace includes for IE compatibility
+function doesContain(array, value) {
     if (array.indexOf(value) === -1) {
         return false;
     } else {
@@ -138,7 +139,11 @@ function stringToLowerCase(name) {
 function inputToLowerCase(inputArray) {
     if (Array.isArray(inputArray)) {
         var result = inputArray.map(function (item) {
-            return item.toLowerCase();
+            if (typeof item === 'number') {
+                return item;
+            } else {
+                return item.toLowerCase();
+            }
         });
         return result;
     } else {
@@ -156,6 +161,7 @@ function filterAll(input, data) {
     var results = data.filter(function (recipe) {
         var caseName = stringToLowerCase(recipe.name);
         var caseTags = inputToLowerCase(recipe.tags);
+        var caseBooks = inputToLowerCase(recipe.books);
         if (doesContain(caseName, input) || doesContain(recipe.books, input) || doesContain(caseTags, input)) {
             return recipe;
         }
@@ -180,7 +186,7 @@ function filterName(input, data) {
 
 function filterBook(input, data) {
     var results = data.filter(function (recipe) {
-        if (doesContain(stringToLowerCase(recipe.books), input)) {
+        if (doesContain(inputToLowerCase(recipe.books), input)) {
             return recipe;
         }
     });
@@ -402,13 +408,7 @@ function replaceInitialInputs(target) {
     resetCounts();
     var fields = ['ingredients', 'books', 'categories'];
     for (var i = 0; i < fields.length; i++) {
-        var type = void 0;
-        if (fields[i] === books) {
-            type = 'number';
-        } else {
-            type = 'text';
-        }
-        inputAdder(target.find('li.' + fields[i] + '-seed'), type, fields[i]);
+        inputAdder(target.find('li.' + fields[i] + '-seed'), 'text', fields[i]);
     }
 }
 
@@ -421,7 +421,7 @@ function populateForm(data) {
     formAdditionsHandler(data['ingredients'], 'text', 'ingredients');
     $('textarea#prep').val(data.prep);
     $('input#notes').val(data.notes);
-    formAdditionsHandler(data['books'], 'number', 'books');
+    formAdditionsHandler(data['books'], 'text', 'books');
     formAdditionsHandler(data['tags'], 'text', 'categories');
     countHandler($('li.ingredients-seed'), $('li.books-seed'), $('li.categories-seed'));
 }
@@ -641,7 +641,7 @@ $('ul.ingredients-field').on('click', 'i.ingredients-adder', function (event) {
 $('ul.books-field').on('click', 'i.books-adder', function (event) {
     event.preventDefault();
     addCount('books');
-    inputAdder($(this), 'number', 'books');
+    inputAdder($(this), 'text', 'books');
     messageRemover('books', $(this));
 });
 
