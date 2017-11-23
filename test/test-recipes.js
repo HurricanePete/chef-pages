@@ -61,7 +61,7 @@ function generateLink() {
 }
 
 function generateBooks() {
-	const bookIds = [1111111, 2222222, 3333333];
+	const bookIds = ['My Books', 'Another great Book', 'Z\'s Sweet Cookbook'];
 	return [bookIds[Math.floor(Math.random() * bookIds.length)]];
 }
 
@@ -232,7 +232,7 @@ describe('Chef Pages API resource', function() {
 		it('should update a recipe correctly', function() {
 			const updateData = {
 				filters: {
-					bookIds: [1357900],
+					bookIds: ['My fancy book'],
 					categories: ['New category']
 				},
 				name: 'Testing Recipe',
