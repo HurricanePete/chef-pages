@@ -160,6 +160,9 @@ function inputToLowerCase(inputArray) {
             if(typeof item === 'number') {
                 return item;
             }
+            else if(item === null) {
+                return item;
+            }
              else {
                 return item.toLowerCase();
             }
