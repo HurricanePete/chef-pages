@@ -148,7 +148,7 @@ function inputToLowerCase(inputArray) {
             if (typeof item === 'number') {
                 return item;
             } else if (item === null) {
-                return item;
+                return false;
             } else {
                 return item.toLowerCase();
             }
