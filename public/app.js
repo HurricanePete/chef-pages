@@ -24,11 +24,17 @@ var state = {
 
 //polyfill to replace includes for IE compatibility
 function doesContain(array, value) {
-    if (array.indexOf(value) === -1) {
-        return false;
-    } else {
-        return true;
+    for (var i = 0; i < array.length; i++) {
+        if (array[i].indexOf(value) !== -1) {
+            return true;
+        } else {
+            return false;
+        }
     }
+}
+
+if (!Element.prototype.matches) {
+    Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
 }
 
 function setSearch(term) {
@@ -162,7 +168,7 @@ function filterAll(input, data) {
         var caseName = stringToLowerCase(recipe.name);
         var caseTags = inputToLowerCase(recipe.tags);
         var caseBooks = inputToLowerCase(recipe.books);
-        if (doesContain(caseName, input) || doesContain(recipe.books, input) || doesContain(caseTags, input)) {
+        if (doesContain(caseName, input) || doesContain(caseBooks, input) || doesContain(caseTags, input)) {
             return recipe;
         }
     });

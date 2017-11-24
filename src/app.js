@@ -22,12 +22,20 @@ let state = {
 
 //polyfill to replace includes for IE compatibility
 function doesContain(array, value) {
-    if(array.indexOf(value) === -1) {
-        return false
+    for(let i=0; i<array.length; i++) {
+        if(array[i].indexOf(value) !== -1) {
+            return true
+        }
+        else {
+            return false
+        }
     }
-    else {
-        return true
-    }
+}
+
+if (!Element.prototype.matches) {
+    Element.prototype.matches =
+        Element.prototype.msMatchesSelector ||
+        Element.prototype.webkitMatchesSelector;
 }
 
 function setSearch(term) {
@@ -174,7 +182,7 @@ function filterAll(input, data) {
         let caseName = stringToLowerCase(recipe.name);
         let caseTags  = inputToLowerCase(recipe.tags);
         let caseBooks = inputToLowerCase(recipe.books);
-        if (doesContain(caseName, input) || doesContain(recipe.books, input) || doesContain(caseTags, input)) {
+        if (doesContain(caseName, input) || doesContain(caseBooks, input) || doesContain(caseTags, input)) {
             return recipe
         }
     })

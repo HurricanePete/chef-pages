@@ -88,7 +88,7 @@ li {
 }
 
 textarea {
-	height: 100px;
+	height: 250px;
 }
 
 hr.separator {
@@ -97,7 +97,7 @@ hr.separator {
 
 input, textarea {
 	padding: 10px 15px;
-    width: 65%;
+    width: 80%;
     margin-right: 0;
     border: 1px solid lightgrey;
     background-color: #FFF7D1;
@@ -117,6 +117,10 @@ span.logo {
     cursor: pointer;
 }
 
+span.screen-size-add {
+    	display: none;
+    }
+
 form.get-form {
 	padding-top: 1rem;
 	padding-bottom: 1rem;
@@ -125,7 +129,7 @@ form.get-form {
 form.post-form {
 	margin-top: 2.5%;
 	padding-left: 5%;
-	padding-right: 10%
+	padding-right: 8%
 }
 
 div.no-results {
@@ -179,6 +183,8 @@ div.edamam-nav {
 	text-align: center;
 	margin: 0 auto;
 	width: 23%;
+	max-width: 20rem;
+	min-width: 10rem;
 }
 
 button.edamam-prev {
@@ -199,9 +205,7 @@ button.edamam-next {
 
 .post-submit, .put-submit {
 	text-align: center;
-	position: relative;
-	right: 5%;
-	width: 25%;
+	width: 35%;
 }
 
 .search {
@@ -226,7 +230,7 @@ button.edamam-next {
 }
 
 .js-added > input {
-	margin: 0 0 3px 3px;
+	margin: 0 0 3px 0;
 }
 
 .js-results {
@@ -314,12 +318,9 @@ li.edit-buttons {
 	margin: 0 auto;
 }
 
-a.js-getButton {
-	font-weight: 700;
-    color: #FFF8EF;
-    text-decoration: none;
-    margin-left: 25px;
-} 
+div.postButton-wrapper {
+	display: inline-block;
+}
 
 a.js-postButton {
 	font-weight: 700;
@@ -596,16 +597,16 @@ a.landing-dismiss {
 		margin: 1rem;
 	}
 	div i.fa-minus-circle, div i.fa-plus-circle {
-		font-size: 2em;
+		font-size: 1.5em;
 		vertical-align: -20%;
-		margin-left: 10px;
+		margin-left: 5px;
 	}
 	input.search {
 		width: 85%;
 		margin-bottom: 1rem;
 	}
 	input.name, input.url, textarea.prep, input.notes {
-		width: 82%;
+		width: 100%;
 	}
 	button.search-submit {
 		width: 25%;
@@ -615,7 +616,7 @@ a.landing-dismiss {
 		width: 100%;
 	}
 	div.results-frame, div.js-display, div.js-post {
-		width: 85%;
+		width: 100%;
 	}
 	div.results-frame {
 		padding: 20px;
@@ -638,5 +639,21 @@ a.landing-dismiss {
     .js-added, .add-buttons {
         padding-left: 0px;
         padding-right: 0px;
+    }
+    form.post-form {
+    	padding-right: 5%;
+    }
+    input, textarea {
+    	width: 75%;
+    }
+    div.dropdown, div.postButton-wrapper {
+    	width: 45%;
+    	position: static;
+    }
+    span.screen-size-remove {
+    	display: none;
+    }
+    span.screen-size-add {
+    	display: unset;
     }
 }
