@@ -25,7 +25,9 @@ var state = {
 //polyfill to replace includes for IE compatibility
 function doesContain(array, value) {
     for (var i = 0; i < array.length; i++) {
-        if (array[i].indexOf(value) !== -1) {
+        if (Array.isArray(array) && array[i].indexOf(value) !== -1) {
+            return true;
+        } else if (array.indexOf(value) !== -1) {
             return true;
         } else {
             return false;
