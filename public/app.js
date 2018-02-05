@@ -609,7 +609,7 @@ $(document).ready(function (event) {
     }
 });
 
-$('a.landing-dismiss').click(function (event) {
+$('button.landing-dismiss').click(function (event) {
     event.preventDefault();
     $('section.landing').addClass('hidden');
     document.cookie = "landing-page=false";

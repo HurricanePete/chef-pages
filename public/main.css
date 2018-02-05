@@ -80,6 +80,13 @@ button {
     border: 1px solid lightgrey;
     padding: 10px 15px;
     font-weight: bold;
+    transition: all 0.5s ease-in-out;
+}
+
+button:hover {
+	background-color: #4CAF50;
+	color: white;
+	cursor: pointer;
 }
 
 li {
@@ -478,8 +485,8 @@ button.tablinks {
     border-top: 16px solid #3498db;
     border-bottom: 16px solid #CA924B;
     border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    width: 75px;
+    height: 75px;
     animation: spin 1.5s cubic-bezier(0.24, 1.13, 0.4, 1.13) infinite;
 }
 
@@ -500,20 +507,19 @@ button.tablinks {
 }
 
 section.landing {
-	padding: 5% 0%;
+	padding: 5rem 0;
     position: absolute;
-    background-color: #FFE19B;
+    background-color: ghostwhite;
     text-align: center;
     z-index: 1;
-    width: 60%;
-    float: center;
+    width: 50%;
     left: 0%;
     right: 0%;
-    bottom: 5%;
-    top: 3%;
+    top: 5rem;
     border-radius: 25px;
     margin: 0 auto;
     height: 800px;
+    opacity: 0.95;
 }
 
 section.landing > h1 {
@@ -526,22 +532,19 @@ section.landing > h3 {
 }
 
 section.landing > div {
-	margin: 1% 20%;
+	margin: 4rem 8rem;
 }
 
 section.landing p {
 	text-align: justify;
    	color: #294F6D;
-   	margin: 5%;
+   	margin: 2rem 1rem;
 }
 
-section.landing p.dismiss-wrapper {
-	text-align: center;
-}
-
-a.landing-dismiss {
-	color: #4CAF50;
-	text-decoration: underline;
+button.landing-dismiss {
+	margin-top: 3rem;
+	padding: 1rem 1.5rem;
+	font-size: 18px;
 }
 
 @media only screen and (max-width: 675px) {
@@ -559,7 +562,7 @@ a.landing-dismiss {
 	}
 
 	section.landing {
-		padding: 1% 0;
+		padding: 1rem 0;
 		width: 90%;
 		bottom: 3%;
 		height: unset;
@@ -578,12 +581,17 @@ a.landing-dismiss {
 	}
 
 	section.landing > div {
-		margin: 1% 10%;
+		margin: 2rem 2rem;
 	}
 
 	section.landing p {  
     	font-size: small;
-    	margin: 5%;
+    	margin: 1rem;
+	}
+
+	button.landing-dismiss {
+		margin-top: 1rem;
+		transform: scale(0.75);
 	}
 
 	span.logo {
