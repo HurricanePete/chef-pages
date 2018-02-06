@@ -471,7 +471,6 @@ function recipePasser(response) {
     $('.js-display-prep').removeClass('choppingboard-error');
     $('.js-display-prep').text(prepBlock);
     state.edamamPostObject.prep = prepBlock;
-
 }
 
 function failMessage(response) {
@@ -526,7 +525,6 @@ function displayRecipes(data) {
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + data[1].id + '</p>' +
             '<h3>' + data[1].name + '</h3>' +
-            '<p><a href="' + data[1].link + '" target="_blank">' + data[1].link + '</a></p>' +
             '<label for="ingredients">Ingredients</label>' + '<br>' +
             '<div id="ingredients">' +
             '<ul class="ingredients-list">' + ingredientsList(data[1].ingredients) + '</ul>' +
@@ -539,7 +537,6 @@ function displayRecipes(data) {
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + item.id + '</p>' +
             '<h3>' + item.name + '</h3>' +
-            '<p><a href="' + item.link + '" target="_blank">' + item.link + '</a></p>' +
             '<label for="ingredients">Ingredients</label>' + '<br>' +
             '<div id="ingredients">' +
             '<ul class="ingredients-list">' + ingredientsList(item.ingredients) + '</ul>' +
@@ -564,7 +561,6 @@ function displayEdamam(data) {
             '<div class="results-frame">' +
             '<p class="js-id hidden">' + item.recipe.uri + '</p>' +
             '<h3>' + item.recipe.label + '</h3>' +
-            '<p><a href="' + item.recipe.url + '" target="_blank">' + item.recipe.url + '</a></p>' +
             '<label for="ingredients">Ingredients</label>' + '<br>' +
             '<div id="ingredients">' +
             '<ul class="ingredients-list">' + ingredientsList(item.recipe.ingredientLines) + '</ul>' +
@@ -640,15 +636,31 @@ function stateToggle(state, target) {
     }
 }
 
+function formValidation(data) {
+    if(data.name === '' || data.name === undefined) {
+        $('div.message').find('p:first').text('Recipes must have a name');
+        return false;
+    }
+    else if(data.ingredients[0] === '' || data.ingredients[0] === undefined) {
+        $('div.message').find('p:first').text('Recipes must have at least one ingredient');
+        return false;
+    }
+    else if(data.prep === '' || data.prep === undefined) {
+        $('div.message').find('p:first').text('Please include preparation instructions');
+        return false;
+    }
+    return true;
+}
+
 function afterDelete() {
     stateToggle(state, $('body'));
-    $('div.message').removeClass('hidden');
+    $('div.message').removeClass('red').removeClass('hidden');
     $('div.message').find('p:first').text('Recipe Deleted!');
 }
 
 function afterPost() {
     stateToggle(state, $('body'));
-    $('div.message').removeClass('hidden');
+    $('div.message').removeClass('red').removeClass('hidden');
     $('div.message').find('p:first').text('Recipe Added!');
 }
 
@@ -766,10 +778,6 @@ $('.edamam-search').submit(function(event) {
 
 $('.post-submit').click(function(event) {
     event.preventDefault();
-    if($('input#name').val() === '') {
-        alert('Recipe must have a name');
-        return
-    }
     const data = {
         "filters": {
             "userId": 1111111,
@@ -792,14 +800,21 @@ $('.post-submit').click(function(event) {
         success: populateDisplay
     }
     setReturn();
-    state.request = 'display';
-    return new Promise (function(resolve, reject) {
-        $.post(settings);
-        resolve(afterPost())
-        reject(function(err) {
-            console.log(err)
-        });
-    })
+    if(formValidation(data)) {
+        state.request = 'display';
+        return new Promise (function(resolve, reject) {
+            $.post(settings);
+            resolve(afterPost())
+            reject(function(err) {
+                console.log(err)
+            });
+        })
+    }
+    else {
+        state.request = 'post';
+        stateToggle(state, $('body'));
+        $('div.message').addClass('red').removeClass('hidden');
+    }
 })
 
 $('div.js-display').on('click', '.delete-button', function(event) {
@@ -866,15 +881,22 @@ $('button.put-submit').click(function(event) {
         success: populateDisplay
     };
     setReturn();
-    state.request = 'display';
-    return new Promise (function(resolve, reject) {
-        $.ajax(settings);
-        resolve(stateToggle(state, $('body')));
-        reject(function(err) {
-            console.log(err)
+    if(formValidation(data)) {
+        state.request = 'display';
+        return new Promise (function(resolve, reject) {
+            $.ajax(settings);
+            resolve(stateToggle(state, $('body')));
+            reject(function(err) {
+                console.log(err)
+            });
         });
-    });
-    state.putId = null;
+        state.putId = null;
+    }
+    else {
+        state.request = 'put';
+        stateToggle(state, $(body));
+        $('div.message').addClass('red').removeClass('hidden');
+    }
 })
 
 $('a.js-getButton').click(function(event) {
@@ -928,7 +950,7 @@ $('div.js-results').on('click', 'div.results-frame', function(event) {
     $.ajax(settings);
 })
 
-$('button.return-button').click(function(event) {
+$('span.return-button').click(function(event) {
     event.preventDefault();
     state.history = state.request;
     if(state.request === 'display' && state.history === 'display') {
