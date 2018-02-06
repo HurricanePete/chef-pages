@@ -3,11 +3,20 @@
 	box-sizing: border-box;
 }
 
+html {
+	position: relative;
+	min-height: 100%;
+}
+
 body {
 	background-image: url('./images/chef-pages_bg_edit_compress.jpg');
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-size: cover;
+}
+
+main {
+	padding-bottom: 6rem;
 }
 
 nav {
@@ -19,11 +28,11 @@ nav {
 header {
 	text-align: center;
 	padding-top: 2rem;
-	padding-bottom: 1rem;
 }
 
 header > h1, header > h2 {
 	color: #FFE19B;
+	margin: 0.5rem;
 }
 
 legend {
@@ -131,6 +140,7 @@ span.screen-size-add {
 form.get-form {
 	padding-top: 1rem;
 	padding-bottom: 1rem;
+	font-size: larger;
 }
 
 form.post-form {
@@ -208,6 +218,8 @@ button.edamam-next {
 
 .search-submit {
 	margin: 0 0 0 0;
+	height: 3rem;
+	padding: 0.5rem 1rem;
 }
 
 .post-submit, .put-submit {
@@ -216,16 +228,18 @@ button.edamam-next {
 }
 
 .search {
-    width: 40%;
+	height: 3rem;
+    width: 45%;
     margin: 0 0 0 0;
     border: 1px solid lightgrey;
     background-color: #FFE19B;
+    padding-left: 1rem;
 }
 
 .filter {
-	height: 40px;
+	height: 3rem;
 	font-weight: bold;
-	padding-left: 5px;
+	padding-left: 0.5rem;
 	background-color: #356381;
 }
 
@@ -481,9 +495,9 @@ button.tablinks {
 
 .loader {
 	margin: 0 auto;
-    border: 16px solid #f3f3f3;
-    border-top: 16px solid #3498db;
-    border-bottom: 16px solid #CA924B;
+    border: 0.5rem solid #f3f3f3;
+    border-top: 0.5rem solid #3498db;
+    border-bottom: 0.5rem solid #CA924B;
     border-radius: 50%;
     width: 75px;
     height: 75px;
@@ -492,9 +506,9 @@ button.tablinks {
 
 .chopping-board-loader {
 	margin: 0 auto;
-    border: 16px solid #f3f3f3;
-    border-top: 16px solid #3498db;
-    border-bottom: 16px solid #CA924B;
+    border: 0.5rem solid #f3f3f3;
+    border-top: 0.5rem solid #3498db;
+    border-bottom: 0.5rem solid #CA924B;
     border-radius: 50%;
     width: 75px;
     height: 75px;
@@ -545,6 +559,58 @@ button.landing-dismiss {
 	margin-top: 3rem;
 	padding: 1rem 1.5rem;
 	font-size: 18px;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 6rem;
+	width: 100%;
+	padding: 1rem;
+	background-color: ghostwhite;
+	color: black;
+	text-align: center;
+}
+
+footer > div.col-3 {
+	float: none;
+}
+
+footer ul {
+	list-style: none;
+	margin: 0;
+	padding: 0.5rem 0.5rem 0 0.5rem;
+	text-align: center;
+}
+
+footer p {
+	width: 12rem;
+	font-size: 15px;
+	margin: auto;
+}
+
+footer a {
+	text-decoration: none;
+}
+
+.footer-link {
+	display: inline-block;
+	margin: 0.5rem;
+	width: auto;
+}
+
+.link-hover {
+	color: black;
+	padding: 1px 5px;
+	transition: all 0.25s ease-in-out 0s;
+}
+
+.link-hover:hover {
+	transform: scale(1.1);
+	background: black;
+	color: ghostwhite;
+	border-radius: 5px;
 }
 
 @media only screen and (max-width: 675px) {
