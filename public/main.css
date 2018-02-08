@@ -563,7 +563,7 @@ section.landing {
     top: 5rem;
     border-radius: 25px;
     margin: 0 auto;
-    max-height: 650px;
+    max-height: 765px;
     opacity: 0.95;
 }
 
@@ -577,7 +577,7 @@ section.landing > h3 {
 }
 
 section.landing > div {
-	margin: 0 8rem;
+	margin: 0 4rem;
 }
 
 section.landing p {
@@ -644,7 +644,7 @@ footer a {
 	border-radius: 5px;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 1040px) {
 	body {
 		background-size: auto;
 	}
